@@ -8,7 +8,8 @@
     "render": "remotion render Main out/video.mp4",
     "still": "remotion still Main out/frame.png --frame=30",
     "typecheck": "tsc --noEmit",
-    "runway:check": "node --experimental-strip-types --no-warnings scripts/runway-check.ts"
+    "runway:check": "node --experimental-strip-types --no-warnings scripts/runway-check.ts",
+    "render:cena01": "remotion render Cena01Preview out/cena01_preview.mp4 --codec=h264 --crf=18"
   },
   "dependencies": {
     "@remotion/cli": "4.0.541",
