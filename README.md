@@ -17,4 +17,7 @@ Vídeos programáticos com [Remotion](https://www.remotion.dev) + geração com 
 
 1. Crie uma chave em https://dev.runwayml.com.
 2. Copie `.env.example` para `.env` e preencha `RUNWAYML_API_SECRET` (o `.env` não é commitado).
-3. Toda geração (`imageToVideo`, `textToImage` etc.) **gasta créditos**: confirme antes de rodar.
+3. **No Claude Code na nuvem (ambiente "Videocachorro")**: a chave fica salva como segredo de rede
+   e o proxy a injeta nas requisições. Não crie `.env`; rode com:
+   `NODE_USE_ENV_PROXY=1 RUNWAYML_API_SECRET=proxy-injected npm run runway:check`
+4. Toda geração (`imageToVideo`, `textToImage` etc.) **gasta créditos**: confirme antes de rodar.
