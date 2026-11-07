@@ -1,0 +1,18 @@
+{
+  "_doc": "Parâmetros do trote compartilhados entre o Python (camada do cachorro) e o Remotion (câmera). Amplitudes em px no quadro 1080x1920.",
+  "fps": 30,
+  "frames": 150,
+  "strideHz": 3.0,
+  "camera": { "bounceY": 5.0, "swayX": 3.5, "rollDeg": 0.45, "scale": 1.045 },
+  "dog": {
+    "widthFrac": 0.50,
+    "keepHeightFrac": 0.78,
+    "visibleFrac": 0.92,
+    "mountFlexY": 1.2,
+    "headNodY": 5.0,
+    "headYawX": 7.0,
+    "headRollX": 3.0,
+    "earFlap": 4.0,
+    "hairRipple": 1.6
+  }
+}

@@ -4,3 +4,5 @@ out/
 .env.*
 !.env.example
 public/cena01/
+public/cena01pov/dog/
+public/cena01pov/praia_3.5-8.5.mov
