@@ -9,7 +9,9 @@
     "still": "remotion still Main out/frame.png --frame=30",
     "typecheck": "tsc --noEmit",
     "runway:check": "node --experimental-strip-types --no-warnings scripts/runway-check.ts",
-    "render:cena01": "remotion render Cena01Preview out/cena01_preview.mp4 --codec=h264 --crf=18"
+    "render:cena01": "remotion render Cena01Preview out/cena01_preview.mp4 --codec=h264 --crf=18",
+    "render:chegada": "remotion render Cena01Chegada out/cena01_chegada_raw.mp4 --codec=h264 --crf=16 --concurrency=4",
+    "export:chegada": "ffmpeg -y -i out/cena01_chegada_raw.mp4 -c:v libx264 -preset slow -crf 17 -profile:v high -pix_fmt yuv420p -r 30 -movflags +faststart -af loudnorm=I=-14:TP=-1.5:LRA=11 -ar 48000 -c:a aac -b:a 192k out/cena01_chegada_final.mp4"
   },
   "dependencies": {
     "@remotion/cli": "4.0.541",
