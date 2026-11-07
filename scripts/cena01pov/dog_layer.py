@@ -27,7 +27,12 @@ P = json.load(open(os.path.join(ROOT, "src", "cena01pov", "trot.json")))
 D = P["dog"]
 W, H, FPS, N = 1080, 1920, P["fps"], P["frames"]
 SRC_W = 512  # largura da filmagem original
-OUT = os.path.join(ROOT, "public", "cena01pov", "dog")
+# MOTION=real → movimento medido no vídeo real do Yorkshire (src/cena01pov/gait_real.json)
+REAL = os.environ.get("MOTION") == "real"
+if REAL:
+    G = json.load(open(os.path.join(ROOT, "src", "cena01pov", "gait_real.json")))
+    N = G["frames"]
+OUT = os.path.join(ROOT, "public", "cena01pov", "dog_real" if REAL else "dog")
 os.makedirs(OUT, exist_ok=True)
 rng = np.random.default_rng(7)
 
@@ -97,6 +102,24 @@ gray = cv2.cvtColor(refs[len(refs) // 2], cv2.COLOR_BGR2GRAY)
 grain_sd = float(np.std(gray - cv2.GaussianBlur(gray, (0, 0), 1.5))) * 0.6
 print(f"cor: ganho L={k_L:.3f} da={d_a:.2f} db={d_b:.2f} | grão sd={grain_sd:.4f} | cachorro {cw}x{ch} em ({x0},{y0})")
 
+# ---------- movimento medido (modo real) ----------
+if REAL:
+    # Conversão física: fração da altura do cachorro (~0.25 m) → deslocamento da cabeça a ~0.15 m
+    # da câmera (f ≈ 805 px no quadro 1080x1920). Metade do medido (máscara inclui pernas/pelo).
+    PX = 0.5 * 0.25 * 805 / 0.15
+    head_dy = np.array(G["heady"]) * PX
+    head_dx = np.array(G["headx"]) * PX + np.clip(np.array(G["headx_slow"]) * 0.5 * 0.12 * 805 / 0.15, -25, 25)
+    # orelhas/pelo: mola amortecida excitada pela aceleração vertical REAL do corpo (sem ciclo fixo)
+    vert = np.array(G["vert"]); acc = np.gradient(np.gradient(vert)) * FPS * FPS
+    wn, z, dt = 2 * math.pi * 5.0, 0.25, 1 / FPS
+    x = v = 0.0; spring = []
+    for a_ in acc:
+        for _ in range(4):
+            v += (-wn * wn * x - 2 * z * wn * v - a_) * dt / 4; x += v * dt / 4
+        spring.append(x)
+    spring = np.array(spring); spring = spring / (np.abs(spring).max() + 1e-9)
+    print(f"real: cabeça dy ±{np.abs(head_dy).max():.0f}px dx ±{np.abs(head_dx).max():.0f}px")
+
 # ---------- render por quadro ----------
 small = (int(cw * SRC_W / W), int(ch * SRC_W / W))
 for f in range(N):
@@ -114,7 +137,14 @@ for f in range(N):
     o = int(40 * t) % 200
     dx = dx + D["hairRipple"] * w_edge * NX[o:o + ch, o:o + cw]
     dy = dy + D["hairRipple"] * w_edge * NY[o:o + ch, o:o + cw]
-    mx, my = xx - dx, yy - dy
+    if REAL:  # substitui todo o movimento sintético pelo medido
+        ear = D["earFlap"] * 1.5 * spring[f]
+        dy = head_dy[f] * w_head + 0.7 * ear * w_ear
+        dx = head_dx[f] * w_head + ear * w_ear * side
+        o = int(25 * t) % 200
+        dx = dx + D["hairRipple"] * (1 + abs(spring[f])) * w_edge * NX[o:o + ch, o:o + cw]
+        dy = dy + D["hairRipple"] * (1 + abs(spring[f])) * w_edge * NY[o:o + ch, o:o + cw]
+    mx, my = (xx - dx).astype(np.float32), (yy - dy).astype(np.float32)
     rgb = cv2.remap(rgb0, mx, my, cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
     a = cv2.remap(a0, mx, my, cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
     rim = cv2.remap(w_rim, mx, my, cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)

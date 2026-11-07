@@ -3,6 +3,7 @@ import { Main } from "./Main";
 import { Cena01Preview } from "./Cena01Preview";
 import { Chegada, CHEGADA_FRAMES } from "./cena01/Chegada";
 import { Cena01POV } from "./cena01pov/Cena01POV";
+import { Cena01POVReal, POV_REAL_FRAMES } from "./cena01pov/Cena01POVReal";
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -13,6 +14,8 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="Cena01Chegada" component={Chegada} durationInFrames={CHEGADA_FRAMES}
       fps={30} width={1080} height={1920} />
     <Composition id="Cena01POV" component={Cena01POV} durationInFrames={150}
+      fps={30} width={1080} height={1920} />
+    <Composition id="Cena01POVReal" component={Cena01POVReal} durationInFrames={POV_REAL_FRAMES}
       fps={30} width={1080} height={1920} />
   </>
 );
