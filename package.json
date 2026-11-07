@@ -1,0 +1,24 @@
+{
+  "name": "videocachorro",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render Main out/video.mp4",
+    "still": "remotion still Main out/frame.png --frame=30",
+    "typecheck": "tsc --noEmit",
+    "runway:check": "node --experimental-strip-types scripts/runway-check.ts"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.541",
+    "@runwayml/sdk": "4.24.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "remotion": "4.0.541"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "typescript": "7.0.2"
+  }
+}
