@@ -47,6 +47,9 @@ DEPOIS = 0.18         # …mantendo o fim natural da palavra anterior
 ANTES = 0.32          # …e a respiração antes da próxima
 ENTRE_FONTES = 0.30   # respiro entre gancho/áudio 1/áudio 2
 FADE = 0.012          # micro-fade em cada corte (sem estalo)
+# Pausas no MEIO de uma frase que não devem existir: (fonte, palavra anterior, próxima) → (depois, antes) em s.
+# Mantém só ~0,2 s (respiro de vírgula) entre as palavras, sem emendar.
+PAUSAS_MEIO_DE_FRASE = {("audio1", "escuro,", "pois"): (0.09, 0.11)}
 # de-esser leve + compressão moderada (a EQ é ajustada já medindo o resultado desta cadeia)
 DINAMICA = "deesser=i=0.35:m=0.5:f=0.5:s=o,acompressor=threshold=-20dB:ratio=2.2:attack=12:release=160:knee=6:makeup=1.5"
 
@@ -124,15 +127,16 @@ def ponto_quieto(x: np.ndarray, a: float, b: float) -> float:
     return a + (int(np.argmin(e)) * (h // 2) + h // 2) / SR
 
 
-def trechos(x: np.ndarray, ws: list[dict]) -> tuple[list[tuple[float, float]], list[dict]]:
+def trechos(x: np.ndarray, ws: list[dict], fonte: str = "") -> tuple[list[tuple[float, float]], list[dict]]:
     """Trechos mantidos (em s da fonte) e registro do que saiu."""
     ini = ponto_quieto(x, ws[0]["s"] - 0.35, ws[0]["s"] - 0.04)
     manter, saiu, a = [], [], ini
     for w0, w1 in zip(ws, ws[1:]):
         gap = w1["s"] - w0["e"]
-        if gap > PAUSA_MAX:
-            c1 = ponto_quieto(x, w0["e"] + DEPOIS - 0.06, w0["e"] + DEPOIS + 0.08)
-            c2 = ponto_quieto(x, w1["s"] - ANTES - 0.08, w1["s"] - ANTES + 0.06)
+        depois, antes = PAUSAS_MEIO_DE_FRASE.get((fonte, w0["w"], w1["w"]), (DEPOIS, ANTES))
+        if gap > PAUSA_MAX or (fonte, w0["w"], w1["w"]) in PAUSAS_MEIO_DE_FRASE:
+            c1 = ponto_quieto(x, w0["e"] + depois - 0.04, w0["e"] + depois + 0.05)
+            c2 = ponto_quieto(x, w1["s"] - antes - 0.05, w1["s"] - antes + 0.04)
             manter.append((a, c1))
             saiu.append({"de": round(c1, 2), "ate": round(c2, 2), "motivo": f"pausa de {gap:.2f}s encurtada"})
             a = c2
@@ -163,7 +167,7 @@ def main() -> None:
         ffmpeg("-i", str(limpo), "-af", loudnorm_linear(["-i", str(limpo)], cadeia, -16), "-ar", str(SR),
                str(fim_trat))
         xt, xo = ler(fim_trat), ler(bruto)
-        manter, saiu = trechos(xt, ws)
+        manter, saiu = trechos(xt, ws, fonte["id"])
         cortes.append({"fonte": fonte["id"], "eq_db": dict(zip([f"{a}-{b}" for a, b in BANDAS],
                                                              [round(g, 1) for g in ganhos])),
                        "mantido": [[round(a, 2), round(b, 2)] for a, b in manter], "removido": saiu})
