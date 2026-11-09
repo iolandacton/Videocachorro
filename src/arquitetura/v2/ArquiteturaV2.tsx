@@ -137,15 +137,15 @@ const LegendaView: React.FC<{ l: Legenda; t: number }> = ({ l, t }) => {
   return (
     <AbsoluteFill style={{ alignItems: "center", pointerEvents: "none" }}>
       <div style={{ position: "absolute", top: 1000, width: 860, textAlign: "center", fontFamily: FONTE,
-        fontWeight: 500, fontSize: 50, lineHeight: 1.28, color: BRANCO, opacity: entra * sai,
+        fontWeight: 400, fontSize: 48, lineHeight: 1.3, color: BRANCO, opacity: entra * sai,
         transform: `translateY(${10 * (1 - entra)}px)`, letterSpacing: `${0.03 - 0.018 * entra}em`,
-        textShadow: "0 1px 3px rgba(0,0,0,0.45), 0 3px 22px rgba(0,0,0,0.42)" }}>
+        textShadow: "0 1px 2px rgba(0,0,0,0.35), 0 2px 18px rgba(0,0,0,0.38)" }}>
         {/* halo escuro e difuso atrás do texto: legível sobre fundos claros sem "caixa" */}
         <div style={{ position: "absolute", inset: "-40px -70px", zIndex: -1, borderRadius: "50%",
           background: "radial-gradient(ellipse at center, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0) 70%)" }} />
         {l.palavras.map(([w], i) => {
           const d = dest.includes(w.toLowerCase().replace(/[.,?!]/g, ""));
-          return <span key={i} style={{ color: d ? AREIA : BRANCO, fontWeight: d ? 600 : 500 }}>{w}{" "}</span>;
+          return <span key={i} style={{ color: d ? AREIA : BRANCO, fontWeight: d ? 500 : 400 }}>{w}{" "}</span>;
         })}
       </div>
     </AbsoluteFill>
