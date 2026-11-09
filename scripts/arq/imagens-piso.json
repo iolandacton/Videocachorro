@@ -1,0 +1,17 @@
+{
+  "teto": 10,
+  "modelo": "gen4_image",
+  "ratio": "1080:1920",
+  "estilo": "Vertical editorial interior photograph for an architecture magazine, photorealistic, natural daylight, straight vertical lines, correct perspective, realistic materials and proportions, no people, no text, no logos, no distortion.",
+  "imagens": [
+    {
+      "id": "porcelanato_grama_v2",
+      "uso": "\"porcelanato que imita a grama\" — referências da cliente (piso cerâmico rústico gramado / garden)",
+      "refs": [
+        { "arquivo": "refs/arq/piso_grama_textura.png", "tag": "estampa" },
+        { "arquivo": "refs/arq/piso_grama_ambiente.png", "tag": "assentado" }
+      ],
+      "prompt": "Apartment balcony floor covered with square ceramic floor tiles printed with exactly the pattern of @estampa: pale irregular stones separated by printed green grass, an obviously artificial printed look with a slight glossy sheen, visible straight tile joints forming a square grid, laid the same way as the floor in @assentado. Glass railing, one simple outdoor armchair, soft city daylight."
+    }
+  ]
+}

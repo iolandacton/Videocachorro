@@ -5,8 +5,9 @@
 // - Sem novas tentativas automáticas (maxRetries=0 na criação).
 // Uso: NODE_USE_ENV_PROXY=1 RUNWAYML_API_SECRET=proxy-injected \
 //      node --experimental-strip-types --no-warnings scripts/arq/gerar-imagens.ts scripts/arq/imagens-previa.json --confirmo-gasto
-import RunwayML from "@runwayml/sdk";
+import RunwayML, { toFile } from "@runwayml/sdk";
 import { readFile, writeFile, mkdir, access } from "node:fs/promises";
+import { basename } from "node:path";
 
 const [specPath] = process.argv.slice(2);
 if (!specPath || !process.argv.includes("--confirmo-gasto")) {
@@ -30,10 +31,16 @@ for (const img of spec.imagens) {
     console.log(`= ${img.id}: já existe, pulando`);
     continue;
   }
+  // referências opcionais: [{arquivo, tag}] → upload efêmero (gratuito), citadas no prompt como @tag
+  const referenceImages = img.refs ? await Promise.all(img.refs.map(async (r: any) => ({
+    tag: r.tag,
+    uri: (await reader.uploads.createEphemeral({ file: await toFile(await readFile(r.arquivo), basename(r.arquivo)) })).uri,
+  }))) : undefined;
   const t = await once.textToImage.create({
     model: spec.modelo,
     ratio: spec.ratio,
     promptText: `${img.prompt} ${spec.estilo}`,
+    ...(referenceImages ? { referenceImages } : {}),
   } as any);
   const custo = (t as any).estimatedCost?.credits ?? 0;
   if (gasto + custo > spec.teto) {
@@ -50,5 +57,5 @@ for (const img of spec.imagens) {
   console.log(`✓ ${img.id} (${custo} créditos) → ${destino}`);
 }
 const depois = (await reader.organization.retrieve()).creditBalance;
-await writeFile(`${OUT}/registro.json`, JSON.stringify({ antes, depois, registro }, null, 1));
+await writeFile(`${OUT}/registro-${basename(specPath, ".json")}.json`, JSON.stringify({ antes, depois, registro }, null, 1));
 console.log(`Saldo depois: ${depois} | consumido: ${antes - depois}`);

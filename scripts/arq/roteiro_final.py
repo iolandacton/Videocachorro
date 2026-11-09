@@ -59,7 +59,7 @@ cenas = [
     {"split": ["bege", "cinza"], "de": T(A1, "puxando pro bege"), "mov": "parado", "entrada": "split"},
     {"img": "vivencia", "de": T(A1, "mas nada muito escuro") + 0.5, "mov": "lateral", "entrada": "dissolve"},
     {"img": "tijolinho_fake", "de": T(A1, "Revestimento fake") - 0.41, "mov": "lateral", "entrada": "linha-vertical"},
-    {"img": "porcelanato_grama", "de": T(A1, "porcelanato que imita") - 0.16, "mov": "pushin", "entrada": "dissolve"},
+    {"img": "porcelanato_grama_v2", "de": T(A1, "porcelanato que imita") - 0.16, "mov": "pushin", "entrada": "dissolve"},
     {"img": "papel_marmorizado_v2", "de": T(A1, "papel de parede marmorizado") - 0.15, "mov": "pullout",
      "entrada": "linha-horizontal"},
     {"img": "quarto_crianca", "de": T(A1, "Papel de parede só") - 0.2, "mov": "pushin", "entrada": "dissolve"},
