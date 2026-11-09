@@ -27,6 +27,11 @@ npm run edit -- video.mp4 --srt out/<nome>/legendas.srt   # re-render com legend
 ```
 
 Opções: `--modelo small|medium|large-v3` (padrão `medium`), `--sem-estabilizar`, `--sem-legendas`.
+
+Música de fundo: por padrão gera uma trilha lo-fi original (`pipeline/musica.py`, sem licença de
+terceiros), que abaixa sozinha quando há fala (ducking) e fica ~17 dB abaixo da voz.
+`--musica caminho.mp3` usa uma faixa sua (em loop), `--musica nenhuma` desliga, e
+`--nivel-musica -31` ajusta o volume (LUFS; mais negativo = mais baixo).
 O modelo Whisper (~1,5 GB) é baixado do Hugging Face na primeira execução.
 
 ## Runway

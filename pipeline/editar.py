@@ -59,21 +59,45 @@ def probe(path: Path) -> dict:
 
 
 # ---------- 1. Áudio ----------
-def limpar_audio(src: Path, dst: Path) -> dict:
-    """Redução de ruído adaptativa + compressão leve + loudnorm em duas passadas."""
+def loudnorm_linear(entrada: list[str], cadeia: str, alvo: float) -> str:
+    """Devolve a cadeia + loudnorm em modo linear (ganho fixo: não levanta o ruído das pausas)."""
+    medida = ffmpeg(*entrada, "-af", f"{cadeia},loudnorm=I={alvo}:TP=-1.5:LRA=11:print_format=json",
+                    "-f", "null", "-")
+    j = json.loads(medida[medida.rindex("{"):medida.rindex("}") + 1])
+    return (f"{cadeia},loudnorm=I={alvo}:TP=-1.5:LRA=11:measured_I={j['input_i']}:"
+            f"measured_TP={j['input_tp']}:measured_LRA={j['input_lra']}:"
+            f"measured_thresh={j['input_thresh']}:offset={j['target_offset']}:linear=true")
+
+
+def limpar_voz(src: Path, dst: Path, alvo: float) -> dict:
+    """Ruído de banda larga (afftdn) + ruído de sala (anlmdn) + EQ de clareza + compressão
+    leve + gate DEPOIS da compressão (silencia reverberação/fundo entre frases)."""
     stats = ffmpeg("-i", str(src), "-vn", "-af", "astats=metadata=0", "-f", "null", "-")
     m = re.findall(r"Noise floor dB: (-?[\d.]+)", stats)
-    piso = max(-80.0, min(-20.0, float(m[-1]))) if m else -45.0
-    base = (f"highpass=f=80,afftdn=nr=10:nf={piso:.0f}:tn=1,"
-            "acompressor=threshold=-21dB:ratio=2.5:attack=8:release=160:makeup=1.5")
-    medida = ffmpeg("-i", str(src), "-vn", "-af",
-                    f"{base},loudnorm=I=-14:TP=-1.5:LRA=11:print_format=json", "-f", "null", "-")
-    j = json.loads(medida[medida.rindex("{"):medida.rindex("}") + 1])
-    ln = (f"loudnorm=I=-14:TP=-1.5:LRA=11:measured_I={j['input_i']}:measured_TP={j['input_tp']}:"
-          f"measured_LRA={j['input_lra']}:measured_thresh={j['input_thresh']}:"
-          f"offset={j['target_offset']}:linear=true")
-    ffmpeg("-i", str(src), "-vn", "-af", f"{base},{ln}", "-ar", "48000", "-ac", "2", str(dst))
-    return {"piso_ruido_db": piso, "lufs_entrada": float(j["input_i"])}
+    piso = max(-70.0, min(-25.0, float(m[-1]) - 10)) if m else -50.0
+    cadeia = (f"highpass=f=90,afftdn=nr=12:nf={piso:.0f}:tn=1,anlmdn=s=3:p=0.002:r=0.006,"
+              "equalizer=f=280:t=q:w=1.2:g=-2,equalizer=f=3200:t=q:w=1.5:g=2,"
+              "acompressor=threshold=-22dB:ratio=2.5:attack=8:release=160:makeup=2,"
+              "agate=threshold=0.03:ratio=3:range=0.1:attack=5:release=300:knee=4")
+    ffmpeg("-i", str(src), "-vn", "-af", loudnorm_linear(["-i", str(src), "-vn"], cadeia, alvo),
+           "-ar", "48000", "-ac", "2", str(dst))
+    return {"piso_ruido_db": piso}
+
+
+def mixar_musica(voz: Path, musica: Path, dst: Path, dur: float, nivel_lufs: float) -> None:
+    """Música em loop sob a voz, com ducking (abaixa sozinha quando há fala), fades e limiter."""
+    ajuste = nivel_lufs - lufs(musica)
+    fc = (f"[1:a]volume={ajuste:.2f}dB,atrim=0:{dur:.3f},afade=t=in:d=1,"
+          f"afade=t=out:st={max(dur - 1.8, 0):.3f}:d=1.8,aformat=sample_rates=48000:channel_layouts=stereo[m];"
+          "[0:a]asplit=2[v][sc];"
+          "[m][sc]sidechaincompress=threshold=0.05:ratio=2:attack=40:release=600:knee=4[md];"
+          "[v][md]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.84:level=false")
+    tmp = dst.with_suffix(".tmp.wav")
+    ffmpeg("-i", str(voz), "-stream_loop", "-1", "-i", str(musica), "-filter_complex", fc,
+           "-ar", "48000", str(tmp))
+    ffmpeg("-i", str(tmp), "-af", loudnorm_linear(["-i", str(tmp)], "anull", -14), "-ar", "48000",
+           str(dst))
+    tmp.unlink()
 
 
 # ---------- 2. Estabilização ----------
@@ -163,6 +187,9 @@ def main() -> None:
     ap.add_argument("--srt", type=Path, help="usar legenda revisada em vez de transcrever")
     ap.add_argument("--sem-estabilizar", action="store_true")
     ap.add_argument("--sem-legendas", action="store_true")
+    ap.add_argument("--musica", default="gerar", help="gerar | nenhuma | caminho de um arquivo de áudio")
+    ap.add_argument("--nivel-musica", type=float, default=-31,
+                    help="loudness da música antes do ducking (LUFS); voz fica em -16")
     a = ap.parse_args()
 
     src = a.video.resolve()
@@ -172,8 +199,22 @@ def main() -> None:
     out.mkdir(parents=True, exist_ok=True)
     print(f"• Fonte: {v['width']}x{v['height']} → {out}/")
 
-    print("• Áudio: redução de ruído + loudnorm -14 LUFS")
-    info = limpar_audio(src, out / "audio_limpo.wav")
+    dur = float(probe(src)["format"]["duration"])
+    com_musica = a.musica != "nenhuma"
+    print("• Voz: redução de ruído, EQ, compressão e gate")
+    info = limpar_voz(src, out / "audio_limpo.wav", -16 if com_musica else -14)
+    audio_final = "audio_limpo.wav"
+    if com_musica:
+        if a.musica == "gerar":
+            from musica import gerar, salvar
+            trilha = out / "musica.wav"
+            salvar(gerar(dur, 84, 3), trilha)
+            print("• Música: trilha lo-fi original gerada")
+        else:
+            trilha = Path(a.musica).resolve()
+            print(f"• Música: {trilha.name}")
+        mixar_musica(out / "audio_limpo.wav", trilha, out / "audio_final.wav", dur, a.nivel_musica)
+        audio_final = "audio_final.wav"
 
     vf = []
     if not a.sem_estabilizar:
@@ -201,7 +242,7 @@ def main() -> None:
         vf.append("ass=legendas.ass")
 
     print(f"• Export {a.res}: x264 CRF 17, AAC 192k")
-    ffmpeg("-i", str(src), "-i", "audio_limpo.wav", "-map", "0:v:0", "-map", "1:a:0",
+    ffmpeg("-i", str(src), "-i", audio_final, "-map", "0:v:0", "-map", "1:a:0",
            "-vf", ",".join(vf), "-c:v", "libx264", "-preset", "slow", "-crf", "17",
            "-profile:v", "high", "-pix_fmt", "yuv420p", "-color_primaries", "bt709",
            "-color_trc", "bt709", "-colorspace", "bt709", "-movflags", "+faststart",
@@ -214,8 +255,7 @@ def main() -> None:
 
     fv = next(s for s in probe(out / "final.mp4")["streams"] if s["codec_type"] == "video")
     print(f"✓ {out}/final.mp4  {fv['width']}x{fv['height']}  "
-          f"loudness {info['lufs_entrada']:.1f} → {lufs(out / 'final.mp4'):.1f} LUFS  "
-          f"(piso de ruído {info['piso_ruido_db']:.0f} dB)")
+          f"loudness final {lufs(out / 'final.mp4'):.1f} LUFS  (piso de ruído {info['piso_ruido_db']:.0f} dB)")
 
 
 if __name__ == "__main__":
