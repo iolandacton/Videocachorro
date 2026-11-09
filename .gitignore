@@ -11,3 +11,4 @@ public/cena01pov/dog_real/
 public/cena01pov/plate_real/
 public/arq/*
 !public/arq/img/
+__pycache__/
