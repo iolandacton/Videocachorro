@@ -69,7 +69,7 @@
    "ate": 22.6
   },
   {
-   "img": "porcelanato_grama_v2",
+   "img": "porcelanato_grama_v3",
    "de": 22.6,
    "mov": "pushin",
    "entrada": "dissolve",
@@ -632,6 +632,7 @@
    "tEsq": 45.49,
    "dir": "durabilidade",
    "tDir": 46.87,
+   "layout": "diagonal",
    "ate": 48.85
   }
  ],

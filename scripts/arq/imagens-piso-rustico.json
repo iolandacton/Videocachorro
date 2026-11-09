@@ -1,0 +1,17 @@
+{
+  "teto": 10,
+  "modelo": "gen4_image",
+  "ratio": "1080:1920",
+  "estilo": "Vertical editorial interior photograph for an architecture magazine, photorealistic, natural daylight, straight vertical lines, correct perspective, realistic materials and proportions, no people, no text, no logos, no distortion.",
+  "imagens": [
+    {
+      "id": "porcelanato_grama_v3",
+      "uso": "\"porcelanato que imita a grama\" — estilo Rústico Gramado escolhido pela cliente",
+      "refs": [
+        { "arquivo": "refs/arq/piso_rustico_estampa.png", "tag": "estampa" },
+        { "arquivo": "refs/arq/piso_rustico_ambiente.png", "tag": "terraco" }
+      ],
+      "prompt": "Residential outdoor terrace floor covered with square ceramic floor tiles printed with exactly the pattern of @estampa: small rustic cobblestones in earthy brown, beige and gray tones separated by printed green grass joints, an obviously artificial printed look, visible straight tile joints forming a square grid, same kind of floor as in @terraco. A rattan armchair with beige cushions and a cream plaster wall, warm daylight."
+    }
+  ]
+}

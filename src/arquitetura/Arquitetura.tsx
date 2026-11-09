@@ -20,7 +20,8 @@ type Cena = {
 };
 type Legenda = { de: number; ate: number; destaque?: string[]; palavras: [string, number][] };
 type Chave = { linha1: string; t1: number; linha2?: string; t2?: number; ate: number };
-type Par = { esq: string; tEsq: number; dir: string; tDir: number; ate: number };
+// "lado": cada palavra centrada na sua metade (tela dividida); "diagonal": esquerda em cima, direita embaixo
+type Par = { esq: string; tEsq: number; dir: string; tDir: number; ate: number; layout?: "lado" | "diagonal" };
 type Lista = { tipo: "x" | "check"; itens: { texto: string; t: number }[]; ate?: number };
 
 export type Roteiro = {
@@ -184,14 +185,19 @@ const ChaveView: React.FC<{ k: Chave; t: number }> = ({ k, t }) => {
 const ParView: React.FC<{ p: Par; t: number }> = ({ p, t }) => {
   if (t < p.tEsq - 0.1 || t > p.ate + 0.5) return null;
   const sai = rampa(t, p.ate, p.ate + 0.45);
+  const diagonal = p.layout === "diagonal";
   const lado = (texto: string, ts: number, direita: boolean) => {
     const e = rampa(t, ts, ts + 0.55);
+    const pos: React.CSSProperties = diagonal
+      ? { top: direita ? 1040 : 700, left: 84, right: 84, textAlign: direita ? "right" : "left" }
+      : { top: 860, width: "50%", left: direita ? "50%" : 0, textAlign: "center" };
+    const fs = diagonal ? Math.min(84, 880 / texto.length) : Math.min(70, 470 / (texto.length * 0.95));
     return (
-      <div style={{ position: "absolute", top: 860, width: "50%", left: direita ? "50%" : 0,
-        textAlign: "center", opacity: e }}>
-        <Mascara e={e}><div style={{ fontWeight: 300, fontSize: Math.min(70, 470 / (texto.length * 0.95)),
-          letterSpacing: `${0.42 - 0.14 * e}em`, paddingLeft: "0.28em" }}>{texto.toUpperCase()}</div></Mascara>
-        <div style={{ height: 2, background: AREIA, margin: "18px auto 0", width: 120 * e }} />
+      <div style={{ position: "absolute", opacity: e, ...pos }}>
+        <Mascara e={e}><div style={{ fontWeight: 400, fontSize: fs,
+          letterSpacing: `${0.42 - 0.14 * e}em`, paddingLeft: diagonal ? 0 : "0.28em" }}>{texto.toUpperCase()}</div></Mascara>
+        <div style={{ height: 2, background: AREIA, marginTop: 18, width: 120 * e,
+          marginLeft: diagonal && direita ? "auto" : diagonal ? 0 : "auto", marginRight: diagonal && !direita ? 0 : "auto" }} />
       </div>
     );
   };
@@ -265,14 +271,15 @@ export const Arquitetura: React.FC<{ roteiro: Roteiro; audio: string }> = ({ rot
   const { fps } = useVideoConfig();
   const t = frame / fps;
   const chaves = roteiro.palavrasChave ?? [];
-  const escurece = Math.max(0, ...chaves.map((k) =>
-    0.28 * rampa(t, k.t1 - 0.2, k.t1 + 0.3) * (1 - rampa(t, k.ate, k.ate + 0.5))));
+  const escurece = Math.max(0,
+    ...chaves.map((k) => 0.28 * rampa(t, k.t1 - 0.2, k.t1 + 0.3) * (1 - rampa(t, k.ate, k.ate + 0.5))),
+    ...(roteiro.pares ?? []).map((p) => 0.3 * rampa(t, p.tEsq - 0.2, p.tEsq + 0.3) * (1 - rampa(t, p.ate, p.ate + 0.5))));
   const fimFade = rampa(t, roteiro.duracao - 0.7, roteiro.duracao);
   return (
     <AbsoluteFill style={{ background: "#111" }}>
       {roteiro.cenas.map((c, i) => <CenaView key={i} c={c} t={t} fps={fps} />)}
       {/* leitura: degradê embaixo e no canto da lista, vinheta suave */}
-      <AbsoluteFill style={{ background: "linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 38%)" }} />
+      <AbsoluteFill style={{ background: "linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.32) 34%, rgba(0,0,0,0) 52%)" }} />
       <AbsoluteFill style={{ background: "linear-gradient(165deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.25) 26%, rgba(0,0,0,0) 44%)" }} />
       <AbsoluteFill style={{ background: "radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.35) 100%)" }} />
       <AbsoluteFill style={{ background: `rgba(0,0,0,${escurece})` }} />

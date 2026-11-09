@@ -1,25 +1,60 @@
 {
- "antes": 4800,
- "depois": 4768,
+ "antes": 4768,
+ "depois": 4672,
  "registro": [
   {
-   "id": "base_clean",
-   "task": "6a294670-3acb-4c36-8881-8390168bf457",
+   "id": "papel_marmorizado_v2",
+   "task": "7a8aca5d-e057-461c-a55a-8bc1d2e24160",
    "custo": 8
   },
   {
-   "id": "tijolinho_fake",
-   "task": "12fb2af6-6d71-4d01-878d-f74be68dd64f",
+   "id": "sala_escura",
+   "task": "1c881696-5342-4425-96f9-6fd3a46d80a1",
    "custo": 8
   },
   {
-   "id": "porcelanato_grama",
-   "task": "e07ba0bf-b027-4596-8d9f-d7600b34a449",
+   "id": "bege",
+   "task": "062cdf45-4196-40b1-b17e-20da4c80fc2a",
    "custo": 8
   },
   {
-   "id": "papel_marmorizado",
-   "task": "f513d912-26c4-4acb-8254-6784b8d0de2a",
+   "id": "cinza",
+   "task": "5cc29396-e932-47fe-95d6-03ebed68983b",
+   "custo": 8
+  },
+  {
+   "id": "vivencia",
+   "task": "4a4ebcbb-d943-402d-9652-c5d8bf40087d",
+   "custo": 8
+  },
+  {
+   "id": "quarto_crianca",
+   "task": "9f2e8280-53ef-4a6d-84f3-1285629ce45a",
+   "custo": 8
+  },
+  {
+   "id": "papel_descolando",
+   "task": "01342c93-752f-4083-8d2b-2a4331757314",
+   "custo": 8
+  },
+  {
+   "id": "pedra_natural",
+   "task": "97b2a928-c4c7-4e74-8962-67d921f5d2c1",
+   "custo": 8
+  },
+  {
+   "id": "granito",
+   "task": "799f1a2d-6d47-4501-8600-4be41bb6c71d",
+   "custo": 8
+  },
+  {
+   "id": "mesa_pedra",
+   "task": "c2e9d4f9-d5f4-45c1-ae5e-daf1b9b36321",
+   "custo": 8
+  },
+  {
+   "id": "atemporal",
+   "task": "73d4c0b8-df0c-4664-ad4e-8838a4ba2764",
    "custo": 8
   }
  ]
