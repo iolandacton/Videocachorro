@@ -12,3 +12,7 @@ public/cena01pov/plate_real/
 public/arq/*
 !public/arq/img/
 __pycache__/
+.tools/
+public/arq_v2/voz/
+public/arq_v2/mix/
+public/arq_v2/takes/

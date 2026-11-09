@@ -7,6 +7,8 @@ import { Cena01POVReal, POV_REAL_FRAMES } from "./cena01pov/Cena01POVReal";
 import { Arquitetura, type Roteiro } from "./arquitetura/Arquitetura";
 import previa from "./arquitetura/previa.json";
 import final from "./arquitetura/final.json";
+import { ArquiteturaV2, type Roteiro as RoteiroV2 } from "./arquitetura/v2/ArquiteturaV2";
+import finalV2 from "./arquitetura/v2/final_v2.json";
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -26,5 +28,9 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="ArqFinal" component={Arquitetura}
       durationInFrames={Math.round(final.duracao * final.fps)} fps={final.fps} width={1080} height={1920}
       defaultProps={{ roteiro: final as unknown as Roteiro, audio: "arq/final/audio.wav" }} />
+    {/* V2: cópia de trabalho para as prévias A–D. A ArqFinal acima continua sendo a versão aprovada. */}
+    <Composition id="ArqV2" component={ArquiteturaV2}
+      durationInFrames={Math.round(finalV2.duracao * finalV2.fps)} fps={finalV2.fps} width={1080} height={1920}
+      defaultProps={{ roteiro: finalV2 as unknown as RoteiroV2, audio: "arq_v2/mix/audio.wav" }} />
   </>
 );
