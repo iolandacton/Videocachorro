@@ -8,6 +8,8 @@
     "render": "remotion render Main out/video.mp4",
     "still": "remotion still Main out/frame.png --frame=30",
     "typecheck": "tsc --noEmit",
+    "setup:edit": "python3 -m venv .venv && .venv/bin/pip install -r pipeline/requirements.txt",
+    "edit": ".venv/bin/python pipeline/editar.py",
     "runway:check": "node --experimental-strip-types --no-warnings scripts/runway-check.ts",
     "render:cena01": "remotion render Cena01Preview out/cena01_preview.mp4 --codec=h264 --crf=18",
     "render:chegada": "remotion render Cena01Chegada out/cena01_chegada_raw.mp4 --codec=h264 --crf=16 --concurrency=4",

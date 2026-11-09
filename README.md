@@ -13,6 +13,22 @@ Vídeos programáticos com [Remotion](https://www.remotion.dev) + geração com 
 | `npm run typecheck` | Verifica os tipos TypeScript |
 | `npm run runway:check` | Mostra os créditos da conta Runway (gratuito, não gera nada) |
 
+## Edição automática (local e gratuita)
+
+`pipeline/editar.py` trata um vídeo com fala usando só FFmpeg + faster-whisper (sem APIs pagas):
+redução de ruído adaptativa e loudnorm (-14 LUFS), estabilização (vid.stab), correção de cor,
+transcrição PT-BR com tempo por palavra, legendas discretas (Inter, terço inferior) e export x264 CRF 17.
+
+```bash
+npm run setup:edit                          # uma vez: cria .venv e instala o faster-whisper
+npm run edit -- video.mp4                   # saída em out/<nome>/final.mp4
+npm run edit -- video.mp4 --res 4k          # export em 2160x3840
+npm run edit -- video.mp4 --srt out/<nome>/legendas.srt   # re-render com legenda revisada
+```
+
+Opções: `--modelo small|medium|large-v3` (padrão `medium`), `--sem-estabilizar`, `--sem-legendas`.
+O modelo Whisper (~1,5 GB) é baixado do Hugging Face na primeira execução.
+
 ## Runway
 
 1. Crie uma chave em https://dev.runwayml.com.
