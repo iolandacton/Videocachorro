@@ -84,7 +84,8 @@ def limpar_voz(src: Path, dst: Path, alvo: float) -> dict:
     return {"piso_ruido_db": piso}
 
 
-def mixar_musica(voz: Path, musica: Path, dst: Path, dur: float, nivel_lufs: float) -> None:
+def mixar_musica(voz: Path, musica: Path, dst: Path, dur: float, nivel_lufs: float,
+                 alvo: float = -14) -> None:
     """Música em loop sob a voz, com ducking (abaixa sozinha quando há fala), fades e limiter."""
     ajuste = nivel_lufs - lufs(musica)
     fc = (f"[1:a]volume={ajuste:.2f}dB,atrim=0:{dur:.3f},afade=t=in:d=1,"
@@ -95,7 +96,7 @@ def mixar_musica(voz: Path, musica: Path, dst: Path, dur: float, nivel_lufs: flo
     tmp = dst.with_suffix(".tmp.wav")
     ffmpeg("-i", str(voz), "-stream_loop", "-1", "-i", str(musica), "-filter_complex", fc,
            "-ar", "48000", str(tmp))
-    ffmpeg("-i", str(tmp), "-af", loudnorm_linear(["-i", str(tmp)], "anull", -14), "-ar", "48000",
+    ffmpeg("-i", str(tmp), "-af", loudnorm_linear(["-i", str(tmp)], "anull", alvo), "-ar", "48000",
            str(dst))
     tmp.unlink()
 

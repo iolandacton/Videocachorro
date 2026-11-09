@@ -2,7 +2,9 @@
 """Áudio de um roteiro de arquitetura: voz tratada + efeitos sutis + música com ducking.
 
 Lê o JSON do roteiro (src/arquitetura/*.json) e grava public/arq/<nome>/audio.wav.
-Uso: .venv/bin/python pipeline/arq_audio.py src/arquitetura/previa.json
+"audio" pode ser um trecho ou uma lista de trechos {arquivo, inicio, fim, em}: cada trecho
+recebe exatamente o mesmo tratamento de voz e é posicionado no tempo "em" do vídeo.
+Uso: .venv/bin/python pipeline/arq_audio.py src/arquitetura/final.json
 """
 from __future__ import annotations
 
@@ -25,34 +27,49 @@ SFX = {
 }
 
 
+def faixa(eventos: list[tuple[Path | str, float]], dur: float, destino: Path, lavfi: bool = False) -> None:
+    """Posiciona cada fonte no seu tempo e soma tudo numa faixa estéreo de duração fixa."""
+    entradas, filtros = [], []
+    for i, (src, t) in enumerate(eventos):
+        if lavfi:
+            fonte, fx = SFX[src]
+            entradas += ["-f", "lavfi", "-i", fonte]
+            pre = f"{fx},"
+        else:
+            entradas += ["-i", str(src)]
+            pre = ""
+        ms = int(t * 1000)
+        filtros.append(f"[{i}:a]{pre}aformat=sample_rates=48000:channel_layouts=stereo,adelay={ms}|{ms}[s{i}]")
+    n = len(eventos)
+    fc = ";".join(filtros) + ";" + "".join(f"[s{i}]" for i in range(n)) + \
+        f"amix=inputs={n}:normalize=0,apad,atrim=0:{dur}"
+    ffmpeg(*entradas, "-filter_complex", fc, "-ar", "48000", str(destino))
+
+
 def main(roteiro: Path) -> None:
     r = json.loads(roteiro.read_text(encoding="utf-8"))
     out = Path("public/arq") / roteiro.stem
     out.mkdir(parents=True, exist_ok=True)
-    a, dur = r["audio"], r["duracao"]
+    dur = r["duracao"]
+    trechos = r["audio"] if isinstance(r["audio"], list) else [{**r["audio"], "em": 0}]
 
-    corte = out / "voz_corte.wav"
-    ffmpeg("-ss", str(a["inicio"]), "-to", str(a["fim"]), "-i", a["arquivo"], "-ac", "2",
-           "-ar", "48000", str(corte))
-    limpar_voz(corte, out / "voz.wav", -16)
-
-    # trilha de efeitos: cada efeito no seu tempo exato
-    entradas, filtros = [], []
-    for i, e in enumerate(r["sfx"]):
-        src, fx = SFX[e["tipo"]]
-        entradas += ["-f", "lavfi", "-i", src]
-        ms = int(e["t"] * 1000)
-        filtros.append(f"[{i}:a]{fx},aformat=channel_layouts=stereo,adelay={ms}|{ms}[s{i}]")
-    n = len(r["sfx"])
-    fc = ";".join(filtros) + ";" + "".join(f"[s{i}]" for i in range(n)) + \
-        f"amix=inputs={n}:normalize=0,apad,atrim=0:{dur}"
-    ffmpeg(*entradas, "-filter_complex", fc, "-ar", "48000", str(out / "sfx.wav"))
+    vozes = []
+    for i, a in enumerate(trechos):
+        corte, limpa = out / f"corte_{i}.wav", out / f"voz_{i}.wav"
+        ffmpeg("-ss", str(a["inicio"]), "-to", str(a["fim"]), "-i", a["arquivo"], "-vn", "-ac", "2",
+               "-ar", "48000", str(corte))
+        limpar_voz(corte, limpa, -16)  # mesmo tratamento e mesmo nível para todo trecho
+        corte.unlink()
+        vozes.append((limpa, a["em"]))
+    faixa(vozes, dur, out / "voz.wav")
+    faixa([(e["tipo"], e["t"]) for e in r["sfx"]], dur, out / "sfx.wav", lavfi=True)
 
     ffmpeg("-i", str(out / "voz.wav"), "-i", str(out / "sfx.wav"), "-filter_complex",
            "[0:a][1:a]amix=inputs=2:normalize=0:duration=first", "-ar", "48000", str(out / "voz_sfx.wav"))
     salvar(gerar(dur, 80, 7), out / "musica.wav")
-    mixar_musica(out / "voz_sfx.wav", out / "musica.wav", out / "audio.wav", dur, -31)
-    for f in ("voz_corte.wav", "voz_sfx.wav"):
+    # voz e música mantêm a proporção; "lufs" define o volume final (mais negativo = mais baixo)
+    mixar_musica(out / "voz_sfx.wav", out / "musica.wav", out / "audio.wav", dur, -31, r.get("lufs", -14))
+    for f in ["voz_sfx.wav", *[v.name for v, _ in vozes]]:
         (out / f).unlink()
     print(out / "audio.wav")
 

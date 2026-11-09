@@ -1,36 +1,163 @@
 {
-  "_fonte": "Tempos do áudio 1 (faster-whisper, palavra a palavra). t = segundos desde o início da prévia.",
-  "fps": 30,
-  "duracao": 11.0,
-  "audio": { "arquivo": "public/originais/arquitetura_audio_1.mp3", "inicio": 12.45, "fim": 23.45 },
-  "cenas": [
-    { "img": "base_clean", "de": 0, "ate": 3.8, "mov": "pushin" },
-    { "img": "tijolinho_fake", "de": 3.8, "ate": 6.25, "mov": "lateral", "entrada": "linha-vertical" },
-    { "img": "porcelanato_grama", "de": 6.25, "ate": 8.1, "mov": "pushin", "entrada": "dissolve" },
-    { "img": "papel_marmorizado", "de": 8.1, "ate": 11.0, "mov": "pullout", "entrada": "linha-horizontal" }
-  ],
-  "legendas": [
-    { "de": 0.07, "ate": 2.6, "destaque": "vivência",
-      "palavras": [["pois", 0.07], ["acho", 0.25], ["que", 0.55], ["dificulta", 0.79], ["a", 1.25], ["vivência", 1.33], ["no", 1.61], ["ambiente.", 1.77]] },
-    { "de": 9.57, "ate": 11.0,
-      "palavras": [["eu", 9.57], ["procuro", 9.95], ["não", 10.21], ["usar.", 10.47]] }
-  ],
-  "palavraChave": { "linha1": "REVESTIMENTO", "t1": 4.21, "linha2": "FAKE", "t2": 4.73, "ate": 5.4 },
-  "lista": {
-    "tipo": "x",
-    "itens": [
-      { "texto": "Preto em excesso", "t": -10 },
-      { "texto": "Tijolinho fake", "t": 5.45 },
-      { "texto": "Porcelanato que imita grama", "t": 6.41 },
-      { "texto": "Papel de parede marmorizado", "t": 8.25 }
-    ]
+ "_fonte": "Tempos do áudio 1 (faster-whisper, palavra a palavra). t = segundos desde o início da prévia.",
+ "fps": 30,
+ "duracao": 11.0,
+ "audio": {
+  "arquivo": "public/originais/arquitetura_audio_1.mp3",
+  "inicio": 12.45,
+  "fim": 23.45
+ },
+ "cenas": [
+  {
+   "img": "base_clean",
+   "de": 0,
+   "ate": 3.8,
+   "mov": "pushin"
   },
-  "sfx": [
-    { "t": 3.62, "tipo": "whoosh" },
-    { "t": 4.13, "tipo": "ar" },
-    { "t": 5.45, "tipo": "clique" },
-    { "t": 6.41, "tipo": "clique" },
-    { "t": 7.92, "tipo": "whoosh" },
-    { "t": 8.25, "tipo": "clique" }
-  ]
+  {
+   "img": "tijolinho_fake",
+   "de": 3.8,
+   "ate": 6.25,
+   "mov": "lateral",
+   "entrada": "linha-vertical"
+  },
+  {
+   "img": "porcelanato_grama",
+   "de": 6.25,
+   "ate": 8.1,
+   "mov": "pushin",
+   "entrada": "dissolve"
+  },
+  {
+   "img": "papel_marmorizado_v2",
+   "de": 8.1,
+   "ate": 11.0,
+   "mov": "pullout",
+   "entrada": "linha-horizontal"
+  }
+ ],
+ "legendas": [
+  {
+   "de": 0.07,
+   "ate": 2.6,
+   "destaque": [
+    "vivência"
+   ],
+   "palavras": [
+    [
+     "pois",
+     0.07
+    ],
+    [
+     "acho",
+     0.25
+    ],
+    [
+     "que",
+     0.55
+    ],
+    [
+     "dificulta",
+     0.79
+    ],
+    [
+     "a",
+     1.25
+    ],
+    [
+     "vivência",
+     1.33
+    ],
+    [
+     "no",
+     1.61
+    ],
+    [
+     "ambiente.",
+     1.77
+    ]
+   ]
+  },
+  {
+   "de": 9.57,
+   "ate": 11.0,
+   "palavras": [
+    [
+     "eu",
+     9.57
+    ],
+    [
+     "procuro",
+     9.95
+    ],
+    [
+     "não",
+     10.21
+    ],
+    [
+     "usar.",
+     10.47
+    ]
+   ]
+  }
+ ],
+ "sfx": [
+  {
+   "t": 3.62,
+   "tipo": "whoosh"
+  },
+  {
+   "t": 4.13,
+   "tipo": "ar"
+  },
+  {
+   "t": 5.45,
+   "tipo": "clique"
+  },
+  {
+   "t": 6.41,
+   "tipo": "clique"
+  },
+  {
+   "t": 7.92,
+   "tipo": "whoosh"
+  },
+  {
+   "t": 8.25,
+   "tipo": "clique"
+  }
+ ],
+ "palavrasChave": [
+  {
+   "linha1": "REVESTIMENTO",
+   "t1": 4.21,
+   "linha2": "FAKE",
+   "t2": 4.73,
+   "ate": 5.4
+  }
+ ],
+ "listas": [
+  {
+   "tipo": "x",
+   "itens": [
+    {
+     "texto": "Preto em excesso",
+     "t": -10
+    },
+    {
+     "texto": "Tijolinho fake",
+     "t": 5.45
+    },
+    {
+     "texto": "Porcelanato que imita grama",
+     "t": 6.41
+    },
+    {
+     "texto": "Papel de parede marmorizado",
+     "t": 8.25
+    }
+   ]
+  }
+ ],
+ "lufs": -16
 }

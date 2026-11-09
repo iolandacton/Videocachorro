@@ -1,0 +1,746 @@
+{
+ "_fonte": "Gerado por scripts/arq/roteiro_final.py — não editar à mão.",
+ "fps": 30,
+ "duracao": 58.0,
+ "lufs": -16,
+ "audio": [
+  {
+   "arquivo": "public/originais/yuri_gancho_C6282.mp4",
+   "inicio": 0.0,
+   "fim": 5.6,
+   "em": 0.0
+  },
+  {
+   "arquivo": "public/originais/arquitetura_audio_1.mp3",
+   "inicio": 1.7,
+   "fim": 33.7,
+   "em": 5.6
+  },
+  {
+   "arquivo": "public/originais/arquitetura_audio_2.mp3",
+   "inicio": 0.8,
+   "fim": 20.3,
+   "em": 37.75
+  }
+ ],
+ "cenas": [
+  {
+   "video": "originais/yuri_gancho_C6282.mp4",
+   "de": 0,
+   "mov": "parado",
+   "ate": 5.21
+  },
+  {
+   "img": "sala_escura",
+   "de": 5.21,
+   "mov": "pushin",
+   "entrada": "linha-vertical",
+   "ate": 10.29
+  },
+  {
+   "img": "base_clean",
+   "de": 10.29,
+   "mov": "pushin",
+   "entrada": "linha-horizontal",
+   "ate": 12.06
+  },
+  {
+   "split": [
+    "bege",
+    "cinza"
+   ],
+   "de": 12.06,
+   "mov": "parado",
+   "entrada": "split",
+   "ate": 14.3
+  },
+  {
+   "img": "vivencia",
+   "de": 14.3,
+   "mov": "lateral",
+   "entrada": "dissolve",
+   "ate": 20.15
+  },
+  {
+   "img": "tijolinho_fake",
+   "de": 20.15,
+   "mov": "lateral",
+   "entrada": "linha-vertical",
+   "ate": 22.6
+  },
+  {
+   "img": "porcelanato_grama",
+   "de": 22.6,
+   "mov": "pushin",
+   "entrada": "dissolve",
+   "ate": 24.450000000000003
+  },
+  {
+   "img": "papel_marmorizado_v2",
+   "de": 24.450000000000003,
+   "mov": "pullout",
+   "entrada": "linha-horizontal",
+   "ate": 28.04
+  },
+  {
+   "img": "quarto_crianca",
+   "de": 28.04,
+   "mov": "pushin",
+   "entrada": "dissolve",
+   "ate": 32.32
+  },
+  {
+   "img": "papel_descolando",
+   "de": 32.32,
+   "mov": "pushin",
+   "entrada": "linha-vertical",
+   "ate": 37.59
+  },
+  {
+   "img": "pedra_natural",
+   "de": 37.59,
+   "mov": "pushin",
+   "entrada": "linha-horizontal",
+   "ate": 42.29
+  },
+  {
+   "img": "granito",
+   "de": 42.29,
+   "mov": "pushin",
+   "entrada": "corte",
+   "ate": 43.39
+  },
+  {
+   "img": "mesa_pedra",
+   "de": 43.39,
+   "mov": "pushin",
+   "entrada": "corte",
+   "luz": true,
+   "ate": 49.15
+  },
+  {
+   "img": "atemporal",
+   "de": 49.15,
+   "mov": "pullout",
+   "entrada": "linha-vertical",
+   "ate": 54.0
+  },
+  {
+   "img": "base_clean",
+   "de": 54.0,
+   "mov": "pullout",
+   "entrada": "dissolve",
+   "ate": 58.0
+  }
+ ],
+ "legendas": [
+  {
+   "de": 0.43,
+   "ate": 3.42,
+   "destaque": [
+    "nunca"
+   ],
+   "palavras": [
+    [
+     "Tem",
+     0.43
+    ],
+    [
+     "coisas",
+     0.99
+    ],
+    [
+     "que",
+     1.29
+    ],
+    [
+     "você",
+     1.45
+    ],
+    [
+     "nunca",
+     1.79
+    ],
+    [
+     "vai",
+     2.11
+    ],
+    [
+     "ver",
+     2.29
+    ],
+    [
+     "no",
+     2.39
+    ],
+    [
+     "meu",
+     2.57
+    ],
+    [
+     "projeto",
+     2.77
+    ]
+   ]
+  },
+  {
+   "de": 3.07,
+   "ate": 5.48,
+   "destaque": [
+    "quase",
+    "todos"
+   ],
+   "palavras": [
+    [
+     "e",
+     3.07
+    ],
+    [
+     "tem",
+     3.37
+    ],
+    [
+     "coisas",
+     3.47
+    ],
+    [
+     "que",
+     3.71
+    ],
+    [
+     "você",
+     3.93
+    ],
+    [
+     "vai",
+     4.13
+    ],
+    [
+     "ver",
+     4.29
+    ],
+    [
+     "em",
+     4.41
+    ],
+    [
+     "quase",
+     4.57
+    ],
+    [
+     "todos.",
+     4.85
+    ]
+   ]
+  },
+  {
+   "de": 7.06,
+   "ate": 10.43,
+   "destaque": [
+    "fecha",
+    "demais"
+   ],
+   "palavras": [
+    [
+     "eu",
+     7.06
+    ],
+    [
+     "não",
+     7.16
+    ],
+    [
+     "uso",
+     7.32
+    ],
+    [
+     "muito,",
+     7.52
+    ],
+    [
+     "porque",
+     8.14
+    ],
+    [
+     "acho",
+     8.28
+    ],
+    [
+     "que",
+     8.46
+    ],
+    [
+     "fecha",
+     8.74
+    ],
+    [
+     "demais",
+     8.96
+    ],
+    [
+     "o",
+     9.32
+    ],
+    [
+     "ambiente.",
+     9.48
+    ]
+   ]
+  },
+  {
+   "de": 13.8,
+   "ate": 15.47,
+   "destaque": [],
+   "palavras": [
+    [
+     "mas",
+     13.8
+    ],
+    [
+     "nada",
+     13.96
+    ],
+    [
+     "muito",
+     14.22
+    ],
+    [
+     "escuro,",
+     14.48
+    ]
+   ]
+  },
+  {
+   "de": 16.42,
+   "ate": 18.91,
+   "destaque": [
+    "vivência"
+   ],
+   "palavras": [
+    [
+     "pois",
+     16.42
+    ],
+    [
+     "acho",
+     16.6
+    ],
+    [
+     "que",
+     16.9
+    ],
+    [
+     "dificulta",
+     17.14
+    ],
+    [
+     "a",
+     17.6
+    ],
+    [
+     "vivência",
+     17.68
+    ],
+    [
+     "no",
+     17.96
+    ],
+    [
+     "ambiente.",
+     18.12
+    ]
+   ]
+  },
+  {
+   "de": 25.92,
+   "ate": 28.17,
+   "destaque": [],
+   "palavras": [
+    [
+     "eu",
+     25.92
+    ],
+    [
+     "procuro",
+     26.3
+    ],
+    [
+     "não",
+     26.56
+    ],
+    [
+     "usar.",
+     26.82
+    ]
+   ]
+  },
+  {
+   "de": 28.24,
+   "ate": 31.07,
+   "destaque": [
+    "personalizado"
+   ],
+   "palavras": [
+    [
+     "Papel",
+     28.24
+    ],
+    [
+     "de",
+     28.46
+    ],
+    [
+     "parede",
+     28.66
+    ],
+    [
+     "só",
+     28.96
+    ],
+    [
+     "se",
+     29.12
+    ],
+    [
+     "for",
+     29.28
+    ],
+    [
+     "algo",
+     29.42
+    ],
+    [
+     "muito",
+     29.66
+    ],
+    [
+     "personalizado,",
+     30.02
+    ]
+   ]
+  },
+  {
+   "de": 31.0,
+   "ate": 32.41,
+   "destaque": [],
+   "palavras": [
+    [
+     "tipo",
+     31.0
+    ],
+    [
+     "um",
+     31.04
+    ],
+    [
+     "quarto",
+     31.22
+    ],
+    [
+     "de",
+     31.38
+    ],
+    [
+     "criança,",
+     31.66
+    ]
+   ]
+  },
+  {
+   "de": 32.52,
+   "ate": 34.65,
+   "destaque": [
+    "desgasta",
+    "descola"
+   ],
+   "palavras": [
+    [
+     "com",
+     32.52
+    ],
+    [
+     "o",
+     32.82
+    ],
+    [
+     "tempo",
+     33.11
+    ],
+    [
+     "ele",
+     33.41
+    ],
+    [
+     "desgasta,",
+     33.71
+    ],
+    [
+     "descola,",
+     34.0
+    ]
+   ]
+  },
+  {
+   "de": 49.55,
+   "ate": 53.78,
+   "destaque": [
+    "continua",
+    "bonito"
+   ],
+   "palavras": [
+    [
+     "Projeto",
+     49.55
+    ],
+    [
+     "bom",
+     49.97
+    ],
+    [
+     "pra",
+     50.09
+    ],
+    [
+     "mim",
+     50.29
+    ],
+    [
+     "é",
+     50.57
+    ],
+    [
+     "aquele",
+     50.87
+    ],
+    [
+     "que",
+     51.11
+    ],
+    [
+     "continua",
+     51.37
+    ],
+    [
+     "bonito",
+     51.69
+    ],
+    [
+     "daqui",
+     52.35
+    ],
+    [
+     "alguns",
+     52.71
+    ],
+    [
+     "anos.",
+     53.05
+    ]
+   ]
+  },
+  {
+   "de": 54.15,
+   "ate": 57.57,
+   "destaque": [
+    "sua",
+    "casa"
+   ],
+   "palavras": [
+    [
+     "E",
+     54.15
+    ],
+    [
+     "aí,",
+     54.29
+    ],
+    [
+     "você",
+     54.59
+    ],
+    [
+     "usaria",
+     54.75
+    ],
+    [
+     "alguma",
+     55.09
+    ],
+    [
+     "dessas",
+     55.39
+    ],
+    [
+     "coisas",
+     55.69
+    ],
+    [
+     "na",
+     56.05
+    ],
+    [
+     "sua",
+     56.23
+    ],
+    [
+     "casa?",
+     56.37
+    ]
+   ]
+  }
+ ],
+ "palavrasChave": [
+  {
+   "linha1": "MINHA BASE",
+   "t1": 10.44,
+   "linha2": "CLEAN",
+   "t2": 11.5,
+   "ate": 11.96
+  },
+  {
+   "linha1": "REVESTIMENTO",
+   "t1": 20.56,
+   "linha2": "FAKE",
+   "t2": 21.08,
+   "ate": 21.7
+  },
+  {
+   "linha1": "TEMPO ÚTIL",
+   "t1": 35.58,
+   "linha2": "MUITO\nBAIXO",
+   "t2": 36.28,
+   "ate": 37.82
+  },
+  {
+   "linha1": "O QUE EU AMO USAR",
+   "t1": 38.57,
+   "linha2": "COISAS\nNATURAIS",
+   "t2": 40.13,
+   "ate": 41.18
+  }
+ ],
+ "pares": [
+  {
+   "esq": "bege",
+   "tEsq": 12.5,
+   "dir": "cinza",
+   "tDir": 13.44,
+   "ate": 14.100000000000001
+  },
+  {
+   "esq": "sofisticada",
+   "tEsq": 45.49,
+   "dir": "durabilidade",
+   "tDir": 46.87,
+   "ate": 48.85
+  }
+ ],
+ "listas": [
+  {
+   "tipo": "x",
+   "ate": 28.42,
+   "itens": [
+    {
+     "texto": "Preto em excesso",
+     "t": 5.76
+    },
+    {
+     "texto": "Tijolinho fake",
+     "t": 21.8
+    },
+    {
+     "texto": "Porcelanato que imita grama",
+     "t": 22.76
+    },
+    {
+     "texto": "Papel de parede marmorizado",
+     "t": 24.6
+    }
+   ]
+  },
+  {
+   "tipo": "check",
+   "ate": 49.349999999999994,
+   "itens": [
+    {
+     "texto": "Pedra natural",
+     "t": 41.25
+    },
+    {
+     "texto": "Granito",
+     "t": 42.29
+    },
+    {
+     "texto": "Tampo de mesa em pedra",
+     "t": 43.39
+    }
+   ]
+  }
+ ],
+ "sfx": [
+  {
+   "t": 5.09,
+   "tipo": "whoosh"
+  },
+  {
+   "t": 5.76,
+   "tipo": "clique"
+  },
+  {
+   "t": 10.36,
+   "tipo": "ar"
+  },
+  {
+   "t": 20.009999999999998,
+   "tipo": "whoosh"
+  },
+  {
+   "t": 20.48,
+   "tipo": "ar"
+  },
+  {
+   "t": 21.8,
+   "tipo": "clique"
+  },
+  {
+   "t": 22.76,
+   "tipo": "clique"
+  },
+  {
+   "t": 24.3,
+   "tipo": "whoosh"
+  },
+  {
+   "t": 24.6,
+   "tipo": "clique"
+  },
+  {
+   "t": 35.5,
+   "tipo": "ar"
+  },
+  {
+   "t": 37.47,
+   "tipo": "whoosh"
+  },
+  {
+   "t": 38.49,
+   "tipo": "ar"
+  },
+  {
+   "t": 41.25,
+   "tipo": "clique"
+  },
+  {
+   "t": 42.29,
+   "tipo": "clique"
+  },
+  {
+   "t": 43.39,
+   "tipo": "clique"
+  },
+  {
+   "t": 49.05,
+   "tipo": "whoosh"
+  }
+ ]
+}

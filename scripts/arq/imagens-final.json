@@ -1,0 +1,63 @@
+{
+  "teto": 92,
+  "modelo": "gen4_image",
+  "ratio": "1080:1920",
+  "estilo": "Vertical editorial interior photograph for an architecture magazine, photorealistic, natural daylight, straight vertical lines, correct perspective, realistic materials and proportions, no people, no text, no logos, no distortion.",
+  "imagens": [
+    {
+      "id": "papel_marmorizado_v2",
+      "uso": "\"papel de parede marmorizado\" — parece mármore, mas é claramente papel",
+      "prompt": "Living room wall covered with marble-effect printed paper wallpaper that is obviously wallpaper: visible vertical seams between the paper rolls, one seam slightly lifting and curling at the top, matte paper texture with printed faux marble veins in an obvious repeating pattern, soft sheen instead of polished stone reflections, white baseboard and a simple sideboard in front, wall seen straight on."
+    },
+    {
+      "id": "sala_escura",
+      "uso": "\"preto em excesso… fecha demais o ambiente\"",
+      "prompt": "Living room where walls, ceiling, floor and furniture are almost entirely matte black, heavy dark finishes everywhere, enclosed and oppressive atmosphere, one small window letting in little light."
+    },
+    {
+      "id": "bege",
+      "uso": "tela dividida, lado esquerdo: \"bege\"",
+      "prompt": "Wall finished in warm beige limewash plaster with soft texture, a linen armchair and a small side table centered in the frame, calm natural light."
+    },
+    {
+      "id": "cinza",
+      "uso": "tela dividida, lado direito: \"cinza\"",
+      "prompt": "Wall finished in soft light gray microcement with subtle texture, a light gray linen sofa corner centered in the frame, calm natural light."
+    },
+    {
+      "id": "vivencia",
+      "uso": "\"mas nada muito escuro, pois… dificulta a vivência no ambiente\"",
+      "prompt": "Bright open-plan living and dining area in light beige and light gray tones, wooden dining table, plants, sheer curtains, inviting and lived-in but tidy."
+    },
+    {
+      "id": "quarto_crianca",
+      "uso": "\"papel de parede só se for algo muito personalizado, tipo um quarto de criança\"",
+      "prompt": "Children's bedroom with a custom personalized wallpaper of soft hand-drawn clouds and small hot-air balloons, single bed with linen bedding, soft pastel tones, wooden toys, natural light."
+    },
+    {
+      "id": "papel_descolando",
+      "uso": "\"com o tempo ele desgasta, descola\"",
+      "prompt": "Close-up of a children's room wallpaper seam peeling and lifting off the wall, worn slightly torn wallpaper edge revealing plaster underneath, soft side light, realistic detail."
+    },
+    {
+      "id": "pedra_natural",
+      "uso": "\"o que eu amo usar são coisas naturais, tipo pedra natural\"",
+      "prompt": "Living room with a floor-to-ceiling natural travertine stone wall, natural textures, warm sunlight, minimalist linen sofa and solid wood coffee table."
+    },
+    {
+      "id": "granito",
+      "uso": "\"granito\"",
+      "prompt": "Kitchen countertop in natural granite with visible speckled grain, close view of the countertop surface and its edge, minimalist kitchen cabinets, natural light."
+    },
+    {
+      "id": "mesa_pedra",
+      "uso": "\"o tampo de mesa em pedra… dá uma sofisticada e uma durabilidade muito maior\"",
+      "prompt": "Dining table with a solid natural stone tabletop with natural veining, simple solid wood chairs, soft daylight from the side, elegant and calm."
+    },
+    {
+      "id": "atemporal",
+      "uso": "\"projeto bom… continua bonito daqui alguns anos\"",
+      "prompt": "Timeless elegant living room with natural materials: stone, solid wood, linen and plaster walls, soft daylight, classic proportions, calm and sophisticated."
+    }
+  ]
+}
