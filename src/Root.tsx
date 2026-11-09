@@ -4,6 +4,8 @@ import { Cena01Preview } from "./Cena01Preview";
 import { Chegada, CHEGADA_FRAMES } from "./cena01/Chegada";
 import { Cena01POV } from "./cena01pov/Cena01POV";
 import { Cena01POVReal, POV_REAL_FRAMES } from "./cena01pov/Cena01POVReal";
+import { Arquitetura, type Roteiro } from "./arquitetura/Arquitetura";
+import previa from "./arquitetura/previa.json";
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -17,5 +19,8 @@ export const RemotionRoot: React.FC = () => (
       fps={30} width={1080} height={1920} />
     <Composition id="Cena01POVReal" component={Cena01POVReal} durationInFrames={POV_REAL_FRAMES}
       fps={30} width={1080} height={1920} />
+    <Composition id="ArqPrevia" component={Arquitetura}
+      durationInFrames={Math.round(previa.duracao * previa.fps)} fps={previa.fps} width={1080} height={1920}
+      defaultProps={{ roteiro: previa as unknown as Roteiro, audio: "arq/previa/audio.wav" }} />
   </>
 );

@@ -1,0 +1,26 @@
+{
+ "antes": 4800,
+ "depois": 4768,
+ "registro": [
+  {
+   "id": "base_clean",
+   "task": "6a294670-3acb-4c36-8881-8390168bf457",
+   "custo": 8
+  },
+  {
+   "id": "tijolinho_fake",
+   "task": "12fb2af6-6d71-4d01-878d-f74be68dd64f",
+   "custo": 8
+  },
+  {
+   "id": "porcelanato_grama",
+   "task": "e07ba0bf-b027-4596-8d9f-d7600b34a449",
+   "custo": 8
+  },
+  {
+   "id": "papel_marmorizado",
+   "task": "f513d912-26c4-4acb-8254-6784b8d0de2a",
+   "custo": 8
+  }
+ ]
+}

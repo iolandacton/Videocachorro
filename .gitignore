@@ -9,3 +9,5 @@ public/cena01pov/dog/
 public/cena01pov/praia_3.5-8.5.mov
 public/cena01pov/dog_real/
 public/cena01pov/plate_real/
+public/arq/*
+!public/arq/img/

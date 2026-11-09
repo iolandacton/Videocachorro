@@ -1,0 +1,28 @@
+{
+  "teto": 60,
+  "modelo": "gen4_image",
+  "ratio": "1080:1920",
+  "estilo": "Vertical editorial interior photograph for an architecture magazine, photorealistic, natural daylight, straight vertical lines, correct perspective, realistic materials and proportions, no people, no text, no logos, no distortion.",
+  "imagens": [
+    {
+      "id": "base_clean",
+      "uso": "\"dificulta a vivência no ambiente\" — base clara bege/cinza que Yuri defende",
+      "prompt": "Bright minimalist living room with a warm beige and soft gray palette, linen sofa, light oak floor, large window with sheer curtains, airy and calm, clean architectural lines."
+    },
+    {
+      "id": "tijolinho_fake",
+      "uso": "\"revestimento fake, tijolinho fake\"",
+      "prompt": "Living room accent wall covered with imitation brick veneer panels, visibly artificial repeating faux brick pattern with uniform printed texture, ordinary apartment, wall seen straight on with a sofa below."
+    },
+    {
+      "id": "porcelanato_grama",
+      "uso": "\"porcelanato que imita a grama\"",
+      "prompt": "Apartment balcony floor made of glossy porcelain tiles printed to imitate green grass, visible tile grout lines in a grid, artificial printed look, glass railing and city daylight in the background."
+    },
+    {
+      "id": "papel_marmorizado",
+      "uso": "\"papel de parede marmorizado\"",
+      "prompt": "Dining room wall covered with glossy marble-effect printed wallpaper, faux marble veins with visible repeating pattern and wallpaper seams, simple dining table in front, wall seen straight on."
+    }
+  ]
+}
