@@ -14,7 +14,7 @@ OUT = Path("public/oficina/proc"); OUT.mkdir(parents=True, exist_ok=True)
 ALVO = (206.0, 195.0, 190.0)      # branco de referência: claro e levemente quente (R−B ≈ +16)
 ESTABILIZAR: set[str] = set()   # a cliente prefere os takes originais, sem estabilização (só transições)
 import sys
-USAR = sys.argv[1:] or ["C6211", "C6212", "C6214", "C6218", "C6219", "C6220", "C6221", "C6222"]
+USAR = sys.argv[1:] or ["C6211", "C6212", "C6214", "C6218", "C6219", "C6222"]
 LOOK = "curves=all='0/0 0.25/0.24 0.5/0.51 0.8/0.82 0.94/0.93 1/0.97',eq=contrast=1.03:saturation=0.95"
 
 
@@ -33,6 +33,7 @@ for n in USAR:
         ff("-i", src, "-vf", f"vidstabdetect=shakiness=6:accuracy=15:result={trf}", "-f", "null", "-")
         pre = f"vidstabtransform=input={trf}:smoothing=10:optzoom=1:interpol=bicubic,"
     vf = f"{pre}scale=1080:1920:flags=lanczos+accurate_rnd+full_chroma_int,cas=0.25,format=rgb24,{cor},{LOOK},format=yuv420p"
-    ff("-i", src, "-an", "-vf", vf, "-c:v", "libx264", "-preset", "medium", "-crf", "8", "-pix_fmt", "yuv420p",
+    # intermediário SEM PERDA (qp 0): nenhuma geração de compressão a mais entre o original e o render final
+    ff("-i", src, "-an", "-vf", vf, "-c:v", "libx264", "-preset", "veryfast", "-qp", "0", "-pix_fmt", "yuv420p",
        str(OUT / f"{n}.mp4"))
     print(f"{n}: ganhos RGB {[round(x, 3) for x in ganho]}" + (" + estabilização" if n in ESTABILIZAR else ""), flush=True)

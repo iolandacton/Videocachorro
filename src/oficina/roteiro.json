@@ -78,14 +78,14 @@
  "apoios": [
   {
    "video": "oficina/proc/C6218.mp4",
-   "inicioVideo": 0.0,
+   "inicioVideo": 0.13,
    "de": 12.285,
-   "ate": 14.735
+   "ate": 14.585
   },
   {
    "video": "oficina/proc/C6222.mp4",
-   "inicioVideo": 0.0,
-   "de": 26.45,
+   "inicioVideo": 0.2,
+   "de": 26.73,
    "ate": 28.43,
    "rotulo": [
     "PORTA",
@@ -93,30 +93,13 @@
    ]
   },
   {
-   "video": "oficina/proc/C6220.mp4",
-   "inicioVideo": 0.6,
-   "de": 31.835,
-   "ate": 33.7
-  },
-  {
    "video": "oficina/proc/C6219.mp4",
-   "inicioVideo": 0.3,
+   "inicioVideo": 0.67,
    "de": 43.225,
-   "ate": 45.855,
+   "ate": 45.225,
    "rotulo": [
     "FITAMENTO",
     "NO TRILHO"
-   ]
-  },
-  {
-   "video": "oficina/proc/C6221.mp4",
-   "inicioVideo": 0.0,
-   "de": 51.005,
-   "ate": 54.31,
-   "saida": "corte",
-   "rotulo": [
-    "PADRÃO DE",
-    "RAJA ÚNICA"
    ]
   }
  ],
@@ -322,5 +305,19 @@
    "texto": "ter no seu próximo projeto."
   }
  ],
- "fadeFinal": 0.7
+ "fadeFinal": 0.7,
+ "sfx": [
+  {
+   "tipo": "whoosh",
+   "pico": 12.44
+  },
+  {
+   "tipo": "tick",
+   "pico": 27.08
+  },
+  {
+   "tipo": "tick",
+   "pico": 43.58
+  }
+ ]
 }

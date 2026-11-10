@@ -118,18 +118,16 @@ def main() -> None:
 
     fim_trecho = {c["trecho"]: c["ate"] for c in cenas_base}
     # Apoios (≈20% do tempo), cada um ilustrando exatamente o que está sendo dito; o áudio do apoio é mudo.
+    # Apoios: só takes originais sem estabilização, no trecho MAIS FIRME de cada um (medido quadro a quadro).
+    # C6220/C6221 (tremor forte no original) e C6223 (reflexo de quem filma) ficam de fora.
     apoios = [
-        {"video": "oficina/proc/C6218.mp4", "inicioVideo": 0.0, "de": T_("Olha só")[0] - 0.1,
-         "ate": T_("Olha só")[0] - 0.1 + 2.45},                                    # o painel ripado (a solução)
-        {"video": "oficina/proc/C6222.mp4", "inicioVideo": 0.0,
-         "de": max(T_("essa porta usinada")[0] - 0.05, fim_trecho[3] + 0.15 - 1.98), "ate": fim_trecho[3] + 0.15,
+        {"video": "oficina/proc/C6218.mp4", "inicioVideo": 0.13, "de": T_("Olha só")[0] - 0.1,
+         "ate": T_("Olha só")[0] - 0.1 + 2.3},                                     # o painel ripado (a solução)
+        {"video": "oficina/proc/C6222.mp4", "inicioVideo": 0.2,
+         "de": fim_trecho[3] + 0.15 - 1.7, "ate": fim_trecho[3] + 0.15,
          "rotulo": ["PORTA", "USINADA"]},                                          # cobre a troca de tomada
-        {"video": "oficina/proc/C6220.mp4", "inicioVideo": 0.6, "de": T_("num padrão")[0] - 0.1,
-         "ate": max(T_("carvalho malva,")[1] + 0.2, fim_trecho[4] + 0.12)},        # o acabamento das ripas
-        {"video": "oficina/proc/C6219.mp4", "inicioVideo": 0.3, "de": T_("Lá em cima")[0] - 0.1,
-         "ate": T_("o fitamento,")[1] + 0.25, "rotulo": ["FITAMENTO", "NO TRILHO"]},  # topo da porta e trilho
-        {"video": "oficina/proc/C6221.mp4", "inicioVideo": 0.0, "de": T_("mas assim")[0] - 0.1,
-         "ate": fim_trecho[6], "saida": "corte", "rotulo": ["PADRÃO DE", "RAJA ÚNICA"]},  # ripas → fechamento
+        {"video": "oficina/proc/C6219.mp4", "inicioVideo": 0.67, "de": T_("Lá em cima")[0] - 0.1,
+         "ate": T_("Lá em cima")[0] - 0.1 + 2.0, "rotulo": ["FITAMENTO", "NO TRILHO"]},  # topo da porta e trilho
     ]
     for a in apoios:
         a["de"], a["ate"] = round(a["de"], 3), round(a["ate"], 3)
@@ -201,8 +199,26 @@ def main() -> None:
     M = Path("public/oficina/mix"); M.mkdir(parents=True, exist_ok=True)
     ffmpeg("-i", str(D / "voz_editada.wav"), "-af", f"aformat=channel_layouts=stereo,apad,atrim=0:{dur}",
            "-ar", "48000", str(M / "voz.wav"))
+    # Efeitos sonoros discretos, só onde há ação visual: tick quando o rótulo surge; whoosh na entrada da solução.
+    SFX = {"tick": ("public/oficina/sfx/mixkit_1120.mp3", 0.10, -12.0),    # (arquivo, pico após o início, ganho dB)
+           "whoosh": ("public/oficina/sfx/mixkit_1489.mp3", 0.71, -21.0)}
+    eventos = [("whoosh", apoios[0]["de"] + 0.15)]
+    eventos += [("tick", a["de"] + 0.35) for a in apoios if a.get("rotulo")]
+    ent, fil = [], []
+    for j, (tipo, t_pico) in enumerate(eventos):
+        arq, pico, ganho = SFX[tipo]
+        ms = max(0, int((t_pico - pico) * 1000))
+        ent += ["-i", arq]
+        fil.append(f"[{j}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume={ganho}dB,adelay={ms}|{ms}[s{j}]")
+    fc = ";".join(fil) + ";" + "".join(f"[s{j}]" for j in range(len(eventos))) + \
+        f"amix=inputs={len(eventos)}:normalize=0,apad,atrim=0:{dur}"
+    ffmpeg(*ent, "-filter_complex", fc, "-ar", "48000", str(M / "sfx.wav"))
+    ffmpeg("-i", str(M / "voz.wav"), "-i", str(M / "sfx.wav"), "-filter_complex",
+           "[0:a][1:a]amix=inputs=2:normalize=0:duration=first", "-ar", "48000", str(M / "voz_sfx.wav"))
+    roteiro["sfx"] = [{"tipo": t, "pico": round(x, 2)} for t, x in eventos]
+    Path("src/oficina/roteiro.json").write_text(json.dumps(roteiro, ensure_ascii=False, indent=1))
     salvar(gerar(dur, 84, 3), M / "trilha.wav")
-    mixar_musica(M / "voz.wav", M / "trilha.wav", M / "audio.wav", dur, NIVEL_MUSICA, -16)
+    mixar_musica(M / "voz_sfx.wav", M / "trilha.wav", M / "audio.wav", dur, NIVEL_MUSICA, -16)
 
     base = dur - sum(a["ate"] - a["de"] for a in apoios)
     print(f"duração {dur:.1f}s | protagonista {100 * base / dur:.0f}% | apoios {100 * (1 - base / dur):.0f}% | "
