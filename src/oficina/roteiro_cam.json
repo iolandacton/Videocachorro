@@ -1,0 +1,323 @@
+{
+ "_fonte": "roteiro.json aprovado (v4) com imagens dos ORIGINAIS DA CÂMERA (public/oficina/cam, 29,97 fps); nada mais muda",
+ "fps": 29.97002997002997,
+ "duracao": 60.63,
+ "cenas": [
+  {
+   "video": "oficina/cam/C6211.mp4",
+   "inicioVideo": 1.465,
+   "de": 0.0,
+   "tomada": "C6211",
+   "trecho": 0,
+   "ate": 9.475
+  },
+  {
+   "video": "oficina/cam/C6211.mp4",
+   "inicioVideo": 11.09,
+   "de": 9.475,
+   "tomada": "C6211",
+   "trecho": 1,
+   "ate": 15.43,
+   "entrada": "corte"
+  },
+  {
+   "video": "oficina/cam/C6211.mp4",
+   "inicioVideo": 17.08,
+   "de": 15.43,
+   "tomada": "C6211",
+   "trecho": 2,
+   "ate": 22.33,
+   "entrada": "corte"
+  },
+  {
+   "video": "oficina/cam/C6211.mp4",
+   "inicioVideo": 24.635,
+   "de": 22.33,
+   "tomada": "C6211",
+   "trecho": 3,
+   "ate": 28.28,
+   "entrada": "corte"
+  },
+  {
+   "video": "oficina/cam/C6212.mp4",
+   "inicioVideo": 1.485,
+   "de": 28.28,
+   "tomada": "C6212",
+   "trecho": 4,
+   "ate": 33.58,
+   "entrada": "corte"
+  },
+  {
+   "video": "oficina/cam/C6212.mp4",
+   "inicioVideo": 7.735,
+   "de": 33.58,
+   "tomada": "C6212",
+   "trecho": 5,
+   "ate": 40.205,
+   "entrada": "corte"
+  },
+  {
+   "video": "oficina/cam/C6212.mp4",
+   "inicioVideo": 13.96,
+   "de": 40.205,
+   "tomada": "C6212",
+   "trecho": 6,
+   "ate": 54.31,
+   "entrada": "corte"
+  },
+  {
+   "video": "oficina/cam/C6214.mp4",
+   "inicioVideo": 4.945,
+   "de": 54.31,
+   "tomada": "C6214",
+   "trecho": 7,
+   "ate": 60.63,
+   "entrada": "corte"
+  }
+ ],
+ "apoios": [
+  {
+   "video": "oficina/cam/C6218.mp4",
+   "inicioVideo": 0.13,
+   "de": 12.285,
+   "ate": 14.585
+  },
+  {
+   "video": "oficina/cam/C6222.mp4",
+   "inicioVideo": 0.2,
+   "de": 26.73,
+   "ate": 28.43,
+   "rotulo": [
+    "PORTA",
+    "USINADA"
+   ]
+  },
+  {
+   "video": "oficina/cam/C6219.mp4",
+   "inicioVideo": 0.67,
+   "de": 43.225,
+   "ate": 45.225,
+   "rotulo": [
+    "FITAMENTO",
+    "NO TRILHO"
+   ]
+  }
+ ],
+ "legendas": [
+  {
+   "de": 0.235,
+   "ate": 1.975,
+   "texto": "sabe aquela esquadria branca"
+  },
+  {
+   "de": 1.975,
+   "ate": 2.875,
+   "texto": "padrão com estrutura"
+  },
+  {
+   "de": 2.875,
+   "ate": 3.935,
+   "texto": "que fica no meio da integração"
+  },
+  {
+   "de": 3.935,
+   "ate": 5.835,
+   "texto": "da sala da varanda"
+  },
+  {
+   "de": 5.835,
+   "ate": 6.535,
+   "texto": "mudando tudo"
+  },
+  {
+   "de": 6.535,
+   "ate": 7.715,
+   "texto": "não combina com nada"
+  },
+  {
+   "de": 7.715,
+   "ate": 9.465,
+   "texto": "mudando tudo o contraste."
+  },
+  {
+   "de": 9.465,
+   "ate": 10.185,
+   "texto": "aqui a gente tem"
+  },
+  {
+   "de": 10.185,
+   "ate": 12.325,
+   "texto": "um pouquinho dela resolvida."
+  },
+  {
+   "de": 12.325,
+   "ate": 13.585,
+   "texto": "olha só a solução"
+  },
+  {
+   "de": 13.585,
+   "ate": 15.375,
+   "texto": "que foi feita nesse projeto."
+  },
+  {
+   "de": 15.47,
+   "ate": 16.55,
+   "texto": "a gente tem a esquadria"
+  },
+  {
+   "de": 16.55,
+   "ate": 18.57,
+   "texto": "tradicional, branca"
+  },
+  {
+   "de": 18.57,
+   "ate": 20.11,
+   "texto": "não muito interessante"
+  },
+  {
+   "de": 20.11,
+   "ate": 20.99,
+   "texto": "do lado de toda uma caixa"
+  },
+  {
+   "de": 20.99,
+   "ate": 22.22,
+   "texto": "de madeira."
+  },
+  {
+   "de": 22.315,
+   "ate": 23.415,
+   "texto": "e o projeto pediu e a gente"
+  },
+  {
+   "de": 23.415,
+   "ate": 28.085,
+   "texto": "executou com essa porta usinada"
+  },
+  {
+   "de": 28.375,
+   "ate": 29.955,
+   "texto": "então aqui a gente consegue ver"
+  },
+  {
+   "de": 29.955,
+   "ate": 31.875,
+   "texto": "são duas portas usinadas"
+  },
+  {
+   "de": 31.875,
+   "ate": 33.705,
+   "texto": "num padrão carvalho malva"
+  },
+  {
+   "de": 33.705,
+   "ate": 35.585,
+   "texto": "e são trilhos"
+  },
+  {
+   "de": 35.585,
+   "ate": 36.305,
+   "texto": "e a gente tem"
+  },
+  {
+   "de": 36.305,
+   "ate": 37.625,
+   "texto": "o revestimento desse trilho"
+  },
+  {
+   "de": 37.625,
+   "ate": 38.665,
+   "texto": "tem um detalhe técnico aqui"
+  },
+  {
+   "de": 38.665,
+   "ate": 40.095,
+   "texto": "que eu acho fundamental."
+  },
+  {
+   "de": 40.185,
+   "ate": 41.705,
+   "texto": "a gente diminui a percepção"
+  },
+  {
+   "de": 41.705,
+   "ate": 43.095,
+   "texto": "por causa do detalhe"
+  },
+  {
+   "de": 43.265,
+   "ate": 44.565,
+   "texto": "lá em cima no trilho"
+  },
+  {
+   "de": 44.565,
+   "ate": 45.725,
+   "texto": "a gente faz o fitamento"
+  },
+  {
+   "de": 45.725,
+   "ate": 47.105,
+   "texto": "não tem como botar a peça"
+  },
+  {
+   "de": 47.105,
+   "ate": 47.845,
+   "texto": "e a gente muda"
+  },
+  {
+   "de": 47.845,
+   "ate": 49.345,
+   "texto": "a raja do fitamento."
+  },
+  {
+   "de": 49.345,
+   "ate": 51.045,
+   "texto": "faz várias emendas"
+  },
+  {
+   "de": 51.045,
+   "ate": 51.925,
+   "texto": "mas assim a gente consegue"
+  },
+  {
+   "de": 51.925,
+   "ate": 54.375,
+   "texto": "manter um padrão de raja única."
+  },
+  {
+   "de": 54.405,
+   "ate": 55.705,
+   "texto": "marcenaria é detalhe"
+  },
+  {
+   "de": 55.705,
+   "ate": 57.265,
+   "texto": "eu acho uma ótima solução"
+  },
+  {
+   "de": 57.265,
+   "ate": 58.265,
+   "texto": "e faz muito sentido"
+  },
+  {
+   "de": 58.265,
+   "ate": 59.625,
+   "texto": "ter no seu próximo projeto."
+  }
+ ],
+ "fadeFinal": 0.7,
+ "sfx": [
+  {
+   "tipo": "whoosh",
+   "pico": 12.44
+  },
+  {
+   "tipo": "tick",
+   "pico": 27.08
+  },
+  {
+   "tipo": "tick",
+   "pico": 43.58
+  }
+ ]
+}

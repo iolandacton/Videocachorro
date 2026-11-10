@@ -14,6 +14,7 @@ import finalV3 from "./arquitetura/v2/final_v3.json";
 import { OutroYuri } from "./outro/OutroYuri";
 import { Oficina, type RoteiroOficina } from "./oficina/Oficina";
 import roteiroOficina from "./oficina/roteiro.json";
+import roteiroOficinaCam from "./oficina/roteiro_cam.json";
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -54,5 +55,9 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="Oficina" component={Oficina}
       durationInFrames={Math.round(roteiroOficina.duracao * roteiroOficina.fps)} fps={roteiroOficina.fps} width={1080} height={1920}
       defaultProps={{ roteiro: roteiroOficina as unknown as RoteiroOficina, audio: "oficina/mix/audio.wav" }} />
+    {/* Oficina Sete — mesma edição aprovada, imagens dos originais da câmera (29,97 fps) */}
+    <Composition id="OficinaCam" component={Oficina}
+      durationInFrames={Math.round(roteiroOficinaCam.duracao * roteiroOficinaCam.fps)} fps={roteiroOficinaCam.fps} width={1080} height={1920}
+      defaultProps={{ roteiro: roteiroOficinaCam as unknown as RoteiroOficina, audio: "oficina/mix/audio.wav" }} />
   </>
 );
