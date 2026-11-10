@@ -45,5 +45,8 @@ export const RemotionRoot: React.FC = () => (
       defaultProps={{ roteiro: finalV3 as unknown as RoteiroV2, audio: "arq_v2/mix/audio.wav" }} />
     <Composition id="OutroYuri" component={OutroYuri} durationInFrames={120} fps={24} width={1080} height={1920}
       defaultProps={{ assinatura: true }} />
+    {/* mesmo encerramento a 30 fps (igual ao vídeo principal), saindo do preto, para a versão completa */}
+    <Composition id="OutroYuri30" component={OutroYuri} durationInFrames={150} fps={30} width={1080} height={1920}
+      defaultProps={{ assinatura: true, entradaPreto: 0.4 }} />
   </>
 );

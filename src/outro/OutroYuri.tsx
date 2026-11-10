@@ -33,7 +33,7 @@ const Grao: React.FC<{ frame: number }> = ({ frame }) => (
   </AbsoluteFill>
 );
 
-export const OutroYuri: React.FC<{ assinatura: boolean }> = ({ assinatura }) => {
+export const OutroYuri: React.FC<{ assinatura: boolean; entradaPreto?: number }> = ({ assinatura, entradaPreto = 0 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const t = frame / fps;
@@ -67,6 +67,9 @@ export const OutroYuri: React.FC<{ assinatura: boolean }> = ({ assinatura }) => 
           </div>
         </AbsoluteFill>
       )}
+      {/* entrada saindo do preto (para emendar depois do fade final do vídeo principal) */}
+      {entradaPreto > 0 && <AbsoluteFill style={{ background: "#000",
+        opacity: interpolate(t, [0, entradaPreto], [1, 0], { extrapolateRight: "clamp", easing: ease }) }} />}
     </AbsoluteFill>
   );
 };
