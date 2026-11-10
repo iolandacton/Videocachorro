@@ -18,7 +18,7 @@
    "tomada": "C6211",
    "trecho": 1,
    "ate": 15.43,
-   "entrada": "dissolve"
+   "entrada": "corte"
   },
   {
    "video": "oficina/proc/C6211.mp4",
@@ -27,7 +27,7 @@
    "tomada": "C6211",
    "trecho": 2,
    "ate": 22.33,
-   "entrada": "dissolve"
+   "entrada": "corte"
   },
   {
    "video": "oficina/proc/C6211.mp4",
@@ -36,7 +36,7 @@
    "tomada": "C6211",
    "trecho": 3,
    "ate": 28.28,
-   "entrada": "dissolve"
+   "entrada": "corte"
   },
   {
    "video": "oficina/proc/C6212.mp4",
@@ -54,7 +54,7 @@
    "tomada": "C6212",
    "trecho": 5,
    "ate": 40.205,
-   "entrada": "dissolve"
+   "entrada": "corte"
   },
   {
    "video": "oficina/proc/C6212.mp4",
@@ -63,7 +63,7 @@
    "tomada": "C6212",
    "trecho": 6,
    "ate": 54.31,
-   "entrada": "dissolve"
+   "entrada": "corte"
   },
   {
    "video": "oficina/proc/C6214.mp4",

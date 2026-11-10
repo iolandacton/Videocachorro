@@ -107,9 +107,10 @@ def main() -> None:
     for c0, c1 in zip(cenas_base, cenas_base[1:]):
         c0["ate"] = c1["de"]
     cenas_base[-1]["ate"] = dur
-    # pulo de imagem entre trechos da mesma tomada: dissolve curto (onde não houver apoio cobrindo)
-    for c0, c1 in zip(cenas_base, cenas_base[1:]):
-        c1["entrada"] = "dissolve" if c0["tomada"] == c1["tomada"] else "corte"
+    # emendas entre trechos: corte seco. (Dissolve dentro da MESMA tomada sobrepõe dois momentos do plano em
+    # movimento e as bordas rígidas parecem dobrar/esticar — deformação artificial; removido na v4.)
+    for c1 in cenas_base[1:]:
+        c1["entrada"] = "corte"
 
     def T_(frase, n=0):
         alvo = [limpa(x) for x in frase.split()]
