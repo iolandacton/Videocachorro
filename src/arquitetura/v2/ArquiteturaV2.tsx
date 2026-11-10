@@ -32,6 +32,8 @@ export type Roteiro = {
   palavrasChave?: Chave[];
   pares?: Par[];
   listas?: Lista[];
+  // Recuperação de qualidade dos vídeos reais (desligado por padrão = render aprovado inalterado)
+  qualidade?: { realSemZoom?: boolean; realSemGrao?: boolean; filtroReal?: string; realClaro?: boolean };
 };
 
 const FONTE = "Montserrat, sans-serif";
@@ -56,7 +58,7 @@ const Linha: React.FC<{ vertical: boolean; pos: number }> = ({ vertical, pos }) 
     ...(vertical ? { top: 0, bottom: 0, left: `${pos}%`, width: 3 } : { left: 0, right: 0, top: `${pos}%`, height: 3 }) }} />
 );
 
-const CenaView: React.FC<{ c: Cena; t: number; fps: number }> = ({ c, t, fps }) => {
+const CenaView: React.FC<{ c: Cena; t: number; fps: number; q?: Roteiro["qualidade"] }> = ({ c, t, fps, q }) => {
   const fim = c.ate + TRANS;
   if (t < c.de || t > fim) return null;
   const p = interpolate(t, [c.de, fim], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
@@ -79,7 +81,8 @@ const CenaView: React.FC<{ c: Cena; t: number; fps: number }> = ({ c, t, fps }) 
     opacidade = e;
     escala += 0.05 * (1 - e);
   }
-  const transform = `translateX(${x + extraX}%) scale(${escala})`;
+  const semZoom = !!(c.video && q?.realSemZoom);
+  const transform = semZoom ? `translateX(${extraX}%)` : `translateX(${x + extraX}%) scale(${escala})`;
 
   let conteudo: React.ReactNode;
   if (c.split) {
@@ -108,7 +111,8 @@ const CenaView: React.FC<{ c: Cena; t: number; fps: number }> = ({ c, t, fps }) 
     conteudo = (
       <Sequence from={Math.round(c.de * fps)} layout="none">
         <OffthreadVideo src={staticFile(c.video)} muted startFrom={Math.round((c.inicioVideo ?? 0) * fps)}
-          style={{ width: "100%", height: "100%", objectFit: "cover", transform, filter: filtro }} />
+          style={{ width: "100%", height: "100%", objectFit: "cover", transform,
+            filter: c.video && q?.filtroReal !== undefined ? q.filtroReal : filtro }} />
       </Sequence>
     );
   } else {
@@ -259,8 +263,8 @@ const ListaView: React.FC<{ l: Lista; t: number }> = ({ l, t }) => {
 };
 
 // ---------- Grão de filme sutil ----------
-const Grao: React.FC<{ frame: number }> = ({ frame }) => (
-  <AbsoluteFill style={{ opacity: 0.07, mixBlendMode: "overlay", overflow: "hidden" }}>
+const Grao: React.FC<{ frame: number; forca?: number }> = ({ frame, forca = 1 }) => (
+  <AbsoluteFill style={{ opacity: 0.07 * forca, mixBlendMode: "overlay", overflow: "hidden" }}>
     <svg width="1300" height="2200" style={{ position: "absolute",
       transform: `translate(${-110 * random(`gx${frame}`)}px, ${-140 * random(`gy${frame}`)}px)` }}>
       <filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" /></filter>
@@ -278,15 +282,20 @@ export const ArquiteturaV2: React.FC<{ roteiro: Roteiro; audio: string }> = ({ r
     ...chaves.map((k) => 0.28 * rampa(t, k.t1 - 0.2, k.t1 + 0.3) * (1 - rampa(t, k.ate, k.ate + 0.5))),
     ...(roteiro.pares ?? []).map((p) => 0.3 * rampa(t, p.tEsq - 0.2, p.tEsq + 0.3) * (1 - rampa(t, p.ate, p.ate + 0.5))));
   const fimFade = rampa(t, roteiro.duracao - 0.7, roteiro.duracao);
+  // quanto do quadro está coberto por vídeo real (para tirar o grão sintético de cima do Yuri)
+  const atual = [...roteiro.cenas].reverse().find((c) => t >= c.de);
+  const cobreReal = atual?.video ? (atual.entrada && atual.entrada !== "corte" ? rampa(t, atual.de, atual.de + TRANS) : 1) : 0;
+  // escurecimentos de legibilidade ficam 65% mais leves sobre o vídeo real (só com qualidade.realClaro)
+  const luzReal = roteiro.qualidade?.realClaro ? 1 - 0.65 * cobreReal : 1;
   return (
     <AbsoluteFill style={{ background: "#111" }}>
-      {roteiro.cenas.map((c, i) => <CenaView key={i} c={c} t={t} fps={fps} />)}
+      {roteiro.cenas.map((c, i) => <CenaView key={i} c={c} t={t} fps={fps} q={roteiro.qualidade} />)}
       {/* leitura: degradê embaixo e no canto da lista, vinheta suave */}
-      <AbsoluteFill style={{ background: "linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.32) 34%, rgba(0,0,0,0) 52%)" }} />
-      <AbsoluteFill style={{ background: "linear-gradient(165deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.25) 26%, rgba(0,0,0,0) 44%)" }} />
-      <AbsoluteFill style={{ background: "radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.35) 100%)" }} />
+      <AbsoluteFill style={{ opacity: luzReal, background: "linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.32) 34%, rgba(0,0,0,0) 52%)" }} />
+      <AbsoluteFill style={{ opacity: luzReal, background: "linear-gradient(165deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.25) 26%, rgba(0,0,0,0) 44%)" }} />
+      <AbsoluteFill style={{ opacity: luzReal, background: "radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.35) 100%)" }} />
       <AbsoluteFill style={{ background: `rgba(0,0,0,${escurece})` }} />
-      <Grao frame={frame} />
+      <Grao frame={frame} forca={roteiro.qualidade?.realSemGrao ? 1 - cobreReal : 1} />
       {(roteiro.listas ?? []).map((l, i) => <ListaView key={i} l={l} t={t} />)}
       {chaves.map((k, i) => <ChaveView key={i} k={k} t={t} />)}
       {(roteiro.pares ?? []).map((p, i) => <ParView key={i} p={p} t={t} />)}
