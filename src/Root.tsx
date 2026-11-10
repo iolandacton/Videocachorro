@@ -12,6 +12,8 @@ import finalV2 from "./arquitetura/v2/final_v2.json";
 import finalV2q from "./arquitetura/v2/final_v2q.json";
 import finalV3 from "./arquitetura/v2/final_v3.json";
 import { OutroYuri } from "./outro/OutroYuri";
+import { Oficina, type RoteiroOficina } from "./oficina/Oficina";
+import roteiroOficina from "./oficina/roteiro.json";
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -48,5 +50,9 @@ export const RemotionRoot: React.FC = () => (
     {/* mesmo encerramento a 30 fps (igual ao vídeo principal), saindo do preto, para a versão completa */}
     <Composition id="OutroYuri30" component={OutroYuri} durationInFrames={150} fps={30} width={1080} height={1920}
       defaultProps={{ assinatura: true, entradaPreto: 0.4 }} />
+    {/* Oficina Sete — primeira montagem (prévia) */}
+    <Composition id="Oficina" component={Oficina}
+      durationInFrames={Math.round(roteiroOficina.duracao * roteiroOficina.fps)} fps={roteiroOficina.fps} width={1080} height={1920}
+      defaultProps={{ roteiro: roteiroOficina as unknown as RoteiroOficina, audio: "oficina/mix/audio.wav" }} />
   </>
 );

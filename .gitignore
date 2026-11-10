@@ -23,3 +23,5 @@ public/arq_v2/takes_runway/entrada_512x910.mp4
 public/arq_v2/mix_completo/
 public/arq_v2/gancho_q/
 refs/oficina_sete/*.mp4
+public/oficina/*
+!public/oficina/originais/
