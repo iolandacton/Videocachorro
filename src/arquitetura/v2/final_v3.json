@@ -1,11 +1,11 @@
 {
- "_fonte": "final_v2q.json + takes IMG_2722/2721/2720 com upscale Runway (Magnific, criatividade 0, tom corrigido); IMG_2723 sem IA",
+ "_fonte": "final_v2q.json + takes IMG_2722/2721/2720 com upscale Runway (Magnific, criatividade 0, tom corrigido); IMG_2723 sem IA | abertura: porta/parede do fundo estabilizadas (scripts/arq/gancho_fundo_estavel.sh)",
  "fps": 30,
  "duracao": 53.88,
  "lufs": -16,
  "cenas": [
   {
-   "video": "originais/yuri_gancho_C6282.mp4",
+   "video": "arq_v2/gancho_q/yuri_gancho_C6282_fundo_estavel.mp4",
    "inicioVideo": 0.32,
    "de": 0,
    "mov": "parado",
