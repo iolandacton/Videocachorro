@@ -42,7 +42,9 @@ TRECHOS = [
     ("C6212", "A gente diminui", "raja única."),
     ("C6214", "Marcenaria detalhe,", "próximo projeto."),
 ]
-GAP_MESMA, GAP_OUTRA = 0.24, 0.32  # respiro entre trechos (mesma tomada / tomadas diferentes)
+GAP_MESMA, GAP_OUTRA = 0.24, 0.32
+# fala ocupa ~83% do vídeo: trilha mais presente que nos vídeos do Yuri (~13 dB abaixo da voz durante a fala)
+NIVEL_MUSICA = -24.5  # respiro entre trechos (mesma tomada / tomadas diferentes)
 TOMADAS = sorted({t[0] for t in TRECHOS})
 
 
@@ -117,10 +119,10 @@ def main() -> None:
     fim_trecho = {c["trecho"]: c["ate"] for c in cenas_base}
     # Apoios (≈20% do tempo), cada um ilustrando exatamente o que está sendo dito; o áudio do apoio é mudo.
     apoios = [
-        {"video": "oficina/proc/C6223.mp4", "inicioVideo": 0.4, "de": T_("Olha só")[0] - 0.1,
-         "ate": max(T_("nesse projeto.")[1] + 0.3, fim_trecho[1] + 0.12)},          # a porta ripada correndo
-        {"video": "oficina/proc/C6218.mp4", "inicioVideo": 0.0,
-         "de": max(T_("essa porta usinada")[0] - 0.05, fim_trecho[3] + 0.15 - 2.45), "ate": fim_trecho[3] + 0.15,
+        {"video": "oficina/proc/C6218.mp4", "inicioVideo": 0.0, "de": T_("Olha só")[0] - 0.1,
+         "ate": T_("Olha só")[0] - 0.1 + 2.45},                                    # o painel ripado (a solução)
+        {"video": "oficina/proc/C6222.mp4", "inicioVideo": 0.0,
+         "de": max(T_("essa porta usinada")[0] - 0.05, fim_trecho[3] + 0.15 - 1.98), "ate": fim_trecho[3] + 0.15,
          "rotulo": ["PORTA", "USINADA"]},                                          # cobre a troca de tomada
         {"video": "oficina/proc/C6220.mp4", "inicioVideo": 0.6, "de": T_("num padrão")[0] - 0.1,
          "ate": max(T_("carvalho malva,")[1] + 0.2, fim_trecho[4] + 0.12)},        # o acabamento das ripas
@@ -200,7 +202,7 @@ def main() -> None:
     ffmpeg("-i", str(D / "voz_editada.wav"), "-af", f"aformat=channel_layouts=stereo,apad,atrim=0:{dur}",
            "-ar", "48000", str(M / "voz.wav"))
     salvar(gerar(dur, 84, 3), M / "trilha.wav")
-    mixar_musica(M / "voz.wav", M / "trilha.wav", M / "audio.wav", dur, -30.5, -16)
+    mixar_musica(M / "voz.wav", M / "trilha.wav", M / "audio.wav", dur, NIVEL_MUSICA, -16)
 
     base = dur - sum(a["ate"] - a["de"] for a in apoios)
     print(f"duração {dur:.1f}s | protagonista {100 * base / dur:.0f}% | apoios {100 * (1 - base / dur):.0f}% | "

@@ -77,15 +77,15 @@
  ],
  "apoios": [
   {
-   "video": "oficina/proc/C6223.mp4",
-   "inicioVideo": 0.4,
-   "de": 12.285,
-   "ate": 15.55
-  },
-  {
    "video": "oficina/proc/C6218.mp4",
    "inicioVideo": 0.0,
-   "de": 25.98,
+   "de": 12.285,
+   "ate": 14.735
+  },
+  {
+   "video": "oficina/proc/C6222.mp4",
+   "inicioVideo": 0.0,
+   "de": 26.45,
    "ate": 28.43,
    "rotulo": [
     "PORTA",

@@ -12,8 +12,9 @@ ORIG = {os.path.basename(p).replace("(1)", "").replace(".mp4", ""): p for p in g
 NEUTRO = json.load(open("public/oficina/analise/neutros.json"))
 OUT = Path("public/oficina/proc"); OUT.mkdir(parents=True, exist_ok=True)
 ALVO = (206.0, 195.0, 190.0)      # branco de referência: claro e levemente quente (R−B ≈ +16)
-ESTABILIZAR = {"C6218", "C6219", "C6220", "C6221", "C6222", "C6223"}   # apoios; o protagonista já está firme
-USAR = ["C6211", "C6212", "C6214", "C6218", "C6219", "C6220", "C6221", "C6222", "C6223"]
+ESTABILIZAR: set[str] = set()   # a cliente prefere os takes originais, sem estabilização (só transições)
+import sys
+USAR = sys.argv[1:] or ["C6211", "C6212", "C6214", "C6218", "C6219", "C6220", "C6221", "C6222"]
 LOOK = "curves=all='0/0 0.25/0.24 0.5/0.51 0.8/0.82 0.94/0.93 1/0.97',eq=contrast=1.03:saturation=0.95"
 
 
