@@ -10,6 +10,7 @@ import final from "./arquitetura/final.json";
 import { ArquiteturaV2, type Roteiro as RoteiroV2 } from "./arquitetura/v2/ArquiteturaV2";
 import finalV2 from "./arquitetura/v2/final_v2.json";
 import finalV2q from "./arquitetura/v2/final_v2q.json";
+import finalV3 from "./arquitetura/v2/final_v3.json";
 import { OutroYuri } from "./outro/OutroYuri";
 
 export const RemotionRoot: React.FC = () => (
@@ -38,6 +39,10 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="ArqV2Q" component={ArquiteturaV2}
       durationInFrames={Math.round(finalV2q.duracao * finalV2q.fps)} fps={finalV2q.fps} width={1080} height={1920}
       defaultProps={{ roteiro: finalV2q as unknown as RoteiroV2, audio: "arq_v2/mix/audio.wav" }} />
+    {/* V3: v2 aprovada + vídeos reais em qualidade recuperada (intro sem IA; takes com upscale Runway, exceto IMG_2723) */}
+    <Composition id="ArqV3" component={ArquiteturaV2}
+      durationInFrames={Math.round(finalV3.duracao * finalV3.fps)} fps={finalV3.fps} width={1080} height={1920}
+      defaultProps={{ roteiro: finalV3 as unknown as RoteiroV2, audio: "arq_v2/mix/audio.wav" }} />
     <Composition id="OutroYuri" component={OutroYuri} durationInFrames={120} fps={24} width={1080} height={1920}
       defaultProps={{ assinatura: true }} />
   </>
