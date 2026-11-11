@@ -11,6 +11,7 @@ Vídeos programáticos com [Remotion](https://www.remotion.dev) + geração com 
 | `npm run still` | Renderiza um quadro em `out/frame.png` |
 | `npm run render` | Renderiza o vídeo em `out/video.mp4` (1080x1920, 30fps) |
 | `npm run typecheck` | Verifica os tipos TypeScript |
+| `python3 scripts/natal/render.py preview` | Prévia noturna 4K da iluminação natalina da Casa Tambaba em `out/natal/` (local, sem créditos) |
 | `npm run runway:check` | Mostra os créditos da conta Runway (gratuito, não gera nada) |
 
 ## Runway
