@@ -14,4 +14,6 @@ ff -f lavfi -i "aevalsrc='0.95*sin(2*PI*(46+70*exp(-t*22))*t)*exp(-t*4.2)':s=480
 ff -f lavfi -i "aevalsrc='0.35*sin(2*PI*(110*t+34*t*t))*pow(t/5,2)':s=48000:d=5" -f lavfi -i "anoisesrc=color=pink:duration=5:amplitude=0.7:seed=9" -filter_complex "[1]highpass=900,volume='pow(t/5,3)':eval=frame[n];[0][n]amix=inputs=2:normalize=0,afade=t=out:st=4.93:d=0.07,volume=-9dB" -ar 48000 -ac 2 "$A/subida.wav"
 # carimbo do X
 ff -f lavfi -i "anoisesrc=color=brown:duration=0.2:amplitude=0.9:seed=4" -af "lowpass=900,afade=t=out:d=0.2,volume=2dB" -ar 48000 -ac 2 "$A/carimbo.wav"
+# digitação (5 s de tiques irregulares) para o gancho digitado
+ff -f lavfi -i "aevalsrc='(random(0)*2-1)*exp(-mod(t+0.021*sin(2*PI*1.3*t),0.085)*240)*gt(sin(2*PI*0.9*t)+0.8*sin(2*PI*2.3*t+1),-0.9)':s=48000:d=5" -af "highpass=1800,lowpass=7500,volume=-6dB" -ac 2 "$A/digitacao.wav"
 ls "$A"

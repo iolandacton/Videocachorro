@@ -5,6 +5,7 @@ import { Chegada, CHEGADA_FRAMES } from "./cena01/Chegada";
 import { Cena01POV } from "./cena01pov/Cena01POV";
 import { Cena01POVReal, POV_REAL_FRAMES } from "./cena01pov/Cena01POVReal";
 import { NutriPrevia, NUTRI_PREVIA_FRAMES } from "./nutri/NutriPrevia";
+import { NutriReel, NUTRI_REEL_FRAMES } from "./nutri/NutriReel";
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -19,6 +20,8 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="Cena01POVReal" component={Cena01POVReal} durationInFrames={POV_REAL_FRAMES}
       fps={30} width={1080} height={1920} />
     <Composition id="NutriPrevia" component={NutriPrevia} durationInFrames={NUTRI_PREVIA_FRAMES}
+      fps={30} width={1080} height={1920} />
+    <Composition id="NutriReel" component={NutriReel} durationInFrames={NUTRI_REEL_FRAMES}
       fps={30} width={1080} height={1920} />
   </>
 );

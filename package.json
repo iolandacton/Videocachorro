@@ -17,7 +17,9 @@
     "render:povreal": "remotion render Cena01POVReal out/cena01_pov_real_raw.mp4 --codec=h264 --crf=14",
     "export:povreal": "ffmpeg -y -i out/cena01_pov_real_raw.mp4 -t 4 -c:v libx264 -preset slow -crf 17 -profile:v high -pix_fmt yuv420p -r 30 -movflags +faststart -af loudnorm=I=-14:TP=-1.5:LRA=11 -ar 48000 -c:a aac -b:a 192k out/cena01_pov_real.mp4",
     "render:nutri": "remotion render NutriPrevia out/nutri_previa_raw.mp4 --codec=h264 --crf=15 --concurrency=3",
-    "export:nutri": "ffmpeg -y -i out/nutri_previa_raw.mp4 -t 15 -c:v libx264 -preset slow -crf 18 -profile:v high -pix_fmt yuv420p -r 30 -movflags +faststart -af loudnorm=I=-14:TP=-1.5:LRA=11 -ar 48000 -c:a aac -b:a 192k out/nutri_previa.mp4"
+    "export:nutri": "ffmpeg -y -i out/nutri_previa_raw.mp4 -t 15 -c:v libx264 -preset slow -crf 18 -profile:v high -pix_fmt yuv420p -r 30 -movflags +faststart -af loudnorm=I=-14:TP=-1.5:LRA=11 -ar 48000 -c:a aac -b:a 192k out/nutri_previa.mp4",
+    "render:reel": "remotion render NutriReel out/nutri_reel_raw.mp4 --codec=h264 --crf=15 --concurrency=3",
+    "export:reel": "ffmpeg -y -i out/nutri_reel_raw.mp4 -c:v libx264 -preset slow -crf 18 -profile:v high -pix_fmt yuv420p -r 30 -movflags +faststart -af alimiter=limit=0.84:level=disabled -ar 48000 -c:a aac -b:a 192k out/nutri_reel_final.mp4"
   },
   "dependencies": {
     "@remotion/cli": "4.0.541",
