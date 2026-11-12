@@ -22,7 +22,7 @@ type Data = {
   segs: { file: string; from: number; frames: number }[];
   zooms: Triple[]; groups: Group[];
   ev: {
-    broll: [number, number]; cutIn: number; cutOut: number; estradiol: number; tension: [number, number];
+    cutIn: number; cutOut: number; estradiol: number; tension: [number, number];
     shakes: [number, number][]; redFlashes: Triple[]; redEdges: Triple[]; whiteFlashes: Triple[];
     goldSweep: number; endCard: number;
     sfx: { whoosh: number[]; pop: number[]; impact: [number, number][]; stamp: number[]; riser: number; typing: [number, number] };
@@ -181,9 +181,8 @@ export const NutriReel: React.FC = () => {
   const frame = useCurrentFrame();
   const s = frame / FPS;
   const { ev } = D;
-  const cutInF = F(ev.cutIn), cutOutF = F(ev.cutOut), brInF = F(ev.broll[0]), brOutF = F(ev.broll[1]);
+  const cutInF = F(ev.cutIn), cutOutF = F(ev.cutOut);
   const inCut = frame >= cutInF && frame < cutOutF;
-  const inBroll = frame >= brInF && frame < brOutF;
 
   const shake = ev.shakes.reduce((a, [at, amp]) => { const k = shakeOne(s, at, amp); return { x: a.x + k.x, y: a.y + k.y }; }, { x: 0, y: 0 });
   const tension = interpolate(s, ev.tension, [0, 0.62], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
@@ -207,12 +206,6 @@ export const NutriReel: React.FC = () => {
             </Sequence>
           ))}
         </AbsoluteFill>
-        {/* apoio: ele no notebook */}
-        <Sequence from={brInF} durationInFrames={brOutF - brInF}>
-          <AbsoluteFill style={{ transform: `scale(${interpolate(s, ev.broll, [1.04, 1.14])})`, filter: "contrast(1.04) saturate(1.05)" }}>
-            <OffthreadVideo muted src={staticFile("nutri/full/broll.mp4")} style={{ width: "100%", height: "100%" }} />
-          </AbsoluteFill>
-        </Sequence>
         {/* animação do Runway: moléculas douradas → rosa, virada em "estradiol" */}
         <Sequence from={cutInF} durationInFrames={cutOutF - cutInF}>
           <AbsoluteFill style={{ transform: `scale(${interpolate(s, [ev.cutIn, ev.cutOut], [1.3, 1.5])})`, transformOrigin: "50% 47%" }}>
@@ -223,7 +216,7 @@ export const NutriReel: React.FC = () => {
 
       {/* escurecimento suave atrás das legendas (sem barra) */}
       {!inCut && <AbsoluteFill style={{
-        background: `radial-gradient(ellipse 88% 34% at 50% 20%, rgba(0,0,0,${inBroll ? 0.62 : 0.42}) 0%, rgba(0,0,0,${inBroll ? 0.36 : 0.22}) 55%, rgba(0,0,0,0) 100%)`,
+        background: `radial-gradient(ellipse 88% 34% at 50% 20%, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.22) 55%, rgba(0,0,0,0) 100%)`,
       }} />}
       {!inCut && tension > 0 && <AbsoluteFill style={{ background: `radial-gradient(ellipse at 50% 42%, rgba(0,0,0,0) 38%, rgba(0,0,0,${tension}) 100%)` }} />}
       <AbsoluteFill style={{ boxShadow: `inset 0 0 220px 40px rgba(255,40,30,${Math.min(1, redEdge)})` }} />

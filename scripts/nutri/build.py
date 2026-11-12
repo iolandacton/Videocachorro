@@ -1,7 +1,8 @@
 """Reel do nutricionista — prepara o vídeo COMPLETO (cortes, voz, proxies, legendas, eventos).
 
-Uso: python -I scripts/nutri/build.py <pasta_com_C64xx.MP4> <musica.mp3>
-Gera (fora do git): public/nutri/full/{seg_N.mp4, broll.mp4, voz.wav, musica.wav}
+Uso: python -I scripts/nutri/build.py <pasta_com_C64xx.MP4> [--timeline-only]
+     python -I scripts/nutri/music.py <musica.mp3>
+Gera (fora do git): public/nutri/full/{seg_N.mp4, voz.wav}
 Gera (no git):      src/nutri/reel.json  (linha do tempo para o Remotion)
 
 Todos os tempos abaixo são segundos do ARQUIVO ORIGINAL de cada clipe; o script converte
@@ -10,7 +11,7 @@ para o tempo final (cortes + aceleração de 6%). Textos = o que ele fala.
 import json, os, subprocess, sys
 import numpy as np
 
-RAW, MUSIC = sys.argv[1], sys.argv[2]
+RAW = sys.argv[1]
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 OUT = os.path.join(ROOT, "public", "nutri", "full"); os.makedirs(OUT, exist_ok=True)
 FPS, SPEED = 30, 1.06
@@ -110,7 +111,7 @@ for i, g in enumerate(groups):
 # ---------- 3. ZOOMS (cortes secos) e EVENTOS ----------
 Z = [
     (0, 0.50, 1.0, 1.05), (0, 2.78, 1.3, 1.36), (0, 5.44, 1.0, 1.05), (0, 6.72, 1.22, 1.27), (0, 9.12, 1.0, 1.04), (0, 10.44, 1.42, 1.5),
-    (1, 1.78, 1.12, 1.16), (1, 5.54, 1.0, 1.05), (1, 7.4, 1.3, 1.36), (1, 8.6, 1.06, 1.1), (1, 10.96, 1.34, 1.4), (1, 12.82, 1.5, 1.56),
+    (1, 1.78, 1.1, 1.14), (1, 3.44, 1.32, 1.37), (1, 5.54, 1.0, 1.05), (1, 7.4, 1.3, 1.36), (1, 8.6, 1.06, 1.1), (1, 10.96, 1.34, 1.4), (1, 12.82, 1.5, 1.56),
     (2, 15.15, 1.0, 1.05), (2, 16.58, 1.25, 1.3),
     (3, 33.80, 1.08, 1.12), (3, 36.42, 1.36, 1.42), (3, 39.0, 1.0, 1.03), (3, 40.04, 1.22, 1.25), (3, 40.62, 1.05, 1.08), (3, 41.4, 1.5, 1.58),
     (4, 1.40, 1.0, 1.06), (4, 3.18, 1.26, 1.31), (4, 5.0, 1.08, 1.12), (4, 6.04, 1.48, 1.55), (4, 7.92, 1.0, 1.04), (4, 9.1, 1.04, 1.4), (4, 15.15, 1.52, 1.62),
@@ -119,10 +120,9 @@ Z = [
     (7, 1.35, 1.0, 1.06), (7, 2.9, 1.25, 1.3), (7, 4.1, 1.05, 1.1), (7, 6.3, 1.3, 1.5),
 ]
 zooms = [[T(s, t), a, b] for s, t, a, b in Z]
-BROLL = (T(1, 2.58), T(1, 5.48))           # ele no notebook, sobre "chegam aqui no meu consultório"
 CUT_IN, CUT_OUT, ESTRADIOL = T(4, 11.84), T(4, 15.15), T(4, 14.1)
 ev = {
-    "broll": list(BROLL), "cutIn": CUT_IN, "cutOut": CUT_OUT, "estradiol": ESTRADIOL,
+    "cutIn": CUT_IN, "cutOut": CUT_OUT, "estradiol": ESTRADIOL,
     "tension": [T(4, 9.1), CUT_IN],
     # [tempo, amplitude]
     "shakes": [[T(0, 4.76), 8], [T(3, 39.1), 10], [T(3, 40.04), 13], [T(3, 41.48), 22], [T(4, 6.04), 14], [ESTRADIOL, 22],
@@ -130,12 +130,12 @@ ev = {
     # [tempo, duração, pico]
     "redFlashes": [[T(3, 41.48), 0.45, 0.6], [T(4, 6.04), 0.3, 0.28], [ESTRADIOL, 0.5, 0.7], [T(6, 15.24), 0.4, 0.45]],
     "redEdges": [[T(3, 38.18), 0.7, 0.7], [T(3, 41.48), 0.9, 0.95], [T(4, 6.04), 0.7, 0.9], [T(6, 14.38), 0.6, 0.6], [T(6, 15.24), 0.9, 0.95]],
-    "whiteFlashes": [[BROLL[0], 0.14, 0.8], [BROLL[1], 0.14, 0.8], [CUT_IN, 0.16, 0.9], [CUT_OUT, 0.14, 0.8]],
+    "whiteFlashes": [[CUT_IN, 0.16, 0.9], [CUT_OUT, 0.14, 0.8]],
     "goldSweep": T(7, 6.58),
     "endCard": VOICE_END - 0.15,
 }
 # sons
-cut_times = sorted(set([z[0] for z in zooms[1:]] + [BROLL[0], BROLL[1], CUT_IN, CUT_OUT]))
+cut_times = sorted(set([z[0] for z in zooms[1:]] + [CUT_IN, CUT_OUT]))
 whoosh = []
 for t in cut_times:
     if not whoosh or t - whoosh[-1] > 0.9: whoosh.append(t)
@@ -148,9 +148,10 @@ ev["sfx"] = {
     "stamp": [T(4, 7.65)], "riser": round(ESTRADIOL - 5, 3), "typing": [T(0, 0.66), T(0, 5.1)],
 }
 
+MEDIA = "--timeline-only" not in sys.argv
 # ---------- 4. VOZ ----------
 parts = []
-for i, (clip, a, b) in enumerate(EDL):
+for i, (clip, a, b) in enumerate(EDL if MEDIA else []):
     end = b + (TAIL if i == len(EDL) - 1 else 0)
     p = os.path.join(OUT, f"_v{i}.wav")
     d = end - a
@@ -159,35 +160,20 @@ for i, (clip, a, b) in enumerate(EDL):
     parts.append(p)
 lst = os.path.join(OUT, "_list.txt")
 open(lst, "w").write("".join(f"file '{p}'\n" for p in parts))
-run("-f", "concat", "-safe", "0", "-i", lst, "-af", f"atempo={SPEED},loudnorm=I=-15:TP=-2:LRA=9", "-ar", "48000", os.path.join(OUT, "voz.wav"))
+if MEDIA: run("-f", "concat", "-safe", "0", "-i", lst, "-af", f"atempo={SPEED},loudnorm=I=-15:TP=-2:LRA=9", "-ar", "48000", os.path.join(OUT, "voz.wav"))
 for p in parts + [lst]: os.remove(p)
+
 
 # ---------- 5. VÍDEO (proxies 1620x2880, já acelerados) ----------
 segs = []
 for i, (clip, a, b) in enumerate(EDL):
     extra = TAIL if i == len(EDL) - 1 else 0.12
-    run("-ss", f"{a}", "-t", f"{b - a + extra}", "-i", os.path.join(RAW, clip + ".MP4"), "-an",
+    if MEDIA: run("-ss", f"{a}", "-t", f"{b - a + extra}", "-i", os.path.join(RAW, clip + ".MP4"), "-an",
         "-vf", f"setpts=PTS/{SPEED},scale=1620:2880:flags=lanczos,fps={FPS},format=yuv420p",
         "-c:v", "libx264", "-crf", "16", "-preset", "medium", os.path.join(OUT, f"seg_{i}.mp4"))
     segs.append({"file": f"nutri/full/seg_{i}.mp4", "from": int(round(starts[i] * FPS))})
     print("seg", i, clip, f"{a}-{b}", "→ início", round(starts[i], 2), flush=True)
-run("-ss", "2.2", "-t", "3.6", "-i", os.path.join(RAW, "C6499.MP4"), "-an",
-    "-vf", f"scale=1620:2880:flags=lanczos,fps={FPS},format=yuv420p", "-c:v", "libx264", "-crf", "16", os.path.join(OUT, "broll.mp4"))
-
-# ---------- 6. MÚSICA: nível e batida alinhada à palavra "estradiol" ----------
-import librosa, warnings
-warnings.filterwarnings("ignore")
-y, sr = librosa.load(MUSIC, sr=22050, mono=True)
-tempo, beats = librosa.beat.beat_track(y=y, sr=sr)
-bt = librosa.frames_to_time(beats, sr=sr)
-oenv = librosa.onset.onset_strength(y=y, sr=sr)
-strength = oenv[beats]
-phase = int(np.argmax([strength[k::4].mean() for k in range(4)]))  # tempo forte do compasso
-cands = [b for i, b in enumerate(bt) if i % 4 == phase and b >= ESTRADIOL]
-offset = round(float(cands[0] - ESTRADIOL), 3)
-run("-ss", f"{offset}", "-t", f"{TOTAL + 0.5}", "-i", MUSIC, "-af", "loudnorm=I=-16:TP=-2:LRA=11", "-ar", "48000", "-ac", "2",
-    os.path.join(OUT, "musica.wav"))
-print(f"música: {float(np.atleast_1d(tempo)[0]):.1f} BPM, começa em {offset}s do arquivo (tempo forte em 'estradiol')")
+# (apoio de camisa branca removido a pedido do cliente; música: scripts/nutri/music.py)
 
 total_frames = int(round(TOTAL * FPS))
 for i, s in enumerate(segs):
