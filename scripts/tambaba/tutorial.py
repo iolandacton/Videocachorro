@@ -13,6 +13,9 @@ CLARO = "eq=gamma=1.45:contrast=1.12:saturation=1.15"
 SUAVE = "SUAVE"  # câmera lenta com interpolação de quadros (para o timelapse)
 FOTOS = Path("guia-tambaba/originais/fotos")
 
+TITULOS = {"chegada": "Como chegar na casa", "telao": "Como ligar o telão",
+           "hidro": "Como ligar a hidromassagem", "pingpong": "Como trocar o ping-pong pela sinuca"}
+
 TUTORIAIS = {
     "telao": [
         dict(fala="Para ligar o telão, pegue o controle branco e baixe a tela.",
@@ -38,9 +41,19 @@ TUTORIAIS = {
         dict(fala="Siga reto até o próximo retorno.", legenda="Siga reto até o próximo retorno",
              clipes=[("v13", 3.0, 5.2, 0.5, SUAVE)]),
         dict(fala="Faça o retorno, e a casa fica à sua direita.", legenda="Faça o retorno:\na casa fica à direita",
-             clipes=[("v13", 5.2, 7.1, 0.45, SUAVE)]),
+             clipes=[("v13", 5.2, 6.8, 0.45, SUAVE)]),
         dict(fala="É a casa com o maior jardim. Seja bem-vindo!", legenda="A casa com o maior jardim!",
-             clipes=[("FOTO", "jardim.jpg", 4.0)]),
+             clipes=[("v13", 6.8, 7.1, 0.45, SUAVE)]),
+    ],
+    "pingpong": [
+        dict(fala="Para jogar sinuca, tire as duas partes do tampo, uma de cada vez.",
+             legenda="Tire as duas partes do tampo,\numa de cada vez",
+             clipes=[("ANIM", "pingpong_animacao.mp4", 0.0, 4.2, 0.85)]),
+        dict(fala="Guarde as duas em pé no suporte preto, encostado na parede.",
+             legenda="Guarde em pé no suporte preto,\nencostado na parede",
+             clipes=[("ANIM", "pingpong_animacao.mp4", 4.2, 8.0, 0.85)]),
+        dict(fala="E nunca deixe o tampo no chão.", legenda="Nunca deixe o tampo no chão",
+             clipes=[("ANIM", "pingpong_animacao.mp4", 7.9, 8.0, 1)]),
     ],
     "hidro": [
         dict(fala="Para ligar a hidromassagem, use o quadro de botões da área externa.",
@@ -54,6 +67,10 @@ TUTORIAIS = {
              clipes=[("v01", 12.0, 13.0, 1, CLARO), ("v01", 13.0, 13.04, 1, CLARO, "anel_hidro.png")]),
     ],
 }
+
+
+def origem(src):
+    return V / src if src.endswith(".mp4") else D / f"{src}.mp4"
 
 
 def dur(p):
@@ -81,6 +98,8 @@ def montar(nome, voz):
                      "-frames:v", str(n), "-an", "-c:v", "libx264", "-crf", "18", str(out)])
                 lista.append(out)
                 continue
+            if c[0] == "ANIM":  # vídeo gerado (Runway) em guia-tambaba/videos
+                c = (c[1],) + tuple(c[2:])
             src, a, z, vel = c[:4]
             filtro = c[4] if len(c) > 4 else "null"
             anel = c[5] if len(c) > 5 else None
@@ -89,12 +108,12 @@ def montar(nome, voz):
             else:
                 vf = f"{filtro},setpts=PTS/{vel},scale=1080:1920,fps=30,setsar=1"
             if anel:  # quadro congelado com destaque
-                run(["-ss", str(a), "-i", str(D / f"{src}.mp4"), "-i", str(V / "fontes" / anel), "-frames:v", "1",
+                run(["-ss", str(a), "-i", str(origem(src)), "-i", str(V / "fontes" / anel), "-frames:v", "1",
                      "-filter_complex", f"[0:v]{vf}[b];[b][1:v]overlay[v]", "-map", "[v]", str(tmp / "q.png")])
                 run(["-loop", "1", "-t", "1", "-i", str(tmp / "q.png"), "-vf", "fps=30,format=yuv420p", "-an",
                      "-c:v", "libx264", "-crf", "18", str(out)])
             else:
-                run(["-ss", str(a), "-t", str(z - a), "-i", str(D / f"{src}.mp4"), "-vf", vf, "-an",
+                run(["-ss", str(a), "-t", str(z - a), "-i", str(origem(src)), "-vf", vf, "-an",
                      "-c:v", "libx264", "-crf", "18", "-pix_fmt", "yuv420p", str(out)])
             lista.append(out)
         (tmp / f"b{i}.txt").write_text("".join(f"file '{p}'\n" for p in lista))
@@ -111,12 +130,13 @@ def montar(nome, voz):
              f"[0:v]tpad=stop_mode=clone:stop_duration={total:.2f},trim=0:{total:.2f},"
              f"drawtext=fontfile={FONTE}:textfile={leg}:fontsize=60:fontcolor=0x141210:line_spacing=14:"
              f"box=1:boxcolor=0xf8f5e3@0.94:boxborderw=34:x=(w-text_w)/2:y=h-text_h-300[v];"
-             f"[1:a]adelay=150:all=1,apad,atrim=0:{total:.2f}[a]",
+             f"[1:a]loudnorm=I=-16:TP=-1.5:LRA=11,aresample=44100,adelay=150:all=1,apad,atrim=0:{total:.2f}[a]",
              "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-crf", "20", "-pix_fmt", "yuv420p",
              "-c:a", "aac", "-b:a", "160k", "-ar", "44100", str(parte)])
         partes.append(parte)
     (tmp / "todas.txt").write_text("".join(f"file '{p}'\n" for p in partes))
-    saida = V / f"previa_{nome}_{voz}.mp4"
+    (V / "finais").mkdir(exist_ok=True)
+    saida = V / "finais" / f"Casa Tambaba - {TITULOS[nome]}.mp4"
     run(["-f", "concat", "-safe", "0", "-i", str(tmp / "todas.txt"), "-c", "copy", "-movflags", "+faststart", str(saida)])
     print("OK:", saida, f"{dur(saida):.1f}s")
 
