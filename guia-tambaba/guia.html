@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Guia Casa Tambaba</title>
+<link rel="stylesheet" href="estilo.css">
+<style>
+  /* ---- capa ---- */
+  .capa { align-items: center; padding-top: 170px; }
+  .capa .logo { width: 230px; }
+  .capa .guia-de { font-family: var(--script); font-size: 190px; line-height: 0.9; margin-top: 20px; }
+  .capa .boas { font-family: var(--titulo); font-weight: 800; font-size: 150px; line-height: 1; margin-top: -10px; }
+  .capa .casa { font-size: 40px; letter-spacing: 0.4em; margin-top: 22px; margin-right: -0.4em; }
+  .capa .foto { width: 960px; height: 1200px; margin-top: 90px; }
+  .capa hr { width: 1044px; border: 0; border-top: 3px solid var(--caramelo); margin: 110px 0 50px; }
+  .capa .local { font-size: 42px; }
+
+  /* ---- menu ---- */
+  .grade { margin-top: 80px; display: grid; grid-template-columns: repeat(3, 300px); justify-content: center; column-gap: 52px; row-gap: 58px; }
+  .grade > div { display: flex; flex-direction: column; align-items: center; gap: 22px; }
+  .grade .rotulo { font-size: 38px; text-align: center; white-space: nowrap; }
+
+  /* ---- anfitrião ---- */
+  .assinatura { font-family: var(--script); font-size: 150px; text-align: center; line-height: 1; margin-top: 70px; }
+  .redes { display: flex; justify-content: center; gap: 200px; margin-top: 70px; }
+  .redes > div { display: flex; flex-direction: column; align-items: center; gap: 18px; font-size: 32px; letter-spacing: 0.14em; text-transform: uppercase; }
+  .redes .bolinha { background: var(--caramelo); color: #fff; width: 150px; height: 150px; }
+  .redes .bolinha .ico { width: 84px; height: 84px; stroke-width: 4; }
+
+  /* ---- horários ---- */
+  .hora { font-weight: 300; font-size: 200px; line-height: 1; text-align: center; letter-spacing: -2px; font-variant-numeric: tabular-nums; }
+  .hora-rotulo { text-align: center; font-size: 48px; font-weight: 900; letter-spacing: 0.32em; margin-right: -0.32em; margin-top: 18px; }
+  .hora-linha { width: 520px; height: 0; border-top: 4px solid var(--tinta); align-self: center; margin: 40px 0 44px; }
+
+  /* ---- wi-fi ---- */
+  .rotulo-largo { text-align: center; font-size: 50px; letter-spacing: 0.3em; margin-right: -0.3em; }
+  .valor { align-self: stretch; height: 170px; border-radius: 999px; background: var(--caramelo); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 54px; font-weight: 700; letter-spacing: 0.16em; margin-top: 30px; }
+
+  /* ---- a casa ---- */
+  .cartoes { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 60px; }
+  .cartao { background: var(--bege); padding: 44px 40px; display: flex; flex-direction: column; align-items: center; gap: 14px; height: 470px; }
+  .cartao .ico { width: 120px; height: 120px; }
+  .cartao h2 { text-align: center; }
+  .cartao ul { margin: 6px 0 0; padding: 0 0 0 30px; font-size: 32px; line-height: 1.4; align-self: stretch; }
+
+  /* ---- colagem regras ---- */
+  .colagem { position: absolute; left: 0; right: 0; bottom: 0; height: 1000px; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .colagem img { min-height: 0; }
+  .colagem img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .colagem img:first-child { grid-row: span 2; }
+
+  /* ---- listas em duas colunas ---- */
+  .duas { display: grid; grid-template-columns: 1fr 1fr; column-gap: 50px; }
+  .duas .lista { font-size: 37px; gap: 14px; }
+  .grupo h3 { margin-top: 0; }
+
+  /* ---- restaurantes ---- */
+  .rest { display: flex; flex-direction: column; gap: 22px; }
+  .rest img { height: 300px; }
+  .rest .linha { display: flex; justify-content: space-between; align-items: center; }
+  .delivery { display: grid; grid-template-columns: 420px 1fr; gap: 40px; align-items: center; }
+  .delivery img { height: 260px; }
+  .delivery > div { display: flex; flex-direction: column; gap: 26px; align-items: flex-start; }
+
+  /* ---- o que fazer ---- */
+  .lugar { display: grid; grid-template-columns: 380px 1fr; height: 560px; }
+  .lugar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .lugar > div { background: var(--cartao); padding: 50px 48px; display: flex; flex-direction: column; gap: 22px; }
+  .lugar .texto { font-size: 34px; line-height: 1.5; flex: 1; }
+
+  /* ---- contatos ---- */
+  .barra { height: 150px; border-radius: 18px; background: var(--caramelo); color: #fff; display: flex; align-items: center; gap: 44px; padding: 0 60px; font-size: 46px; font-weight: 700; letter-spacing: 0.06em; }
+  .barra .ico { width: 78px; height: 78px; stroke-width: 4; flex: none; }
+
+  /* ---- ping-pong (roteiro da animação) ---- */
+  .quadros { fill: none; stroke: var(--tinta); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+</style>
+</head>
+<body>
+<!--ICONES-->
+
+<!-- =============================== 1. CAPA =============================== -->
+<section class="page capa" data-id="capa">
+  <img class="logo" src="originais/fotos/logo.png" alt="">
+  <div class="guia-de">Guia de</div>
+  <div class="boas">BOAS-VINDAS</div>
+  <div class="casa">CASA TAMBABA</div>
+  <img class="foto" src="originais/fotos/capa.jpg" alt="" style="object-position: 70% 50%">
+  <hr>
+  <div class="local">Pitimbu - PB</div>
+</section>
+
+<!-- =============================== 2. MENU =============================== -->
+<section class="page" data-id="menu">
+  <h1>SEJA BEM-VINDO!</h1>
+  <div class="eyebrow">Toque nos ícones abaixo</div>
+  <div class="grade">
+    <div data-link="checkin"><div class="tile"><svg class="ico"><use href="#chave"/></svg></div><div class="rotulo">Check-in/out</div></div>
+    <div data-link="chegar"><div class="tile"><svg class="ico"><use href="#pin"/></svg></div><div class="rotulo">Como chegar</div></div>
+    <div data-link="wifi"><div class="tile"><svg class="ico"><use href="#wifi"/></svg></div><div class="rotulo">Wi-Fi</div></div>
+    <div data-link="casa"><div class="tile"><svg class="ico"><use href="#casa"/></svg></div><div class="rotulo">A casa</div></div>
+    <div data-link="regras"><div class="tile"><svg class="ico"><use href="#doc"/></svg></div><div class="rotulo">Regras da casa</div></div>
+    <div data-link="importante"><div class="tile"><svg class="ico"><use href="#info"/></svg></div><div class="rotulo">Importante</div></div>
+    <div data-link="hub"><div class="tile"><svg class="ico"><use href="#play"/></svg></div><div class="rotulo">Como funciona</div></div>
+    <div data-link="amenidades"><div class="tile"><svg class="ico"><use href="#toalhas"/></svg></div><div class="rotulo">Amenidades</div></div>
+    <div data-link="condominio"><div class="tile"><svg class="ico"><use href="#piscina"/></svg></div><div class="rotulo">Condomínio</div></div>
+    <div data-link="fazer"><div class="tile"><svg class="ico"><use href="#mapa"/></svg></div><div class="rotulo">O que fazer</div></div>
+    <div data-link="restaurantes"><div class="tile"><svg class="ico"><use href="#talheres"/></svg></div><div class="rotulo">Restaurantes</div></div>
+    <div data-link="seguranca"><div class="tile"><svg class="ico"><use href="#escudo"/></svg></div><div class="rotulo">Segurança</div></div>
+    <div data-link="partir"><div class="tile"><svg class="ico"><use href="#malas"/></svg></div><div class="rotulo">Antes de partir</div></div>
+    <div data-link="avaliacao"><div class="tile"><svg class="ico"><use href="#estrela"/></svg></div><div class="rotulo">Avaliação</div></div>
+    <div data-link="obrigado"><div class="tile"><svg class="ico"><use href="#contato"/></svg></div><div class="rotulo">Contato</div></div>
+  </div>
+</section>
+
+<!-- =============================== 3. ANFITRIÃO =============================== -->
+<section class="page" data-id="anfitriao">
+  <h1>CONHEÇA SEU<br>ANFITRIÃO</h1>
+  <div class="after-title texto centro" style="display:flex;flex-direction:column;gap:50px;font-size:44px">
+    <p>Olá! Eu sou o Eduardo Julien, <b>anfitrião da Casa Tambaba</b>. É um prazer receber você no nosso destino!</p>
+    <p>Estou aqui para garantir que a sua estadia seja simplesmente incrível. Fico à disposição para responder a qualquer pergunta, antes e durante a sua estadia.</p>
+  </div>
+  <div class="assinatura">Eduardo Julien</div>
+  <p class="texto centro" style="font-size:44px;margin-top:10px">Aproveite a sua estadia!</p>
+  <div class="redes">
+    <div data-href="https://wa.me/{{WA_ANFITRIAO}}"><div class="bolinha"><svg class="ico"><use href="#whats"/></svg></div>WhatsApp</div>
+    <div data-href="https://www.airbnb.com.br/"><div class="bolinha"><svg class="ico"><use href="#casa"/></svg></div>Airbnb</div>
+  </div>
+  <img class="rodape-foto" src="originais/fotos/jardim.jpg" alt="" style="height:740px">
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 4. CHECK-IN/OUT =============================== -->
+<section class="page" data-id="checkin">
+  <h1>CHECK-IN/OUT</h1>
+  <div class="after-title" style="display:flex;flex-direction:column">
+    <div class="hora">12:00</div>
+    <div class="hora-rotulo">CHECK-IN</div>
+    <div class="hora-linha"></div>
+    <p class="texto centro">O check-in é a partir das 12h. Antes de seguir para a casa, apresente-se na portaria do condomínio.</p>
+  </div>
+  <div style="display:flex;flex-direction:column;margin-top:220px">
+    <div class="hora">12:00</div>
+    <div class="hora-rotulo">CHECK-OUT</div>
+    <div class="hora-linha"></div>
+    <p class="texto centro">Por gentileza, avise o horário do seu check-out. Se não houver hóspedes no dia seguinte nem algum evento, conseguimos deixar o check-out mais flexível.</p>
+  </div>
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 5. COMO CHEGAR =============================== -->
+<section class="page" data-id="chegar">
+  <h1>COMO CHEGAR</h1>
+  <img class="foto after-title" src="originais/fotos/portaria.jpg" alt="" style="height:600px;margin-top:80px">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:20px;margin-top:56px">
+    <svg class="ico" style="width:100px;height:100px;color:var(--caramelo);stroke-width:3.6"><use href="#pin"/></svg>
+    <div style="font-size:42px;letter-spacing:0.16em">CONDOMÍNIO TAMBABA</div>
+  </div>
+  <div class="pilula" style="margin-top:50px" data-href="https://maps.app.goo.gl/getB9BEwrgJHbis69?g_st=ic">
+    <svg class="ico"><use href="#pin"/></svg>Google Maps
+  </div>
+  <div class="caixa passos" style="margin-top:70px">
+    <h3>Da portaria até a casa</h3>
+    <p><span class="n">1</span><span>Identifique-se na portaria do condomínio.</span></p>
+    <p><span class="n">2</span><span>Suba a ladeira até chegar à rotatória.</span></p>
+    <p><span class="n">3</span><span>Vire à esquerda e siga até o próximo retorno.</span></p>
+    <p><span class="n">4</span><span>Depois do retorno, a casa fica à sua direita. <b>É a casa com o maior jardim!</b></span></p>
+  </div>
+  <div class="pilula pequena contorno" style="margin-top:50px;align-self:flex-start" data-link="chegada">
+    <svg class="ico"><use href="#play"/></svg>Ver vídeo do trajeto
+  </div>
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 6. WI-FI =============================== -->
+<section class="page" data-id="wifi">
+  <h1>WI-FI</h1>
+  <svg class="ico after-title" style="width:260px;height:260px;align-self:center;color:var(--caramelo);stroke-width:4;margin-top:80px"><use href="#wifi"/></svg>
+  <div class="rotulo-largo" style="margin-top:80px">REDE</div>
+  <div class="valor">{{WIFI_REDE}}</div>
+  <div class="rotulo-largo" style="margin-top:90px">SENHA</div>
+  <div class="valor">{{WIFI_SENHA}}</div>
+  <img class="rodape-foto" src="originais/fotos/laptop.jpg" alt="" style="height:1000px;object-position:50% 60%">
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 7. A CASA =============================== -->
+<section class="page" data-id="casa">
+  <h1>A CASA</h1>
+  <img class="foto sangria" src="originais/fotos/quarto.jpg" alt="" style="height:820px;margin-top:90px">
+  <div class="cartoes">
+    <div class="cartao" style="justify-content:center">
+      <svg class="ico"><use href="#pessoas"/></svg>
+      <h2>10 PESSOAS</h2>
+      <p style="font-size:32px;text-align:center">Capacidade máxima da casa</p>
+    </div>
+    <div class="cartao">
+      <svg class="ico"><use href="#quarto"/></svg>
+      <h2>3 QUARTOS</h2>
+      <ul>
+        <li>1 com cama queen e cama king</li>
+        <li>2 com cama king e cama de solteiro</li>
+        <li>Também há colchões infláveis e redes</li>
+      </ul>
+    </div>
+    <div class="cartao">
+      <svg class="ico"><use href="#cama"/></svg>
+      <h2>6 CAMAS</h2>
+      <ul>
+        <li>3 camas king</li>
+        <li>2 camas de solteiro</li>
+        <li>1 cama queen</li>
+        <li>+ 1 colchão inflável de casal</li>
+      </ul>
+    </div>
+    <div class="cartao">
+      <svg class="ico"><use href="#banheiro"/></svg>
+      <h2>4 BANHEIROS</h2>
+      <ul>
+        <li>3 suítes</li>
+        <li>1 banheiro social</li>
+      </ul>
+    </div>
+  </div>
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 8. REGRAS =============================== -->
+<section class="page" data-id="regras">
+  <h1>REGRAS DA CASA</h1>
+  <ul class="lista" style="font-size:38px;gap:20px;margin-top:90px">
+    <li><b>Proibido som alto após as 22h.</b> Em caso de multa do condomínio, o valor será repassado integralmente ao hóspede.</li>
+    <li>Proibido fumar dentro da casa.</li>
+    <li>Pets são bem-vindos! Por gentileza, recolha os dejetos.</li>
+    <li>Desligue o ar-condicionado e apague as luzes ao sair.</li>
+    <li>Antes de ir embora, deixe a louça usada lavada no escorredor.</li>
+    <li>Retire o lixo antes de sair e coloque no tambor azul do lado de fora.</li>
+    <li>Não cobramos taxa de limpeza. Porém, sujeira excessiva, manchas de vômito ou cheiro de cigarro nos quartos terão uma taxa extra de <b>R$ 200</b>.</li>
+  </ul>
+  <div class="caixa texto centro" style="margin-top:60px;font-size:38px">
+    Agradeço antecipadamente por você ser um super‑hóspede! Espero que aproveite a casa ao máximo.
+  </div>
+  <div class="colagem">
+    <img src="originais/fotos/regras1.jpg" alt="">
+    <img src="originais/fotos/regras2.jpg" alt="">
+    <img src="originais/fotos/regras3.jpg" alt="">
+  </div>
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 9. IMPORTANTE (1/2) =============================== -->
+<section class="page" data-id="importante">
+  <h1>IMPORTANTE</h1>
+  <div class="after-title" style="display:flex;flex-direction:column;gap:70px">
+    <div class="item">
+      <div class="bolinha"><svg class="ico"><use href="#telao"/></svg></div>
+      <div>
+        <h2>Projetor</h2>
+        <p class="texto">Funciona do fim de tarde para a noite. Baixe a tela com o controle, ligue o projetor com o controle da Epson e use o controle pequeno preto para navegar e conectar o som do projetor ao sistema de som da casa.</p>
+        <div class="pilula pequena contorno" data-link="telao"><svg class="ico"><use href="#play"/></svg>Ver passo a passo</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="bolinha"><svg class="ico"><use href="#som"/></svg></div>
+      <div>
+        <h2>Som</h2>
+        <p class="texto">O som é ligado pelo aparelho na parede da área gourmet. Toque para ligar, depois toque no ícone do Bluetooth e procure <b>DBWall</b> no seu celular.</p>
+      </div>
+    </div>
+    <div class="item">
+      <div class="bolinha"><svg class="ico"><use href="#inseto"/></svg></div>
+      <div>
+        <h2>Insetos</h2>
+        <p class="texto">Estamos numa área de mata, em contato com a natureza, então é comum aparecerem pequenos insetos, moscas e mosquitos, principalmente na época de chuva, mesmo com a dedetização sempre em dia. Os horários de maior movimento são das 17h às 18h e das 5h às 6h. Deixamos repelentes, ventiladores e pega-moscas à sua disposição.</p>
+      </div>
+    </div>
+    <div class="item">
+      <div class="bolinha"><svg class="ico"><use href="#bola8"/></svg></div>
+      <div>
+        <h2>Sinuca e ping-pong</h2>
+        <p class="texto">Não coloque copos com bebida nas bordas da sinuca. Para trocar do ping-pong para a sinuca, coloque o tampo no suporte ao lado da mesa. <b>Nunca deixe o tampo no chão.</b></p>
+        <div class="pilula pequena contorno" data-link="pingpong"><svg class="ico"><use href="#play"/></svg>Ver como trocar o tampo</div>
+      </div>
+    </div>
+  </div>
+  <div class="paginacao">1/2</div>
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 10. IMPORTANTE (2/2) =============================== -->
+<section class="page" data-id="importante2">
+  <h1>IMPORTANTE</h1>
+  <div class="after-title" style="display:flex;flex-direction:column;gap:70px">
+    <div class="item">
+      <div class="bolinha"><svg class="ico"><use href="#grelha"/></svg></div>
+      <div>
+        <h2>Churrasqueira do jardim</h2>
+        <p class="texto">Depois de usar a churrasqueira da área externa, espere o fogo apagar e esfriar e coloque a capa de volta.</p>
+      </div>
+    </div>
+    <div class="item">
+      <div class="bolinha"><svg class="ico"><use href="#frutas"/></svg></div>
+      <div>
+        <h2>Frutas e vegetais</h2>
+        <p class="texto">A casa tem muitas árvores frutíferas e hortaliças. Colha apenas o que estiver maduro e pronto para consumo, e somente o que for consumir na casa. Já deixamos várias frutas colhidas para você no check-in. Evite colher para levar embora. Na dúvida se algo está bom para comer, é só falar com a gente.</p>
+      </div>
+    </div>
+  </div>
+  <img class="rodape-foto" src="originais/fotos/mata.jpg" alt="" style="height:1060px">
+  <div class="paginacao" style="top:1620px">2/2</div>
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 11. COMO FUNCIONA =============================== -->
+<section class="page" data-id="hub">
+  <h1>COMO FUNCIONA</h1>
+  <div class="eyebrow">Vídeos e passo a passo</div>
+  <p class="texto centro" style="margin-top:60px">Toque em um item para ver como usar os equipamentos da casa.</p>
+  <div class="grade" style="grid-template-columns:repeat(2,420px);column-gap:80px;row-gap:90px;margin-top:100px">
+    <div data-link="chegada"><div class="tile" style="width:300px;height:300px;border-radius:52px"><svg class="ico" style="width:200px;height:200px"><use href="#rota"/></svg></div><div class="rotulo">Chegando na casa</div></div>
+    <div data-link="hidro"><div class="tile" style="width:300px;height:300px;border-radius:52px"><svg class="ico" style="width:200px;height:200px"><use href="#hidro"/></svg></div><div class="rotulo">Hidromassagem</div></div>
+    <div data-link="pingpong"><div class="tile" style="width:300px;height:300px;border-radius:52px"><svg class="ico" style="width:200px;height:200px"><use href="#pingpong"/></svg></div><div class="rotulo">Ping-pong e sinuca</div></div>
+    <div data-link="telao"><div class="tile" style="width:300px;height:300px;border-radius:52px"><svg class="ico" style="width:200px;height:200px"><use href="#telao"/></svg></div><div class="rotulo">Telão</div></div>
+  </div>
+  <div class="caixa contorno texto centro" style="margin-top:130px" data-href="https://wa.me/{{WA_ANFITRIAO}}">
+    Ficou com alguma dúvida?<br>Fale com o anfitrião no WhatsApp:<br><b>{{TEL_ANFITRIAO}}</b>
+  </div>
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 12. CHEGANDO NA CASA =============================== -->
+<section class="page" data-id="chegada">
+  <div class="voltar" data-link="hub">‹ Como funciona</div>
+  <h1>CHEGANDO NA CASA</h1>
+  <div class="eyebrow">Da portaria até a casa</div>
+  <div class="video" style="margin-top:80px">
+    <div class="play"></div><div class="rotulo">Vídeo em breve</div><div class="dica">O trajeto completo, da portaria até o portão</div>
+  </div>
+  <div class="caixa passos" style="margin-top:70px">
+    <h3>Passo a passo</h3>
+    <p><span class="n">1</span><span>Identifique-se na portaria do condomínio.</span></p>
+    <p><span class="n">2</span><span>Suba a ladeira até chegar à rotatória.</span></p>
+    <p><span class="n">3</span><span>Vire à esquerda e siga até o próximo retorno.</span></p>
+    <p><span class="n">4</span><span>Depois do retorno, a casa fica à sua direita. <b>É a casa com o maior jardim!</b></span></p>
+  </div>
+  <div class="pilula" style="margin-top:70px" data-href="https://maps.app.goo.gl/getB9BEwrgJHbis69?g_st=ic"><svg class="ico"><use href="#pin"/></svg>Google Maps</div>
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 13. HIDROMASSAGEM =============================== -->
+<section class="page" data-id="hidro">
+  <div class="voltar" data-link="hub">‹ Como funciona</div>
+  <h1>HIDROMASSAGEM</h1>
+  <div class="eyebrow">Como ligar</div>
+  <div class="video" style="margin-top:80px">
+    <div class="play"></div><div class="rotulo">Vídeo em breve</div><div class="dica">Como ligar e desligar a hidromassagem</div>
+  </div>
+  <div class="caixa passos" style="margin-top:70px">
+    <h3>Passo a passo</h3>
+    <p class="suave" style="font-style:italic">O passo a passo será adicionado junto com o vídeo.</p>
+  </div>
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 14. PING-PONG =============================== -->
+<section class="page" data-id="pingpong">
+  <div class="voltar" data-link="hub">‹ Como funciona</div>
+  <h1>PING-PONG</h1>
+  <div class="eyebrow">Como trocar para sinuca</div>
+  <div class="video" style="margin-top:80px">
+    <div class="play"></div><div class="rotulo">Animação em breve</div><div class="dica">O tampo saindo da mesa e indo para o suporte</div>
+  </div>
+  <svg class="quadros" viewBox="0 0 1000 360" style="width:1000px;height:360px;align-self:center;margin-top:50px">
+    <rect x="40" y="196" width="220" height="20" fill="#e4d5bd"/>
+    <rect x="40" y="216" width="220" height="40" fill="#f8f5e3"/>
+    <rect x="62" y="256" width="20" height="50" fill="#f8f5e3"/><rect x="218" y="256" width="20" height="50" fill="#f8f5e3"/>
+    <rect x="22" y="104" width="256" height="20" fill="#c8b698"/>
+    <path d="M90 180 V140 M76 154 L90 140 L104 154 M210 180 V140 M196 154 L210 140 L224 154"/>
+    <g transform="rotate(-8 500 150)"><rect x="372" y="140" width="256" height="20" fill="#c8b698"/></g>
+    <path d="M400 250 H600" stroke-dasharray="10 12"/><path d="M582 234 L600 250 L582 266"/>
+    <rect x="770" y="70" width="160" height="214" fill="#c8b698"/>
+    <path d="M748 236 V300 H952 V236" stroke-width="7"/><path d="M730 300 H970"/>
+    <circle cx="950" cy="52" r="26" fill="#f8f5e3"/><path d="M938 52 L947 61 L963 43"/>
+    <g fill="#141210" stroke="none" font-family="Lato, Arial, sans-serif" font-size="30" text-anchor="middle">
+      <text x="150" y="350">1. Levante</text><text x="500" y="350">2. Leve ao suporte</text><text x="850" y="350">3. Encaixe em pé</text>
+    </g>
+  </svg>
+  <div class="caixa passos" style="margin-top:50px">
+    <h3>Passo a passo</h3>
+    <p><span class="n">1</span><span>Retire o tampo de cima da mesa, de preferência com duas pessoas.</span></p>
+    <p><span class="n">2</span><span>Leve o tampo até o suporte ao lado da sinuca.</span></p>
+    <p><span class="n">3</span><span>Encaixe o tampo em pé no suporte.</span></p>
+    <p><span class="n">4</span><span>Para voltar ao ping-pong, faça o caminho inverso.</span></p>
+  </div>
+  <div class="caixa contorno texto centro" style="margin-top:40px;width:880px;padding:30px 40px;font-size:36px">
+    <b>Nunca coloque o tampo no chão</b> e não apoie copos nas bordas da sinuca.
+  </div>
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 15. TELÃO =============================== -->
+<section class="page" data-id="telao">
+  <div class="voltar" data-link="hub">‹ Como funciona</div>
+  <h1>TELÃO</h1>
+  <div class="eyebrow">Projetor e som</div>
+  <div class="video" style="margin-top:80px">
+    <div class="play"></div><div class="rotulo">Vídeo em breve</div><div class="dica">Como baixar a tela e ligar o projetor</div>
+  </div>
+  <div class="caixa passos" style="margin-top:70px">
+    <h3>Passo a passo</h3>
+    <p><span class="n">1</span><span>Use o controle para baixar a tela.</span></p>
+    <p><span class="n">2</span><span>Ligue o projetor com o controle da Epson.</span></p>
+    <p><span class="n">3</span><span>Com o controle pequeno preto, navegue e conecte o som do projetor ao sistema de som da casa.</span></p>
+  </div>
+  <div class="caixa contorno texto centro" style="margin-top:60px;font-size:37px">
+    O projetor funciona <b>do fim de tarde para a noite</b>.<br>
+    Para tocar música do celular, ligue o aparelho na parede da área gourmet, toque no ícone do Bluetooth e procure <b>DBWall</b>.
+  </div>
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 16. AMENIDADES =============================== -->
+<section class="page" data-id="amenidades">
+  <h1>AMENIDADES</h1>
+  <p class="texto centro after-title" style="margin-top:70px">Para deixar a sua estadia o mais confortável possível, a casa oferece:</p>
+  <div class="duas" style="margin-top:70px">
+    <div style="display:flex;flex-direction:column;gap:60px">
+      <div class="grupo"><h3>Quartos e banho</h3><ul class="lista">
+        <li>Ar-condicionado nos quartos</li><li>Roupa de cama</li><li>Toalhas</li><li>Papel higiênico</li><li>Shampoo, condicionador e sabonete</li>
+      </ul></div>
+      <div class="grupo"><h3>Lazer</h3><ul class="lista">
+        <li>Bicicletas</li><li>Guarda-sol</li><li>Jogos de tabuleiro</li><li>Bolas de futebol e de vôlei</li><li>YouTube Premium e Premiere</li>
+      </ul></div>
+    </div>
+    <div class="grupo"><h3>Cozinha</h3><ul class="lista">
+      <li>Cafeteira elétrica</li><li>Airfryer</li><li>Micro-ondas</li><li>Todos os utensílios de cozinha</li><li>Açúcar, sal e temperos</li><li>Panos de prato</li><li>Esponja e detergente</li><li>Gelo</li><li>Saco de carvão</li><li>Frutas da época</li>
+    </ul></div>
+  </div>
+  <img class="foto" src="originais/fotos/maracuja.jpg" alt="" style="height:560px;margin-top:80px">
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 17. CONDOMÍNIO =============================== -->
+<section class="page" data-id="condominio">
+  <h1>CONDOMÍNIO</h1>
+  <p class="texto centro" style="margin-top:70px">Os hóspedes têm acesso às áreas comuns do condomínio:</p>
+  <div class="duas" style="margin-top:70px">
+    <ul class="lista">
+      <li>Piscinas com 2.500 m² de lâmina d'água</li><li>Spa de lazer</li><li>Salão de festas adulto</li><li>Salão de festas infantil</li><li>Salão restaurante</li><li>Quadra de tênis de saibro</li><li>Quadra poliesportiva</li><li>Vôlei de areia</li><li>Minigolfe</li>
+    </ul>
+    <ul class="lista">
+      <li>Minicampo de futebol gramado</li><li>Minicampo de futebol society</li><li>Minicampo de futebol de areia</li><li>Cidade infantil</li><li>Playground infantil</li><li>Área verde e reserva</li><li>Estacionamentos</li><li>Pórtico de entrada com guarita</li>
+    </ul>
+  </div>
+  <img class="rodape-foto" src="originais/fotos/condominio.jpg" alt="" style="height:1000px">
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 18. RESTAURANTES (1/2) =============================== -->
+<section class="page" data-id="restaurantes">
+  <h1>RESTAURANTES<br>LOCAIS</h1>
+  <div style="display:flex;flex-direction:column;gap:70px;margin-top:80px">
+    <div class="rest">
+      <h2>Canoa Pizzaria</h2>
+      <img class="foto" src="originais/fotos/canoa.jpg" alt="">
+      <div class="pilula pequena" data-href="https://maps.app.goo.gl/oAtWYqJnFuKMhG447?g_st=ic"><svg class="ico"><use href="#pin"/></svg>Mapa e avaliações</div>
+    </div>
+    <div class="rest">
+      <h2>Turek Grelhados</h2>
+      <img class="foto" src="originais/fotos/turek.jpg" alt="">
+      <div class="pilula pequena" data-href="https://maps.app.goo.gl/SBaFqFEoh1DYHUtu8?g_st=ic"><svg class="ico"><use href="#pin"/></svg>Mapa e avaliações</div>
+    </div>
+    <div class="rest">
+      <h2>Estação Tokio Jacumã</h2>
+      <img class="foto" src="originais/fotos/tokio.jpg" alt="" style="object-position:50% 60%">
+      <div class="pilula pequena" data-href="https://maps.app.goo.gl/Vrrj6Ac21LtApTsy6?g_st=ic"><svg class="ico"><use href="#pin"/></svg>Mapa e avaliações</div>
+    </div>
+  </div>
+  <div class="paginacao">1/2</div>
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 19. RESTAURANTES (2/2) =============================== -->
+<section class="page" data-id="restaurantes2">
+  <h1>RESTAURANTES</h1>
+  <div style="display:flex;flex-direction:column;gap:70px;margin-top:80px">
+    <div class="rest">
+      <h2>Restaurante Trattoria</h2>
+      <img class="foto" src="originais/fotos/trattoria.jpg" alt="">
+      <div class="pilula pequena" data-href="https://maps.app.goo.gl/2dfWqYromTjgV5MF7?g_st=ic"><svg class="ico"><use href="#pin"/></svg>Mapa e avaliações</div>
+    </div>
+    <div class="rest">
+      <h2>Restaurante Rural Casa de Taipa</h2>
+      <img class="foto" src="originais/fotos/taipa.jpg" alt="">
+      <div class="pilula pequena" data-href="https://maps.app.goo.gl/WsfszNhnk8QUyQu7A?g_st=ic"><svg class="ico"><use href="#pin"/></svg>Mapa e avaliações</div>
+    </div>
+  </div>
+  <h1 style="text-align:left;font-size:96px;margin-top:90px">DELIVERY</h1>
+  <div style="display:flex;flex-direction:column;gap:40px;margin-top:40px">
+    <div class="delivery">
+      <img class="foto" src="originais/fotos/canoa2.jpg" alt="">
+      <div><h2>Canoa Pizzaria</h2><div class="pilula pequena" data-href="https://wa.me/5583988745847"><svg class="ico"><use href="#whats"/></svg>Pedir no WhatsApp</div></div>
+    </div>
+    <div class="delivery">
+      <img class="foto" src="originais/fotos/burger.jpg" alt="">
+      <div><h2>Carpe Diem</h2><div class="pilula pequena" data-href="https://wa.me/5583981694603"><svg class="ico"><use href="#whats"/></svg>Pedir no WhatsApp</div></div>
+    </div>
+  </div>
+  <div class="paginacao">2/2</div>
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 20. O QUE FAZER (1/2) =============================== -->
+<section class="page" data-id="fazer">
+  <h1>O QUE FAZER</h1>
+  <div style="display:flex;flex-direction:column;gap:56px;margin-top:90px">
+    <div class="lugar">
+      <img src="originais/fotos/coqueirinho.jpg" alt="">
+      <div><h2>Praia de Coqueirinho</h2><p class="texto">Uma praia muito bonita, com um visual incrível visto do alto. Tem boa infraestrutura e passeios de buggy e quadriciclo.</p>
+      <div class="pilula pequena" style="align-self:flex-start" data-href="https://www.google.com/maps/search/?api=1&amp;query=Praia+de+Coqueirinho+Conde+PB"><svg class="ico"><use href="#pin"/></svg>Ver no mapa</div></div>
+    </div>
+    <div class="lugar">
+      <img src="originais/fotos/tambaba.jpg" alt="">
+      <div><h2>Praia de Tambaba</h2><p class="texto">Uma praia pequena, de beleza marcante. Um coqueiro que nasce na rocha forma um cenário único.</p>
+      <div class="pilula pequena" style="align-self:flex-start" data-href="https://www.google.com/maps/search/?api=1&amp;query=Praia+de+Tambaba+Conde+PB"><svg class="ico"><use href="#pin"/></svg>Ver no mapa</div></div>
+    </div>
+    <div class="lugar">
+      <img src="originais/fotos/praiabela.jpg" alt="">
+      <div><h2>Praia Bela</h2><p class="texto">Em Pitimbu, é um dos destinos mais encantadores do litoral da Paraíba. É onde o rio encontra o mar.</p>
+      <div class="pilula pequena" style="align-self:flex-start" data-href="https://www.google.com/maps/search/?api=1&amp;query=Praia+Bela+Pitimbu+PB"><svg class="ico"><use href="#pin"/></svg>Ver no mapa</div></div>
+    </div>
+  </div>
+  <div class="paginacao">1/2</div>
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 21. O QUE FAZER (2/2) =============================== -->
+<section class="page" data-id="fazer2">
+  <h1>O QUE FAZER</h1>
+  <div style="display:flex;flex-direction:column;gap:56px;margin-top:90px">
+    <div class="lugar">
+      <img src="originais/fotos/abiai.jpg" alt="">
+      <div><h2>Reserva do Abiaí</h2><p class="texto">São 350 hectares no litoral sul da Paraíba, com praias, falésias e rios que formam um cenário paradisíaco.</p>
+      <div class="pilula pequena" style="align-self:flex-start" data-href="https://www.google.com/maps/search/?api=1&amp;query=Reserva+do+Abiai+Pitimbu+PB"><svg class="ico"><use href="#pin"/></svg>Ver no mapa</div></div>
+    </div>
+    <div class="lugar">
+      <img src="originais/fotos/tabatinga.jpg" alt="">
+      <div><h2>Praia de Tabatinga</h2><p class="texto">Em Conde, é muito bonita, com água em temperatura agradável e falésias coloridas.</p>
+      <div class="pilula pequena" style="align-self:flex-start" data-href="https://www.google.com/maps/search/?api=1&amp;query=Praia+de+Tabatinga+Conde+PB"><svg class="ico"><use href="#pin"/></svg>Ver no mapa</div></div>
+    </div>
+  </div>
+  <div class="paginacao">2/2</div>
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 22. SEGURANÇA =============================== -->
+<section class="page" data-id="seguranca">
+  <h1>SEGURANÇA</h1>
+  <div class="after-title" style="display:flex;flex-direction:column;gap:80px">
+    <div class="item">
+      <div class="bolinha"><svg class="ico"><use href="#extintor"/></svg></div>
+      <div><h2>Extintor</h2><p class="texto">Fica embaixo da bancada da área gourmet.</p></div>
+    </div>
+    <div class="item">
+      <div class="bolinha"><svg class="ico"><use href="#camera"/></svg></div>
+      <div><h2>Câmeras de segurança</h2><p class="texto">A casa tem 2 câmeras, as duas voltadas para a entrada e a saída de pessoas. Por favor, não as obstrua: elas são para a segurança de todos.</p></div>
+    </div>
+    <div class="item">
+      <div class="bolinha"><svg class="ico"><use href="#moto"/></svg></div>
+      <div><h2>Rondas de moto</h2><p class="texto">O segurança do condomínio faz uma ronda a cada 1 hora.</p></div>
+    </div>
+    <div class="item">
+      <div class="bolinha"><svg class="ico"><use href="#caminhao"/></svg></div>
+      <div><h2>Delivery</h2><p class="texto">Antes de pedir delivery, avise a portaria pelo número <b>{{TEL_PORTARIA}}</b>.</p>
+      <div class="pilula pequena contorno" data-href="tel:{{TEL_PORTARIA_LINK}}"><svg class="ico"><use href="#telefone"/></svg>Ligar para a portaria</div></div>
+    </div>
+  </div>
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 23. ANTES DE PARTIR =============================== -->
+<section class="page" data-id="partir">
+  <h1>ANTES DE PARTIR</h1>
+  <div style="display:flex;flex-direction:column;margin-top:70px">
+    <div class="hora" style="font-size:170px">12:00</div>
+    <div class="hora-rotulo">CHECK-OUT</div>
+    <div class="hora-linha" style="margin:34px 0 40px"></div>
+    <p class="texto centro" style="font-size:37px">O check-out é até as 12h. Fazemos o possível para atender pedidos de check-out mais tarde: se precisar, fale com a gente.</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:34px;margin-top:70px">
+    <div class="item" style="gap:34px;align-items:center"><svg class="ico" style="width:80px;height:80px;flex:none"><use href="#check"/></svg><p class="texto">Recolha o lixo e coloque no tambor azul do lado de fora.</p></div>
+    <div class="item" style="gap:34px;align-items:center"><svg class="ico" style="width:80px;height:80px;flex:none"><use href="#check"/></svg><p class="texto">Deixe toda a louça limpa.</p></div>
+    <div class="item" style="gap:34px;align-items:center"><svg class="ico" style="width:80px;height:80px;flex:none"><use href="#check"/></svg><p class="texto">Confira se não está esquecendo nenhum pertence.</p></div>
+    <div class="item" style="gap:34px;align-items:center"><svg class="ico" style="width:80px;height:80px;flex:none"><use href="#check"/></svg><p class="texto">Feche todas as janelas e portas.</p></div>
+    <div class="item" style="gap:34px;align-items:center"><svg class="ico" style="width:80px;height:80px;flex:none"><use href="#check"/></svg><p class="texto">Desligue o ar-condicionado e apague todas as luzes.</p></div>
+    <div class="item" style="gap:34px;align-items:center"><svg class="ico" style="width:80px;height:80px;flex:none"><use href="#check"/></svg><p class="texto">Avise-nos se acontecer algum pequeno dano.</p></div>
+  </div>
+  <div class="caixa" style="margin-top:70px;width:860px;display:flex;gap:36px;align-items:center">
+    <svg class="ico" style="width:96px;height:96px;flex:none"><use href="#chave"/></svg>
+    <div><h3 style="margin-bottom:6px">Chaves</h3><p class="texto" style="font-size:37px">Por favor, deixe as chaves nas portas dos quartos.</p></div>
+  </div>
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 24. AVALIAÇÃO =============================== -->
+<section class="page" data-id="avaliacao">
+  <h1>AVALIAÇÃO</h1>
+  <img class="foto" src="originais/fotos/avaliacao.jpg" alt="" style="height:560px;margin-top:110px;border-radius:16px">
+  <div style="display:flex;justify-content:center;gap:28px;margin-top:90px;color:var(--caramelo)">
+    <svg class="ico" style="width:96px;height:96px;fill:currentColor"><use href="#estrela-lisa"/></svg><svg class="ico" style="width:96px;height:96px;fill:currentColor"><use href="#estrela-lisa"/></svg><svg class="ico" style="width:96px;height:96px;fill:currentColor"><use href="#estrela-lisa"/></svg><svg class="ico" style="width:96px;height:96px;fill:currentColor"><use href="#estrela-lisa"/></svg><svg class="ico" style="width:96px;height:96px;fill:currentColor"><use href="#estrela-lisa"/></svg>
+  </div>
+  <p class="texto centro" style="margin-top:80px;font-size:44px">Esperamos que você tenha gostado da sua estadia! Ficaremos muito gratos se você puder deixar uma avaliação na plataforma.</p>
+  <div class="pilula" style="margin-top:80px" data-href="https://www.airbnb.com.br/trips"><svg class="ico"><use href="#estrela"/></svg>Avaliar no Airbnb</div>
+  <img src="originais/fotos/logo.png" alt="" style="width:200px;align-self:center;margin-top:120px">
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+
+<!-- =============================== 25. OBRIGADO / CONTATO =============================== -->
+<section class="page" data-id="obrigado">
+  <h1>OBRIGADO</h1>
+  <p class="texto centro" style="margin-top:50px;font-size:46px">por escolher se hospedar na Casa Tambaba!</p>
+  <div style="display:flex;flex-direction:column;gap:40px;margin-top:100px">
+    <div class="barra" data-href="https://wa.me/{{WA_ANFITRIAO}}"><svg class="ico"><use href="#whats"/></svg>{{TEL_ANFITRIAO}}</div>
+    <div class="barra" data-href="mailto:{{EMAIL}}"><svg class="ico"><use href="#email"/></svg>{{EMAIL}}</div>
+    <div class="barra"><svg class="ico"><use href="#pin"/></svg>João Pessoa - PB</div>
+    <div class="barra" data-href="https://www.instagram.com/casatambaba"><svg class="ico"><use href="#insta"/></svg>@casatambaba</div>
+  </div>
+  <img class="rodape-foto" src="originais/fotos/obrigado.jpg" alt="" style="height:1060px">
+  <div class="menu" data-link="menu"><i></i><i></i><i></i></div>
+</section>
+</body>
+</html>
