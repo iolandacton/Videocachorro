@@ -165,6 +165,10 @@
     <circle cx="40" cy="42" r="22"/><path d="M54 58 l14 16 a5 5 0 0 1 -7 7 l-16 -14 M27 31 a16 16 0 0 1 12 -6"/>
     <circle cx="76" cy="24" r="7"/><path d="M10 90 h80"/>
   </symbol>
+  <symbol id="pizza" viewBox="0 0 100 100">
+    <path d="M18 26 Q50 8 82 26 L50 90 Z M24 36 Q50 22 76 36"/>
+    <circle cx="44" cy="48" r="5"/><circle cx="58" cy="58" r="4.5"/><circle cx="48" cy="70" r="4"/>
+  </symbol>
   <symbol id="telefone" viewBox="0 0 100 100">
     <path d="M30 16 l12 -2 l8 18 l-10 7 c4 10 10 16 20 20 l7 -10 l18 8 l-2 12 c-2 4 -6 6 -11 6 c-28 -4 -46 -22 -50 -50 c0 -5 2 -9 8 -9 z"/>
   </symbol>
