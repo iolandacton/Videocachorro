@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR" class="overlay">
+<head>
+<meta charset="utf-8">
+<title>Guia Casa Tambaba: sobreposições</title>
+<link rel="stylesheet" href="estilo.css">
+<style>
+  .chip {
+    position: absolute; height: 64px; padding: 0 34px;
+    border-radius: 999px; background: var(--caramelo); color: #fff;
+    display: flex; align-items: center; gap: 16px;
+    font-size: 27px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; white-space: nowrap;
+  }
+  .chip::before {
+    content: ""; border-left: 20px solid #fff; border-top: 12px solid transparent; border-bottom: 12px solid transparent;
+  }
+</style>
+</head>
+<body>
+<!-- Desenhado por cima de páginas do PDF original (fundo transparente).
+     data-pagina = página original (1 = capa). -->
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-play" viewBox="0 0 100 100">
+    <rect x="10" y="18" width="80" height="54" rx="5"/>
+    <path d="M43 34 L62 45 L43 56 Z"/>
+    <path d="M50 72 V82 M34 84 H66"/>
+  </symbol>
+</svg>
+
+<!-- Página 2 (menu): novo ícone "Como funciona" no espaço vazio ao lado de "Avaliação" -->
+<section class="page" data-pagina="2">
+  <div data-link="hub" style="position:absolute;left:840px;top:1907px;width:300px;display:flex;flex-direction:column;align-items:center;gap:26px">
+    <div class="tile" style="margin-left:0"><svg><use href="#i-play"/></svg></div>
+    <div class="legenda">Como funciona</div>
+  </div>
+</section>
+
+<!-- Página 5 (Como chegar): atalho para o vídeo do trajeto -->
+<section class="page" data-pagina="5">
+  <div class="chip" data-link="chegada" style="left:150px;top:2545px">Vídeo da portaria até a casa</div>
+</section>
+
+<!-- Página 9 (Importante): atalhos do telão e do tampo -->
+<section class="page" data-pagina="9">
+  <div class="chip" data-link="telao" style="left:376px;top:922px;height:58px;font-size:25px">Ver vídeo do telão</div>
+  <div class="chip" data-link="pingpong" style="left:376px;top:2290px">Ver como trocar o tampo</div>
+</section>
+</body>
+</html>
