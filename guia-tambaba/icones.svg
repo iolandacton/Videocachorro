@@ -1,0 +1,175 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute">
+  <!-- Todos os ícones: grade 100x100, traço 3.2, pontas arredondadas, sem preenchimento -->
+  <symbol id="chave" viewBox="0 0 100 100">
+    <circle cx="66" cy="34" r="18"/><circle cx="71" cy="29" r="4.5"/>
+    <path d="M53 47 L18 82 M26 74 L33 81 M33 67 L39 73 M18 82 L23 87"/>
+  </symbol>
+  <symbol id="pin" viewBox="0 0 100 100">
+    <path d="M50 82 C 40 70, 26 54, 26 38 a24 24 0 0 1 48 0 c0 16 -14 32 -24 44 z"/>
+    <circle cx="50" cy="38" r="9"/>
+    <ellipse cx="50" cy="84" rx="24" ry="6"/>
+  </symbol>
+  <symbol id="wifi" viewBox="0 0 100 100">
+    <path d="M12 42 a54 54 0 0 1 76 0 M24 55 a37 37 0 0 1 52 0 M36 68 a20 20 0 0 1 28 0"/>
+    <circle cx="50" cy="80" r="4.5"/>
+  </symbol>
+  <symbol id="casa" viewBox="0 0 100 100">
+    <path d="M14 50 L50 18 L86 50 M24 42 V84 H76 V42"/>
+    <rect x="43" y="62" width="14" height="22"/><rect x="30" y="52" width="10" height="10"/><rect x="60" y="52" width="10" height="10"/>
+  </symbol>
+  <symbol id="doc" viewBox="0 0 100 100">
+    <path d="M26 12 H60 L76 28 V88 H26 Z M60 12 V28 H76"/>
+    <path d="M36 44 H66 M36 56 H66 M36 68 H56"/>
+  </symbol>
+  <symbol id="info" viewBox="0 0 100 100">
+    <path d="M30 76 A34 34 0 1 1 42 81 L18 88 Z"/>
+    <circle class="cheio" cx="52" cy="32" r="4"/>
+    <path d="M52 44 V66"/>
+  </symbol>
+  <symbol id="toalhas" viewBox="0 0 100 100">
+    <rect x="14" y="64" width="72" height="18" rx="9"/><rect x="20" y="46" width="62" height="18" rx="9"/><rect x="26" y="28" width="52" height="18" rx="9"/>
+    <path d="M72 64 v18 M72 46 v18 M68 28 v18"/>
+  </symbol>
+  <symbol id="piscina" viewBox="0 0 100 100">
+    <rect x="10" y="40" width="80" height="42" rx="21"/>
+    <path d="M30 61 q5 -5 10 0 t10 0 t10 0 t10 0"/>
+    <path d="M38 52 V26 a6 6 0 0 1 12 0 M58 52 V26 a6 6 0 0 1 12 0 M38 36 H58"/>
+  </symbol>
+  <symbol id="mapa" viewBox="0 0 100 100">
+    <path d="M12 24 L36 16 L64 26 L88 18 V76 L64 84 L36 74 L12 82 Z M36 16 V74 M64 26 V84"/>
+    <path d="M24 46 c-5 -6 -6 -9 -6 -12 a6 6 0 0 1 12 0 c0 3 -1 6 -6 12 z"/>
+    <path d="M44 50 q8 -10 14 0 t16 -6" stroke-dasharray="3 6"/>
+  </symbol>
+  <symbol id="contato" viewBox="0 0 100 100">
+    <path d="M18 18 H82 a6 6 0 0 1 6 6 V64 a6 6 0 0 1 -6 6 H42 L24 84 V70 H18 a6 6 0 0 1 -6 -6 V24 a6 6 0 0 1 6 -6 Z"/>
+    <path d="M38 30 l7 -1 l4 9 l-5 4 c2 5 6 9 11 11 l4 -5 l9 4 l-1 7 c-1 2 -3 3 -6 3 c-14 -2 -24 -12 -26 -26 c0 -3 1 -5 3 -6 z"/>
+  </symbol>
+  <symbol id="talheres" viewBox="0 0 100 100">
+    <path d="M30 12 V34 M40 12 V34 M50 12 V34 M30 34 a10 10 0 0 0 20 0 M40 44 V88"/>
+    <path d="M70 12 c-9 0 -12 12 -12 20 c0 8 5 14 12 14 c7 0 12 -6 12 -14 c0 -8 -3 -20 -12 -20 z M70 46 V88"/>
+  </symbol>
+  <symbol id="escudo" viewBox="0 0 100 100">
+    <path d="M50 10 L82 22 V46 c0 20 -14 34 -32 44 c-18 -10 -32 -24 -32 -44 V22 Z"/>
+    <path d="M36 50 L46 60 L66 38"/>
+  </symbol>
+  <symbol id="malas" viewBox="0 0 100 100">
+    <rect x="14" y="24" width="38" height="58" rx="5"/><path d="M26 24 V16 H40 V24 M24 34 V72 M33 34 V72 M42 34 V72"/>
+    <circle cx="22" cy="87" r="3"/><circle cx="44" cy="87" r="3"/>
+    <rect x="56" y="50" width="32" height="32" rx="4"/><path d="M65 50 V43 H79 V50 M56 62 H88"/>
+  </symbol>
+  <symbol id="estrela" viewBox="0 0 100 100">
+    <path d="M50 14 L58.8 37.9 L84.2 38.9 L64.3 54.6 L71.2 79.1 L50 65 L28.8 79.1 L35.7 54.6 L15.8 38.9 L41.2 37.9 Z"/>
+    <path d="M84 14 l4 -4 M88 26 h6 M74 8 v-4"/>
+  </symbol>
+  <symbol id="estrela-lisa" viewBox="0 0 100 100">
+    <path d="M50 14 L58.8 37.9 L84.2 38.9 L64.3 54.6 L71.2 79.1 L50 65 L28.8 79.1 L35.7 54.6 L15.8 38.9 L41.2 37.9 Z"/>
+  </symbol>
+  <symbol id="play" viewBox="0 0 100 100">
+    <rect x="10" y="18" width="80" height="54" rx="5"/>
+    <path d="M43 34 L62 45 L43 56 Z"/>
+    <path d="M50 72 V82 M34 84 H66"/>
+  </symbol>
+  <symbol id="pessoas" viewBox="0 0 100 100">
+    <circle cx="27" cy="40" r="8"/><path d="M12 72 a15 15 0 0 1 30 0"/>
+    <circle cx="73" cy="40" r="8"/><path d="M58 72 a15 15 0 0 1 30 0"/>
+    <circle cx="50" cy="32" r="10"/><path d="M32 72 a18 18 0 0 1 36 0"/>
+  </symbol>
+  <symbol id="cama" viewBox="0 0 100 100">
+    <path d="M14 82 V28 M86 82 V50 M14 64 H86 M14 74 H86 M14 50 H86"/>
+    <rect x="22" y="38" width="20" height="12" rx="4"/><rect x="46" y="38" width="20" height="12" rx="4"/>
+  </symbol>
+  <symbol id="quarto" viewBox="0 0 100 100">
+    <path d="M10 36 L14 22 H28 L32 36 Z M21 36 V54 M10 54 H32 M13 54 L10 82 M29 54 L32 82"/>
+    <path d="M44 82 V40 H88 V82 M44 64 H88 M44 72 H88"/>
+    <rect x="50" y="48" width="16" height="10" rx="3"/><rect x="70" y="48" width="12" height="10" rx="3"/>
+  </symbol>
+  <symbol id="banheiro" viewBox="0 0 100 100">
+    <rect x="16" y="30" width="16" height="18" rx="2"/>
+    <path d="M12 48 H50 c0 14 -8 22 -18 22 H28 c-9 0 -16 -9 -16 -22 z M26 70 V84 H40 V70"/>
+    <path d="M58 14 H90 M62 14 V86 M86 14 V86 M62 86 H86 M70 20 V80 M78 20 V80"/>
+  </symbol>
+  <symbol id="telao" viewBox="0 0 100 100">
+    <path d="M12 14 H88"/><rect x="18" y="14" width="64" height="42"/>
+    <path d="M50 56 v6"/><circle cx="50" cy="65" r="3"/>
+    <rect x="36" y="78" width="28" height="12" rx="3"/><circle cx="58" cy="84" r="3"/>
+    <path d="M42 78 L30 60 M58 78 L70 60" stroke-dasharray="3 5"/>
+  </symbol>
+  <symbol id="som" viewBox="0 0 100 100">
+    <rect x="28" y="12" width="44" height="76" rx="6"/>
+    <circle cx="50" cy="62" r="15"/><circle cx="50" cy="62" r="4"/><circle cx="50" cy="30" r="7"/>
+  </symbol>
+  <symbol id="inseto" viewBox="0 0 100 100">
+    <ellipse cx="50" cy="60" rx="6" ry="18"/><circle cx="50" cy="36" r="6"/><path d="M50 30 V16"/>
+    <ellipse cx="34" cy="44" rx="15" ry="7" transform="rotate(-25 34 44)"/>
+    <ellipse cx="66" cy="44" rx="15" ry="7" transform="rotate(25 66 44)"/>
+    <path d="M45 56 L30 66 L26 82 M55 56 L70 66 L74 82 M45 64 L36 76 M55 64 L64 76"/>
+  </symbol>
+  <symbol id="bola8" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="36"/><circle cx="50" cy="48" r="15"/>
+    <circle cx="50" cy="42.5" r="4.5"/><circle cx="50" cy="53" r="5.5"/>
+    <path d="M27 34 a26 26 0 0 1 11 -11"/>
+  </symbol>
+  <symbol id="grelha" viewBox="0 0 100 100">
+    <path d="M18 46 H82 a32 24 0 0 1 -64 0 Z M30 46 V40 M42 46 V40 M54 46 V40 M66 46 V40"/>
+    <path d="M34 66 L24 90 M66 66 L76 90 M50 70 V90 M28 80 H72"/>
+    <path d="M38 30 q-5 -6 0 -12 M50 28 q-5 -6 0 -12 M62 30 q-5 -6 0 -12"/>
+  </symbol>
+  <symbol id="frutas" viewBox="0 0 100 100">
+    <path d="M50 36 c-10 -8 -30 -4 -30 16 c0 18 14 32 22 30 c4 -1 12 -1 16 0 c8 2 22 -12 22 -30 c0 -20 -20 -24 -30 -16 z"/>
+    <path d="M50 36 C 50 28, 53 22, 58 17 M52 27 q9 -9 18 -4 q-7 9 -18 4 z"/>
+  </symbol>
+  <symbol id="extintor" viewBox="0 0 100 100">
+    <rect x="36" y="32" width="28" height="56" rx="9"/>
+    <path d="M44 32 V22 H56 V32 M50 22 V16 M44 18 L30 14 M56 22 H68 L76 32 V44"/>
+    <rect x="42" y="50" width="16" height="20" rx="2"/>
+  </symbol>
+  <symbol id="camera" viewBox="0 0 100 100">
+    <path d="M12 30 L64 18 L70 42 L18 54 Z M64 18 L78 22 L82 38 L70 42"/>
+    <circle cx="28" cy="38" r="5"/>
+    <path d="M52 48 L58 64 H78 M78 54 V76"/>
+  </symbol>
+  <symbol id="moto" viewBox="0 0 100 100">
+    <circle cx="24" cy="70" r="10"/><circle cx="78" cy="70" r="10"/>
+    <path d="M24 70 H44 C 46 56, 56 50, 66 50 L78 70 M30 50 H52 M66 50 L62 28 H74 M58 28 H62"/>
+  </symbol>
+  <symbol id="caminhao" viewBox="0 0 100 100">
+    <rect x="24" y="28" width="40" height="38" rx="3"/>
+    <path d="M64 40 H78 L90 54 V66 H64 Z"/>
+    <circle cx="36" cy="72" r="7"/><circle cx="76" cy="72" r="7"/>
+    <path d="M6 36 H16 M2 46 H16 M8 56 H16"/>
+  </symbol>
+  <symbol id="check" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="36"/><path d="M34 51 L45 62 L66 40"/>
+  </symbol>
+  <symbol id="whats" viewBox="0 0 100 100">
+    <path d="M28 78 A36 36 0 1 1 40 83 L14 88 Z"/>
+    <path d="M38 32 l7 -1 l4 9 l-5 4 c2 5 6 9 11 11 l4 -5 l9 4 l-1 7 c-1 2 -3 3 -6 3 c-14 -2 -24 -12 -26 -26 c0 -3 1 -5 3 -6 z"/>
+  </symbol>
+  <symbol id="email" viewBox="0 0 100 100">
+    <rect x="12" y="24" width="76" height="52" rx="5"/><path d="M14 28 L50 56 L86 28"/>
+  </symbol>
+  <symbol id="insta" viewBox="0 0 100 100">
+    <rect x="16" y="16" width="68" height="68" rx="20"/><circle cx="50" cy="50" r="16"/><circle class="cheio" cx="70" cy="30" r="4"/>
+  </symbol>
+  <symbol id="hidro" viewBox="0 0 100 100">
+    <rect x="12" y="50" width="76" height="28" rx="14"/><rect x="19" y="56" width="62" height="16" rx="8"/>
+    <path d="M28 64 q5 -4 10 0 t10 0 t10 0 t10 0 M24 78 v8 M76 78 v8"/>
+    <circle cx="36" cy="38" r="4.5"/><circle cx="52" cy="30" r="6"/><circle cx="66" cy="40" r="3.5"/><circle cx="44" cy="17" r="3"/><circle cx="62" cy="20" r="2.5"/>
+  </symbol>
+  <symbol id="rota" viewBox="0 0 100 100">
+    <path d="M20 84 C 20 64, 52 72, 50 56 C 48 42, 30 46, 34 34" stroke-dasharray="5 6"/>
+    <circle cx="20" cy="84" r="5"/>
+    <path d="M66 54 C 56 42, 52 36, 52 28 a14 14 0 0 1 28 0 c0 8 -4 14 -14 26 z"/><circle cx="66" cy="28" r="5"/>
+  </symbol>
+  <symbol id="pingpong" viewBox="0 0 100 100">
+    <circle cx="40" cy="42" r="22"/><path d="M54 58 l14 16 a5 5 0 0 1 -7 7 l-16 -14 M27 31 a16 16 0 0 1 12 -6"/>
+    <circle cx="76" cy="24" r="7"/><path d="M10 90 h80"/>
+  </symbol>
+  <symbol id="pizza" viewBox="0 0 100 100">
+    <path d="M18 26 Q50 8 82 26 L50 90 Z M24 36 Q50 22 76 36"/>
+    <circle cx="44" cy="48" r="5"/><circle cx="58" cy="58" r="4.5"/><circle cx="48" cy="70" r="4"/>
+  </symbol>
+  <symbol id="telefone" viewBox="0 0 100 100">
+    <path d="M30 16 l12 -2 l8 18 l-10 7 c4 10 10 16 20 20 l7 -10 l18 8 l-2 12 c-2 4 -6 6 -11 6 c-28 -4 -46 -22 -50 -50 c0 -5 2 -9 8 -9 z"/>
+  </symbol>
+</svg>
