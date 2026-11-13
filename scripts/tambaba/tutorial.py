@@ -10,6 +10,8 @@ V = Path("guia-tambaba/videos")
 D = V / "drive"
 FONTE = "/usr/share/fonts/truetype/crosextra/Carlito-Bold.ttf"
 CLARO = "eq=gamma=1.45:contrast=1.12:saturation=1.15"
+SUAVE = "SUAVE"  # câmera lenta com interpolação de quadros (para o timelapse)
+FOTOS = Path("guia-tambaba/originais/fotos")
 
 TUTORIAIS = {
     "telao": [
@@ -26,6 +28,19 @@ TUTORIAIS = {
              legenda="Som: painel da parede,\nluz verde acesa",
              clipes=[("v12", 40.5, 46.0, 1)]),
         dict(fala="Pronto, é só aproveitar!", legenda="Pronto!", clipes=[("v12", 50.0, 52.8, 1)]),
+    ],
+    "chegada": [
+        dict(fala="Depois de passar pela portaria, suba a ladeira até a rotatória.",
+             legenda="Suba a ladeira até a rotatória",
+             clipes=[("v13", 0.0, 2.0, 0.4, SUAVE)]),
+        dict(fala="Na rotatória, vire à esquerda.", legenda="Na rotatória, vire à esquerda",
+             clipes=[("v13", 2.0, 3.0, 0.4, SUAVE)]),
+        dict(fala="Siga reto até o próximo retorno.", legenda="Siga reto até o próximo retorno",
+             clipes=[("v13", 3.0, 5.2, 0.5, SUAVE)]),
+        dict(fala="Faça o retorno, e a casa fica à sua direita.", legenda="Faça o retorno:\na casa fica à direita",
+             clipes=[("v13", 5.2, 7.1, 0.45, SUAVE)]),
+        dict(fala="É a casa com o maior jardim. Seja bem-vindo!", legenda="A casa com o maior jardim!",
+             clipes=[("FOTO", "jardim.jpg", 4.0)]),
     ],
     "hidro": [
         dict(fala="Para ligar a hidromassagem, use o quadro de botões da área externa.",
@@ -56,15 +71,28 @@ def montar(nome, voz):
         # 1. vídeo do bloco
         lista = []
         for j, c in enumerate(b["clipes"]):
+            out = tmp / f"b{i}c{j}.mp4"
+            if c[0] == "FOTO":  # foto parada com leve aproximação
+                _, arq, seg = c
+                n = int(seg * 30)
+                run(["-loop", "1", "-i", str(FOTOS / arq), "-vf",
+                     f"scale=2160:3840:force_original_aspect_ratio=increase,crop=2160:3840,"
+                     f"zoompan=z='1+0.08*on/{n}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d={n}:s=1080x1920:fps=30,format=yuv420p",
+                     "-frames:v", str(n), "-an", "-c:v", "libx264", "-crf", "18", str(out)])
+                lista.append(out)
+                continue
             src, a, z, vel = c[:4]
             filtro = c[4] if len(c) > 4 else "null"
             anel = c[5] if len(c) > 5 else None
-            out = tmp / f"b{i}c{j}.mp4"
-            vf = f"{filtro},setpts=PTS/{vel},scale=1080:1920,fps=30,setsar=1"
-            if anel:
+            if filtro == SUAVE:
+                vf = f"setpts=PTS/{vel},scale=1080:1920,minterpolate=fps=30:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1,setsar=1"
+            else:
+                vf = f"{filtro},setpts=PTS/{vel},scale=1080:1920,fps=30,setsar=1"
+            if anel:  # quadro congelado com destaque
                 run(["-ss", str(a), "-i", str(D / f"{src}.mp4"), "-i", str(V / "fontes" / anel), "-frames:v", "1",
                      "-filter_complex", f"[0:v]{vf}[b];[b][1:v]overlay[v]", "-map", "[v]", str(tmp / "q.png")])
-                run(["-loop", "1", "-t", "1", "-i", str(tmp / "q.png"), "-vf", "fps=30,format=yuv420p", "-an", "-c:v", "libx264", "-crf", "18", str(out)])
+                run(["-loop", "1", "-t", "1", "-i", str(tmp / "q.png"), "-vf", "fps=30,format=yuv420p", "-an",
+                     "-c:v", "libx264", "-crf", "18", str(out)])
             else:
                 run(["-ss", str(a), "-t", str(z - a), "-i", str(D / f"{src}.mp4"), "-vf", vf, "-an",
                      "-c:v", "libx264", "-crf", "18", "-pix_fmt", "yuv420p", str(out)])
