@@ -129,3 +129,17 @@ h3 { font-family: var(--sub); font-weight: 700; font-size: 40px; margin: 0 0 14p
   font-size: 30px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--tinta-suave);
   padding: 14px 30px; border: 3px solid var(--caramelo); border-radius: 999px;
 }
+
+/* bloco de vídeo com miniatura (abre no YouTube) */
+.assistir { display: grid; grid-template-columns: 330px 1fr; height: 586px; background: var(--bege); }
+.assistir .thumb { position: relative; overflow: hidden; }
+.assistir .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.assistir .thumb .play {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: 130px; height: 130px; border-radius: 50%; background: rgba(200, 182, 152, 0.92);
+  display: flex; align-items: center; justify-content: center;
+}
+.assistir .thumb .play::after { content: ""; margin-left: 10px; border-left: 46px solid #fff; border-top: 28px solid transparent; border-bottom: 28px solid transparent; }
+.assistir .info { padding: 60px 56px; display: flex; flex-direction: column; justify-content: center; gap: 22px; min-width: 0; }
+.assistir .rotulo { font-size: 30px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--tinta-suave); }
+.assistir .pilula { align-self: flex-start; margin-top: 12px; }
