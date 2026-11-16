@@ -68,3 +68,12 @@ export const OutroOficina: React.FC = () => {
     </AbsoluteFill>
   );
 };
+
+// Encerramento "cartela" (referência enviada pela cliente): corte seco para preto, só a logo branca, parada,
+// centralizada um pouco acima do meio; sem animação. A duração e o instante do corte vêm do roteiro
+// (cabeça de compasso da trilha).
+export const CartelaLogo: React.FC = () => (
+  <AbsoluteFill style={{ background: "#000", alignItems: "center" }}>
+    <Img src={staticFile(LOGO)} style={{ position: "absolute", top: 1920 * 0.47 - (700 * 452 / 1728) / 2, width: 700 }} />
+  </AbsoluteFill>
+);

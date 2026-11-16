@@ -37,9 +37,10 @@ from editar import ffmpeg, loudnorm_linear, mixar_musica  # noqa: E402
 from musica import gerar, salvar  # noqa: E402
 
 SR = V.SR
-VER = next((v for v in ("v5", "v6", "v6b") if f"--{v}" in sys.argv), None)
+VER = next((v for v in ("v5", "v6", "v6b", "v7", "v7b") if f"--{v}" in sys.argv), None)
 V5 = VER is not None            # v5 em diante: trechos contínuos unidos, 29,97 fps, voz aprovada reaproveitada
-V6 = VER in ("v6", "v6b")       # v6: gimbal virtual + imagens de detalhe sobre a fala; v6b = sem a virada de página
+V6 = VER in ("v6", "v6b", "v7", "v7b")   # v6: gimbal virtual + imagens de detalhe sobre a fala; "b" = sem a virada de página
+V7 = VER in ("v7", "v7b")       # v7: igual à v6, só troca o encerramento pela cartela preta com a logo (referência da cliente)
 SUF = f"_{VER}" if VER else ""
 PASTA = "oficina/gimbal" if V6 else "oficina/cam" if V5 else "oficina/proc"
 D = Path("public/oficina/voz"); D.mkdir(parents=True, exist_ok=True)
@@ -136,7 +137,7 @@ def main() -> None:
     # movimento e as bordas rígidas parecem dobrar/esticar — deformação artificial; removido na v4.)
     for c1 in cenas_base[1:]:
         c1["entrada"] = "corte"
-    if VER in ("v5", "v6"):   # troca de tomada para o fechamento: virada de página
+    if VER in ("v5", "v6", "v7"):   # troca de tomada para o fechamento: virada de página
         cenas_base[-1]["entrada"] = "pagina"
 
     def T_(frase, n=0):
@@ -175,7 +176,7 @@ def main() -> None:
             {"video": L("C6220"), "inicioVideo": 0.5, "de": T_("Faz várias")[0] - 0.1, "ate": T_("mas assim")[0] + 0.6,
              "saida": "corte"},                                                                               # veio / emendas
             {"video": L("C6221"), "inicioVideo": 0.6, "de": T_("mas assim")[0] + 0.3, "ate": fecho + 0.45,     # raja única → fechamento
-             **({"saida": "pagina"} if VER == "v6" else {})},
+             **({"saida": "pagina"} if VER in ("v6", "v7") else {})},
             {"video": L("C6217"), "inicioVideo": 0.6, "de": T_("eu acho uma")[0] - 0.1, "ate": T_("ter no")[0] - 0.07},
         ]
     for a in apoios:
@@ -242,10 +243,14 @@ def main() -> None:
     if V6:   # encerramento com a logo (src/oficina/OutroOficina.tsx, 6 s): entra em dissolve logo após a última fala
         outro_de = round(palavras[-1]["e"] + 0.35, 3)
         total = round(outro_de + 6.0, 3)
+    if V7:   # cartela: corte seco para preto + logo, SINCRONIZADO com a trilha — entra na 1ª cabeça de compasso
+        compasso = 4 * 60 / 84                                   # depois da última fala e dura um compasso inteiro,
+        outro_de = round(np.ceil((palavras[-1]["e"] + 0.3) / compasso) * compasso, 3)   # com a música sumindo
+        total = round(outro_de + compasso, 3)
     roteiro = {"_fonte": "Gerado por pipeline/oficina.py", "fps": 30000 / 1001 if V5 else 30, "duracao": dur, "cenas": cenas_base,
                "apoios": apoios, "legendas": legendas, "fadeFinal": 0.7}
     if V6:
-        roteiro["outro"] = {"de": outro_de}
+        roteiro["outro"] = {"de": outro_de, **({"estilo": "cartela", "dur": round(total - outro_de, 3)} if V7 else {})}
     Path("src/oficina").mkdir(parents=True, exist_ok=True)
     Path(f"src/oficina/roteiro{SUF}.json").write_text(json.dumps(roteiro, ensure_ascii=False, indent=1))
     (D / f"palavras{SUF}.json").write_text(json.dumps(palavras, ensure_ascii=False, indent=0))
@@ -263,7 +268,7 @@ def main() -> None:
     eventos = [("whoosh", apoios[0]["de"] + 0.15)]
     eventos += [("tick", a["de"] + 0.35) for a in apoios if a.get("rotulo")]
     eventos += [("pagina", c["de"] - 0.12) for c in cenas_base if c.get("entrada") == "pagina"]
-    if V6:
+    if V6 and not V7:
         SFX["logo"] = ("public/oficina/sfx/mixkit_1489.mp3", 0.71, -24.0)   # sopro bem discreto quando a logo se revela
         eventos.append(("logo", outro_de + 3.5))
     ent, fil = [], []
@@ -281,6 +286,10 @@ def main() -> None:
     Path(f"src/oficina/roteiro{SUF}.json").write_text(json.dumps(roteiro, ensure_ascii=False, indent=1))
     salvar(gerar(dur, 84, 3), M / "trilha.wav")
     mixar_musica(M / "voz_sfx.wav", M / "trilha.wav", M / "audio.wav", dur, NIVEL_MUSICA, -16)
+    if V7:   # como na referência: a trilha vai sumindo durante a cartela da logo
+        (M / "audio.wav").rename(M / "audio_sem_fade.wav")
+        ffmpeg("-i", str(M / "audio_sem_fade.wav"), "-af", f"afade=t=out:st={outro_de + 0.1}:d={dur - outro_de - 0.25}:curve=qsin",
+               "-ar", "48000", str(M / "audio.wav"))
 
     base = dur_fala - sum(a["ate"] - a["de"] for a in apoios)
     print(f"duração {dur:.1f}s | protagonista {100 * base / dur_fala:.0f}% | apoios {100 * (1 - base / dur_fala):.0f}% | "
