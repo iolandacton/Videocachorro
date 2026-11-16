@@ -12,3 +12,7 @@ public/nutri/*.mp4
 public/nutri/*.wav
 public/nutri/sfx/
 public/nutri/full/
+# Guia Casa Tambaba: o PDF tem senha do Wi-Fi e contatos, e este repositório é público
+guia-tambaba/originais/
+guia-tambaba/out/
+guia-tambaba/videos/
