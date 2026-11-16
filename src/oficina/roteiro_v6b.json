@@ -334,6 +334,9 @@
   }
  ],
  "fadeFinal": 0.7,
+ "outro": {
+  "de": 59.395
+ },
  "sfx": [
   {
    "tipo": "whoosh",
@@ -346,6 +349,10 @@
   {
    "tipo": "tick",
    "pico": 43.18
+  },
+  {
+   "tipo": "logo",
+   "pico": 62.9
   }
  ]
 }

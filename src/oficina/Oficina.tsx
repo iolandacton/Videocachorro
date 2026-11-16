@@ -2,6 +2,7 @@ import React from "react";
 import "@fontsource/montserrat/300-italic.css";
 import "@fontsource/montserrat/400.css";
 import "@fontsource/montserrat/600.css";
+import { OutroOficina, OUTRO_DUR } from "./OutroOficina";
 import { AbsoluteFill, Audio, Easing, interpolate, OffthreadVideo, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 
 // Oficina Sete — linguagem da referência: protagonista como base, apoios em dissolve curto, legendas
@@ -11,7 +12,9 @@ import { AbsoluteFill, Audio, Easing, interpolate, OffthreadVideo, Sequence, sta
 type Cena = { video: string; inicioVideo: number; de: number; ate: number; entrada?: "dissolve" | "corte" | "pagina" };
 type Apoio = Cena & { rotulo?: [string, string]; saida?: "dissolve" | "corte" | "pagina" };
 type Legenda = { de: number; ate: number; texto: string };
-export type RoteiroOficina = { fps: number; duracao: number; cenas: Cena[]; apoios: Apoio[]; legendas: Legenda[]; fadeFinal: number };
+export type RoteiroOficina = { fps: number; duracao: number; cenas: Cena[]; apoios: Apoio[]; legendas: Legenda[]; fadeFinal: number;
+  outro?: { de: number } };   // encerramento com a logo: entra em dissolve a partir de "de"
+export const duracaoTotal = (r: { duracao: number; outro?: { de: number } }) => (r.outro ? r.outro.de + OUTRO_DUR : r.duracao);
 
 const FONTE = "Montserrat, sans-serif";
 const DISSOLVE = 0.35;
@@ -117,7 +120,15 @@ export const Oficina: React.FC<{ roteiro: RoteiroOficina; audio: string }> = ({ 
       </AbsoluteFill>
       {roteiro.apoios.map((a, i) => <Rotulo key={`r${i}`} a={a} t={t} />)}
       {roteiro.legendas.map((l, i) => <LegendaView key={i} l={l} t={t} />)}
-      <AbsoluteFill style={{ background: "#fff", opacity: rampa(t, roteiro.duracao - roteiro.fadeFinal, roteiro.duracao) }} />
+      {roteiro.outro ? (
+        <Sequence from={Math.round(roteiro.outro.de * fps)} layout="none">
+          <AbsoluteFill style={{ opacity: rampa(t, roteiro.outro.de, roteiro.outro.de + 0.6) }}>
+            <OutroOficina />
+          </AbsoluteFill>
+        </Sequence>
+      ) : (
+        <AbsoluteFill style={{ background: "#fff", opacity: rampa(t, roteiro.duracao - roteiro.fadeFinal, roteiro.duracao) }} />
+      )}
       <Audio src={staticFile(audio)} />
     </AbsoluteFill>
   );

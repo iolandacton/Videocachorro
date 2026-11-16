@@ -238,13 +238,21 @@ def main() -> None:
     for a, b in zip(legendas, legendas[1:]):
         a["ate"] = min(a["ate"], b["de"])
 
+    total = dur
+    if V6:   # encerramento com a logo (src/oficina/OutroOficina.tsx, 6 s): entra em dissolve logo após a última fala
+        outro_de = round(palavras[-1]["e"] + 0.35, 3)
+        total = round(outro_de + 6.0, 3)
     roteiro = {"_fonte": "Gerado por pipeline/oficina.py", "fps": 30000 / 1001 if V5 else 30, "duracao": dur, "cenas": cenas_base,
                "apoios": apoios, "legendas": legendas, "fadeFinal": 0.7}
+    if V6:
+        roteiro["outro"] = {"de": outro_de}
     Path("src/oficina").mkdir(parents=True, exist_ok=True)
     Path(f"src/oficina/roteiro{SUF}.json").write_text(json.dumps(roteiro, ensure_ascii=False, indent=1))
     (D / f"palavras{SUF}.json").write_text(json.dumps(palavras, ensure_ascii=False, indent=0))
 
     # Trilha discreta com ducking; mesma trilha lo-fi aprovada nos vídeos anteriores.
+    dur_fala = dur
+    dur = total   # daqui em diante: duração do áudio (inclui o encerramento, com a trilha seguindo até o fim)
     M = Path(f"public/oficina/mix{SUF}"); M.mkdir(parents=True, exist_ok=True)
     ffmpeg("-i", str(D / f"voz_editada{SUF}.wav"), "-af", f"aformat=channel_layouts=stereo,apad,atrim=0:{dur}",
            "-ar", "48000", str(M / "voz.wav"))
@@ -255,6 +263,9 @@ def main() -> None:
     eventos = [("whoosh", apoios[0]["de"] + 0.15)]
     eventos += [("tick", a["de"] + 0.35) for a in apoios if a.get("rotulo")]
     eventos += [("pagina", c["de"] - 0.12) for c in cenas_base if c.get("entrada") == "pagina"]
+    if V6:
+        SFX["logo"] = ("public/oficina/sfx/mixkit_1489.mp3", 0.71, -24.0)   # sopro bem discreto quando a logo se revela
+        eventos.append(("logo", outro_de + 3.5))
     ent, fil = [], []
     for j, (tipo, t_pico) in enumerate(eventos):
         arq, pico, ganho = SFX[tipo]
@@ -271,8 +282,8 @@ def main() -> None:
     salvar(gerar(dur, 84, 3), M / "trilha.wav")
     mixar_musica(M / "voz_sfx.wav", M / "trilha.wav", M / "audio.wav", dur, NIVEL_MUSICA, -16)
 
-    base = dur - sum(a["ate"] - a["de"] for a in apoios)
-    print(f"duração {dur:.1f}s | protagonista {100 * base / dur:.0f}% | apoios {100 * (1 - base / dur):.0f}% | "
+    base = dur_fala - sum(a["ate"] - a["de"] for a in apoios)
+    print(f"duração {dur:.1f}s | protagonista {100 * base / dur_fala:.0f}% | apoios {100 * (1 - base / dur_fala):.0f}% | "
           f"{len(legendas)} legendas")
     for c in cenas_base:
         print(f"  {c['de']:6.2f}–{c['ate']:6.2f}  {c['tomada']} (desde {c['inicioVideo']:.2f}s) {c.get('entrada', '')}")

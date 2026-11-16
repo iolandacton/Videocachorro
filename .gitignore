@@ -25,3 +25,4 @@ public/arq_v2/gancho_q/
 refs/oficina_sete/*.mp4
 public/oficina/*
 !public/oficina/originais/
+!public/oficina/logo/
