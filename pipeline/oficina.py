@@ -7,7 +7,14 @@
 3. Roteiro para o Remotion: protagonista como base, apoios ancorados nas frases que ilustram, legendas
    curtas no estilo da referência e rótulos de detalhe (só com termos ditos na fala).
 4. Trilha lo-fi discreta com ducking; volume final −16 LUFS.
-Uso: .venv/bin/python pipeline/oficina.py
+Uso: .venv/bin/python pipeline/oficina.py          (v4 aprovada — arquivos de 512x910)
+     .venv/bin/python pipeline/oficina.py --v5     (ajustes pedidos sobre a versão dos originais da câmera)
+
+v5 (mesma edição, mesma voz tratada, mesmas legendas/estilo):
+  • "…acho fundamental." → "A gente diminui…": os dois trechos são CONTÍNUOS na tomada; o corte (que voltava
+    0,4 s no mesmo plano) deixa de existir — a fala segue sem emenda;
+  • troca de tomada antes de "Marcenaria é detalhe": virada de página (com som de papel) no lugar do corte seco;
+  • imagem da porta usinada: câmera lenta real (todos os quadros do original 59,94p) e quase o dobro do tempo.
 """
 from __future__ import annotations
 
@@ -25,6 +32,9 @@ from editar import ffmpeg, loudnorm_linear, mixar_musica  # noqa: E402
 from musica import gerar, salvar  # noqa: E402
 
 SR = V.SR
+V5 = "--v5" in sys.argv
+SUF = "_v5" if V5 else ""
+PASTA = "oficina/cam" if V5 else "oficina/proc"
 D = Path("public/oficina/voz"); D.mkdir(parents=True, exist_ok=True)
 V.OUT = D  # arquivos temporários da EQ ficam aqui
 T = json.loads(Path("public/oficina/analise/transcricoes.json").read_text())
@@ -42,9 +52,12 @@ TRECHOS = [
     ("C6212", "A gente diminui", "raja única."),
     ("C6214", "Marcenaria detalhe,", "próximo projeto."),
 ]
+FANTASMAS = {"Tchau!"}   # palavra que o Whisper "ouviu" num estalo entre duas frases — não foi dita
 GAP_MESMA, GAP_OUTRA = 0.24, 0.32
 # fala ocupa ~83% do vídeo: trilha mais presente que nos vídeos do Yuri (~13 dB abaixo da voz durante a fala)
 NIVEL_MUSICA = -24.5  # respiro entre trechos (mesma tomada / tomadas diferentes)
+if V5:   # "e são trilhos … fundamental." + "A gente diminui … raja única." = um trecho só (contínuo na tomada)
+    TRECHOS[5:7] = [("C6212", "e são trilhos,", "raja única.")]
 TOMADAS = sorted({t[0] for t in TRECHOS})
 
 
@@ -64,6 +77,9 @@ def tratar_vozes() -> dict[str, np.ndarray]:
     df = V.garantir_deepfilter()
     out = {}
     for k in TOMADAS:
+        trat = D / f"{k}_tratado.wav"
+        if V5 and trat.exists():      # v5 reaproveita exatamente a voz já aprovada
+            out[k] = V.ler(trat); continue
         bruto = D / f"{k}_bruto.wav"
         ffmpeg("-i", T[k]["arquivo"], "-vn", "-ac", "1", "-ar", str(SR), "-c:a", "pcm_s16le", str(bruto))
         subprocess.run([str(df), "-D", "-a", "20", "-o", str(D / "df"), str(bruto)], check=True, capture_output=True)
@@ -94,15 +110,17 @@ def main() -> None:
             partes.append(np.zeros(int(g * SR), np.float32)); t_out += g
         p = x[int(a * SR):int(b * SR)].copy(); p[:len(rampa)] *= rampa; p[-len(rampa):] *= rampa[::-1]
         partes.append(p)
-        cenas_base.append({"video": f"oficina/proc/{k}.mp4", "inicioVideo": round(a, 3), "de": round(t_out, 3),
+        cenas_base.append({"video": f"{PASTA}/{k}.mp4", "inicioVideo": round(a, 3), "de": round(t_out, 3),
                            "tomada": k, "trecho": idx})
         for w in ws[i0:i1 + 1]:
+            if w["w"] in FANTASMAS:
+                continue
             palavras.append({"w": GRAFIA.get(w["w"], w["w"]), "s": round(w["s"] - a + t_out, 3),
                              "e": round(w["e"] - a + t_out, 3), "trecho": idx})
         t_out += b - a
         anterior = k
     voz = np.concatenate(partes)
-    V.gravar(voz, D / "voz_editada.wav")
+    V.gravar(voz, D / f"voz_editada{SUF}.wav")
     dur = round(len(voz) / SR + 0.9, 2)   # respiro final para o encerramento
     for c0, c1 in zip(cenas_base, cenas_base[1:]):
         c0["ate"] = c1["de"]
@@ -111,6 +129,8 @@ def main() -> None:
     # movimento e as bordas rígidas parecem dobrar/esticar — deformação artificial; removido na v4.)
     for c1 in cenas_base[1:]:
         c1["entrada"] = "corte"
+    if V5:   # troca de tomada para o fechamento: virada de página
+        cenas_base[-1]["entrada"] = "pagina"
 
     def T_(frase, n=0):
         alvo = [limpa(x) for x in frase.split()]
@@ -122,12 +142,12 @@ def main() -> None:
     # Apoios: só takes originais sem estabilização, no trecho MAIS FIRME de cada um (medido quadro a quadro).
     # C6220/C6221 (tremor forte no original) e C6223 (reflexo de quem filma) ficam de fora.
     apoios = [
-        {"video": "oficina/proc/C6218.mp4", "inicioVideo": 0.13, "de": T_("Olha só")[0] - 0.1,
+        {"video": f"{PASTA}/C6218.mp4", "inicioVideo": 0.13, "de": T_("Olha só")[0] - 0.1,
          "ate": T_("Olha só")[0] - 0.1 + 2.3},                                     # o painel ripado (a solução)
-        {"video": "oficina/proc/C6222.mp4", "inicioVideo": 0.2,
-         "de": fim_trecho[3] + 0.15 - 1.7, "ate": fim_trecho[3] + 0.15,
+        {"video": f"{PASTA}/C6222{'_lento' if V5 else ''}.mp4", "inicioVideo": 0.4 if V5 else 0.2,   # v5: câmera lenta 50%
+         "de": fim_trecho[3] + 0.15 - (3.2 if V5 else 1.7), "ate": fim_trecho[3] + 0.15,
          "rotulo": ["PORTA", "USINADA"]},                                          # cobre a troca de tomada
-        {"video": "oficina/proc/C6219.mp4", "inicioVideo": 0.67, "de": T_("Lá em cima")[0] - 0.1,
+        {"video": f"{PASTA}/C6219.mp4", "inicioVideo": 0.67, "de": T_("Lá em cima")[0] - 0.1,
          "ate": T_("Lá em cima")[0] - 0.1 + 2.0, "rotulo": ["FITAMENTO", "NO TRILHO"]},  # topo da porta e trilho
     ]
     for a in apoios:
@@ -190,21 +210,23 @@ def main() -> None:
     for a, b in zip(legendas, legendas[1:]):
         a["ate"] = min(a["ate"], b["de"])
 
-    roteiro = {"_fonte": "Gerado por pipeline/oficina.py", "fps": 30, "duracao": dur, "cenas": cenas_base,
+    roteiro = {"_fonte": "Gerado por pipeline/oficina.py", "fps": 30000 / 1001 if V5 else 30, "duracao": dur, "cenas": cenas_base,
                "apoios": apoios, "legendas": legendas, "fadeFinal": 0.7}
     Path("src/oficina").mkdir(parents=True, exist_ok=True)
-    Path("src/oficina/roteiro.json").write_text(json.dumps(roteiro, ensure_ascii=False, indent=1))
-    (D / "palavras.json").write_text(json.dumps(palavras, ensure_ascii=False, indent=0))
+    Path(f"src/oficina/roteiro{SUF}.json").write_text(json.dumps(roteiro, ensure_ascii=False, indent=1))
+    (D / f"palavras{SUF}.json").write_text(json.dumps(palavras, ensure_ascii=False, indent=0))
 
     # Trilha discreta com ducking; mesma trilha lo-fi aprovada nos vídeos anteriores.
-    M = Path("public/oficina/mix"); M.mkdir(parents=True, exist_ok=True)
-    ffmpeg("-i", str(D / "voz_editada.wav"), "-af", f"aformat=channel_layouts=stereo,apad,atrim=0:{dur}",
+    M = Path(f"public/oficina/mix{SUF}"); M.mkdir(parents=True, exist_ok=True)
+    ffmpeg("-i", str(D / f"voz_editada{SUF}.wav"), "-af", f"aformat=channel_layouts=stereo,apad,atrim=0:{dur}",
            "-ar", "48000", str(M / "voz.wav"))
     # Efeitos sonoros discretos, só onde há ação visual: tick quando o rótulo surge; whoosh na entrada da solução.
     SFX = {"tick": ("public/oficina/sfx/mixkit_1120.mp3", 0.10, -12.0),    # (arquivo, pico após o início, ganho dB)
-           "whoosh": ("public/oficina/sfx/mixkit_1489.mp3", 0.71, -21.0)}
+           "whoosh": ("public/oficina/sfx/mixkit_1489.mp3", 0.71, -21.0),
+           "pagina": ("public/oficina/sfx/mixkit_1105.mp3", 0.33, -10.0)}   # "Big paper page turn"
     eventos = [("whoosh", apoios[0]["de"] + 0.15)]
     eventos += [("tick", a["de"] + 0.35) for a in apoios if a.get("rotulo")]
+    eventos += [("pagina", c["de"] - 0.12) for c in cenas_base if c.get("entrada") == "pagina"]
     ent, fil = [], []
     for j, (tipo, t_pico) in enumerate(eventos):
         arq, pico, ganho = SFX[tipo]
@@ -217,7 +239,7 @@ def main() -> None:
     ffmpeg("-i", str(M / "voz.wav"), "-i", str(M / "sfx.wav"), "-filter_complex",
            "[0:a][1:a]amix=inputs=2:normalize=0:duration=first", "-ar", "48000", str(M / "voz_sfx.wav"))
     roteiro["sfx"] = [{"tipo": t, "pico": round(x, 2)} for t, x in eventos]
-    Path("src/oficina/roteiro.json").write_text(json.dumps(roteiro, ensure_ascii=False, indent=1))
+    Path(f"src/oficina/roteiro{SUF}.json").write_text(json.dumps(roteiro, ensure_ascii=False, indent=1))
     salvar(gerar(dur, 84, 3), M / "trilha.wav")
     mixar_musica(M / "voz_sfx.wav", M / "trilha.wav", M / "audio.wav", dur, NIVEL_MUSICA, -16)
 
