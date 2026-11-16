@@ -9,7 +9,7 @@ import { AbsoluteFill, Audio, Easing, interpolate, OffthreadVideo, Sequence, sta
 // detalhe (ícone + linha fina itálica + linha bold). Cor e estabilização já vêm aplicadas nos arquivos.
 
 type Cena = { video: string; inicioVideo: number; de: number; ate: number; entrada?: "dissolve" | "corte" | "pagina" };
-type Apoio = Cena & { rotulo?: [string, string]; saida?: "dissolve" | "corte" };
+type Apoio = Cena & { rotulo?: [string, string]; saida?: "dissolve" | "corte" | "pagina" };
 type Legenda = { de: number; ate: number; texto: string };
 export type RoteiroOficina = { fps: number; duracao: number; cenas: Cena[]; apoios: Apoio[]; legendas: Legenda[]; fadeFinal: number };
 
@@ -18,6 +18,9 @@ const DISSOLVE = 0.35;
 // "pagina": a cena que sai vira como a página de um livro (dobradiça na borda esquerda), centrada no corte
 const PAGINA = 0.9;
 const viraSuave = Easing.inOut(Easing.sin);
+const progressoVirada = (frame: number, inicio: number, fps: number) =>
+  interpolate(frame, [Math.round(inicio * fps), Math.round((inicio + PAGINA) * fps)], [0, 1],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: viraSuave });
 const suave = Easing.bezier(0.4, 0, 0.2, 1);
 const rampa = (t: number, a: number, b: number) =>
   interpolate(t, [a, b], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: suave });
@@ -27,14 +30,16 @@ const rampa = (t: number, a: number, b: number) =>
 const Video: React.FC<{ c: Cena; ate: number; opacidade: number; fps: number; antes?: number; virada?: number | null }> =
   ({ c, ate, opacidade, fps, antes = 0, virada = null }) => {
     const de = c.de - antes;
+    // início e fim arredondados separadamente: cenas vizinhas nunca deixam um quadro vazio (flash branco) entre elas
+    const q = (seg: number) => Math.round(seg * fps);
     const pagina: React.CSSProperties = virada === null ? {} : {
       zIndex: 2, transformOrigin: "0% 50%", transform: `rotateY(${-96 * virada}deg)`, backfaceVisibility: "hidden",
       boxShadow: `${40 * virada}px 0 ${90 * virada}px rgba(0,0,0,${0.45 * virada})`,
     };
     return (
-      <Sequence from={Math.round(de * fps)} durationInFrames={Math.max(1, Math.round((ate - de) * fps))} layout="none">
+      <Sequence from={q(de)} durationInFrames={Math.max(1, q(ate) - q(de))} layout="none">
         <AbsoluteFill style={{ opacity: opacidade, ...pagina }}>
-          <OffthreadVideo src={staticFile(c.video)} muted startFrom={Math.round((c.inicioVideo - antes) * fps)}
+          <OffthreadVideo src={staticFile(c.video)} muted startFrom={Math.max(0, Math.round((c.inicioVideo - antes) * fps))}
             style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           {virada !== null && (   /* o papel escurece do lado da dobra e ganha um brilho na borda que levanta */
             <AbsoluteFill style={{ background: `linear-gradient(to right, rgba(0,0,0,${0.5 * virada}) 0%, rgba(0,0,0,${0.18 * virada}) 55%, rgba(255,255,255,${0.16 * virada}) 100%)` }} />
@@ -90,8 +95,7 @@ export const Oficina: React.FC<{ roteiro: RoteiroOficina; audio: string }> = ({ 
           const ate = prox ? prox.de + (prox.entrada === "dissolve" ? DISSOLVE : vira ? PAGINA / 2 : 0) : roteiro.duracao;
           const op = c.entrada === "dissolve" ? rampa(t, c.de, c.de + DISSOLVE) : 1;
           const a = prox ? prox.de - PAGINA / 2 : 0;
-          const virada = vira && t >= a - 1e-6
-            ? interpolate(t, [a, a + PAGINA], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: viraSuave }) : null;
+          const virada = vira && frame >= Math.round(a * fps) ? progressoVirada(frame, a, fps) : null;
           return (
             <React.Fragment key={i}>
               <Video c={c} ate={ate} opacidade={op} fps={fps} antes={c.entrada === "pagina" ? PAGINA / 2 : 0} virada={virada} />
@@ -103,10 +107,14 @@ export const Oficina: React.FC<{ roteiro: RoteiroOficina; audio: string }> = ({ 
           );
         })}
       </AbsoluteFill>
-      {roteiro.apoios.map((a, i) => {
-        const op = rampa(t, a.de, a.de + 0.3) * (a.saida === "corte" ? 1 : 1 - rampa(t, a.ate - 0.28, a.ate));
-        return <Video key={`a${i}`} c={a} ate={a.ate} opacidade={op} fps={fps} />;
-      })}
+      <AbsoluteFill style={{ isolation: "isolate", perspective: 2600, perspectiveOrigin: "50% 50%" }}>
+        {roteiro.apoios.map((a, i) => {
+          const some = a.saida === "corte" || a.saida === "pagina" ? 1 : 1 - rampa(t, a.ate - 0.28, a.ate);
+          const virada = a.saida === "pagina" && frame >= Math.round((a.ate - PAGINA) * fps)
+            ? progressoVirada(frame, a.ate - PAGINA, fps) : null;
+          return <Video key={`a${i}`} c={a} ate={a.ate} opacidade={rampa(t, a.de, a.de + 0.3) * some} fps={fps} virada={virada} />;
+        })}
+      </AbsoluteFill>
       {roteiro.apoios.map((a, i) => <Rotulo key={`r${i}`} a={a} t={t} />)}
       {roteiro.legendas.map((l, i) => <LegendaView key={i} l={l} t={t} />)}
       <AbsoluteFill style={{ background: "#fff", opacity: rampa(t, roteiro.duracao - roteiro.fadeFinal, roteiro.duracao) }} />

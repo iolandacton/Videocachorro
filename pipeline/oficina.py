@@ -15,6 +15,11 @@ v5 (mesma edição, mesma voz tratada, mesmas legendas/estilo):
     0,4 s no mesmo plano) deixa de existir — a fala segue sem emenda;
   • troca de tomada antes de "Marcenaria é detalhe": virada de página (com som de papel) no lugar do corte seco;
   • imagem da porta usinada: câmera lenta real (todos os quadros do original 59,94p) e quase o dobro do tempo.
+
+v6 / v6b (--v6 com virada de página no fechamento, --v6b sem):
+  • imagens do "gimbal virtual" (scripts/oficina/gimbal_*.py): câmera suave e apresentador mais centralizado;
+  • a pedido da cliente, os takes só do móvel (em câmera lenta real) entram sobre as falas que eles ilustram;
+  • as trocas de tomada ficam SEMPRE escondidas sob uma imagem de detalhe já opaca (sem "relâmpago").
 """
 from __future__ import annotations
 
@@ -32,9 +37,11 @@ from editar import ffmpeg, loudnorm_linear, mixar_musica  # noqa: E402
 from musica import gerar, salvar  # noqa: E402
 
 SR = V.SR
-V5 = "--v5" in sys.argv
-SUF = "_v5" if V5 else ""
-PASTA = "oficina/cam" if V5 else "oficina/proc"
+VER = next((v for v in ("v5", "v6", "v6b") if f"--{v}" in sys.argv), None)
+V5 = VER is not None            # v5 em diante: trechos contínuos unidos, 29,97 fps, voz aprovada reaproveitada
+V6 = VER in ("v6", "v6b")       # v6: gimbal virtual + imagens de detalhe sobre a fala; v6b = sem a virada de página
+SUF = f"_{VER}" if VER else ""
+PASTA = "oficina/gimbal" if V6 else "oficina/cam" if V5 else "oficina/proc"
 D = Path("public/oficina/voz"); D.mkdir(parents=True, exist_ok=True)
 V.OUT = D  # arquivos temporários da EQ ficam aqui
 T = json.loads(Path("public/oficina/analise/transcricoes.json").read_text())
@@ -129,7 +136,7 @@ def main() -> None:
     # movimento e as bordas rígidas parecem dobrar/esticar — deformação artificial; removido na v4.)
     for c1 in cenas_base[1:]:
         c1["entrada"] = "corte"
-    if V5:   # troca de tomada para o fechamento: virada de página
+    if VER in ("v5", "v6"):   # troca de tomada para o fechamento: virada de página
         cenas_base[-1]["entrada"] = "pagina"
 
     def T_(frase, n=0):
@@ -150,6 +157,27 @@ def main() -> None:
         {"video": f"{PASTA}/C6219.mp4", "inicioVideo": 0.67, "de": T_("Lá em cima")[0] - 0.1,
          "ate": T_("Lá em cima")[0] - 0.1 + 2.0, "rotulo": ["FITAMENTO", "NO TRILHO"]},  # topo da porta e trilho
     ]
+    if V6:
+        # Detalhes em câmera lenta real (arquivo _lento: 2 s de arquivo = 1 s do take). Cada um entra na fala que
+        # ilustra; quando cobre uma troca de trecho, só começa a sair 0,12 s DEPOIS do corte (0,40 − 0,28 de fade).
+        L = lambda k: f"{PASTA}/{k}_lento.mp4"
+        corte = lambda i: fim_trecho[i] + 0.40
+        fecho = cenas_base[-1]["de"]
+        apoios = [
+            {"video": L("C6218"), "inicioVideo": 0.26, "de": T_("Olha só")[0] - 0.1, "ate": T_("Olha só")[0] + 2.2},
+            {"video": L("C6215"), "inicioVideo": 0.6, "de": T_("não muito")[0] - 0.13, "ate": corte(2)},      # esquadria branca × madeira
+            {"video": L("C6222"), "inicioVideo": 0.4, "de": T_("essa porta")[0] + 0.14, "ate": corte(3),
+             "rotulo": ["PORTA", "USINADA"]},
+            {"video": L("C6216"), "inicioVideo": 0.6, "de": T_("são duas")[0] - 0.1, "ate": corte(4)},        # portas usinadas / carvalho
+            {"video": L("C6219"), "inicioVideo": 0.3, "de": T_("e a gente tem o")[0] - 0.05, "ate": T_("desse trilho")[1] + 0.2},
+            {"video": L("C6219"), "inicioVideo": 3.0, "de": T_("Lá em cima")[0] - 0.1, "ate": T_("o fitamento")[1] + 0.25,
+             "rotulo": ["FITAMENTO", "NO TRILHO"]},
+            {"video": L("C6220"), "inicioVideo": 0.5, "de": T_("Faz várias")[0] - 0.1, "ate": T_("mas assim")[0] + 0.6,
+             "saida": "corte"},                                                                               # veio / emendas
+            {"video": L("C6221"), "inicioVideo": 0.6, "de": T_("mas assim")[0] + 0.3, "ate": fecho + 0.45,     # raja única → fechamento
+             **({"saida": "pagina"} if VER == "v6" else {})},
+            {"video": L("C6217"), "inicioVideo": 0.6, "de": T_("eu acho uma")[0] - 0.1, "ate": T_("ter no")[0] - 0.07},
+        ]
     for a in apoios:
         a["de"], a["ate"] = round(a["de"], 3), round(a["ate"], 3)
 
