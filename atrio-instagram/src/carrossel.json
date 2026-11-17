@@ -1,0 +1,7 @@
+{
+  "s2": { "file": "cena-2.jpg", "pos": "center top" },
+  "s3": { "file": "cena-3.jpg", "pos": "center top" },
+  "s4": { "file": "cena-4.jpg", "pos": "center top" },
+  "s5": { "file": "cena-5.jpg", "pos": "center top", "logoTop": 700 },
+  "hotspots": []
+}
