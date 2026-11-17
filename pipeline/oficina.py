@@ -37,12 +37,13 @@ from editar import ffmpeg, loudnorm_linear, mixar_musica  # noqa: E402
 from musica import gerar, salvar  # noqa: E402
 
 SR = V.SR
-VER = next((v for v in ("v5", "v6", "v6b", "v7", "v7b") if f"--{v}" in sys.argv), None)
+VER = next((v for v in ("v5", "v6", "v6b", "v7", "v7b", "v8", "v8b") if f"--{v}" in sys.argv), None)
 V5 = VER is not None            # v5 em diante: trechos contínuos unidos, 29,97 fps, voz aprovada reaproveitada
-V6 = VER in ("v6", "v6b", "v7", "v7b")   # v6: gimbal virtual + imagens de detalhe sobre a fala; "b" = sem a virada de página
-V7 = VER in ("v7", "v7b")       # v7: igual à v6, só troca o encerramento pela cartela preta com a logo (referência da cliente)
+V6 = VER in ("v6", "v6b", "v7", "v7b", "v8", "v8b")   # v6: gimbal virtual + imagens de detalhe sobre a fala; "b" = sem a virada de página
+V7 = VER in ("v7", "v7b", "v8", "v8b")       # v7: igual à v6, só troca o encerramento pela cartela preta com a logo (referência da cliente)
 SUF = f"_{VER}" if VER else ""
-PASTA = "oficina/gimbal" if V6 else "oficina/cam" if V5 else "oficina/proc"
+V8 = VER in ("v8", "v8b")       # v8: igual à v7, com a colorimetria nova (scripts/oficina/cor.py)
+PASTA = "oficina/grade" if V8 else "oficina/gimbal" if V6 else "oficina/cam" if V5 else "oficina/proc"
 D = Path("public/oficina/voz"); D.mkdir(parents=True, exist_ok=True)
 V.OUT = D  # arquivos temporários da EQ ficam aqui
 T = json.loads(Path("public/oficina/analise/transcricoes.json").read_text())
@@ -137,7 +138,7 @@ def main() -> None:
     # movimento e as bordas rígidas parecem dobrar/esticar — deformação artificial; removido na v4.)
     for c1 in cenas_base[1:]:
         c1["entrada"] = "corte"
-    if VER in ("v5", "v6", "v7"):   # troca de tomada para o fechamento: virada de página
+    if VER in ("v5", "v6", "v7", "v8"):   # troca de tomada para o fechamento: virada de página
         cenas_base[-1]["entrada"] = "pagina"
 
     def T_(frase, n=0):
@@ -176,7 +177,7 @@ def main() -> None:
             {"video": L("C6220"), "inicioVideo": 0.5, "de": T_("Faz várias")[0] - 0.1, "ate": T_("mas assim")[0] + 0.6,
              "saida": "corte"},                                                                               # veio / emendas
             {"video": L("C6221"), "inicioVideo": 0.6, "de": T_("mas assim")[0] + 0.3, "ate": fecho + 0.45,     # raja única → fechamento
-             **({"saida": "pagina"} if VER in ("v6", "v7") else {})},
+             **({"saida": "pagina"} if VER in ("v6", "v7", "v8") else {})},
             {"video": L("C6217"), "inicioVideo": 0.6, "de": T_("eu acho uma")[0] - 0.1, "ate": T_("ter no")[0] - 0.07},
         ]
     for a in apoios:

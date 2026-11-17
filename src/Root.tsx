@@ -20,6 +20,8 @@ import roteiroOficinaV6 from "./oficina/roteiro_v6.json";
 import roteiroOficinaV6b from "./oficina/roteiro_v6b.json";
 import roteiroOficinaV7 from "./oficina/roteiro_v7.json";
 import roteiroOficinaV7b from "./oficina/roteiro_v7b.json";
+import roteiroOficinaV8 from "./oficina/roteiro_v8.json";
+import roteiroOficinaV8b from "./oficina/roteiro_v8b.json";
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -82,5 +84,12 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="OficinaV7b" component={Oficina}
       durationInFrames={Math.round(duracaoTotal(roteiroOficinaV7b) * roteiroOficinaV7b.fps)} fps={roteiroOficinaV7b.fps} width={1080} height={1920}
       defaultProps={{ roteiro: roteiroOficinaV7b as unknown as RoteiroOficina, audio: "oficina/mix_v7b/audio.wav" }} />
+    {/* Oficina Sete v8 — igual à v7, com a colorimetria nova (altas luzes recuperadas, mais densidade) */}
+    <Composition id="OficinaV8" component={Oficina}
+      durationInFrames={Math.round(duracaoTotal(roteiroOficinaV8) * roteiroOficinaV8.fps)} fps={roteiroOficinaV8.fps} width={1080} height={1920}
+      defaultProps={{ roteiro: roteiroOficinaV8 as unknown as RoteiroOficina, audio: "oficina/mix_v8/audio.wav" }} />
+    <Composition id="OficinaV8b" component={Oficina}
+      durationInFrames={Math.round(duracaoTotal(roteiroOficinaV8b) * roteiroOficinaV8b.fps)} fps={roteiroOficinaV8b.fps} width={1080} height={1920}
+      defaultProps={{ roteiro: roteiroOficinaV8b as unknown as RoteiroOficina, audio: "oficina/mix_v8b/audio.wav" }} />
   </>
 );

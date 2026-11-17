@@ -4,16 +4,25 @@ Para cada quadro: uma única transformação GLOBAL (desloca + gira + aproxima a
 original 2160x3840 para 1620x2880, depois redução lanczos para 1080x1920 e a MESMA cor aprovada.
 Como a janela tem sempre mais pixels que a saída, não há ampliação: a nitidez do original é mantida.
 Sem deformação localizada, sem IA, sem interpolação de quadros.
-Uso: python3 scripts/oficina/gimbal_aplicar.py TAKE[:lento] ...      (python do sistema: usa Pillow)
+Uso: python3 scripts/oficina/gimbal_aplicar.py [--cor] TAKE[:lento] ...      (python do sistema: usa Pillow)
      saída: public/oficina/gimbal/<TAKE>[_lento].mp4
+     --cor: colorimetria v8 (scripts/oficina/cor.py: recupera as altas luzes do original de 10 bits, mais
+            densidade e ombro suave) no lugar da cor antiga; saída em public/oficina/grade/
 """
 import json, math, subprocess, sys
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from PIL import Image
 
+sys.path.insert(0, str(Path(__file__).parent))
+import cor as COR
+
+NOVA_COR = "--cor" in sys.argv
+
 SW, SH, OW, OH = 2160, 3840, 1620, 2880
 D = Path("public/oficina/gimbal")
+SAIDA = Path("public/oficina/grade") if NOVA_COR else D
+SAIDA.mkdir(parents=True, exist_ok=True)
 NEUTRO = json.load(open("public/oficina/analise/neutros.json"))
 ALVO = (206.0, 195.0, 190.0)
 LOOK = "curves=all='0/0 0.25/0.24 0.5/0.51 0.8/0.82 0.94/0.93 1/0.97',eq=contrast=1.03:saturation=0.95"
@@ -29,13 +38,15 @@ def aplicar(item):
     cor = f"colorchannelmixer=rr={ganho[0]:.4f}:gg={ganho[1]:.4f}:bb={ganho[2]:.4f}"
     dec = subprocess.Popen(["ffmpeg", "-v", "error", "-i", f"public/oficina/camera/{take}.MP4", "-an", "-vf",
                             ("" if lento else "select='not(mod(n\\,2))',") +
+                            (COR.filtro(take) + "," if NOVA_COR else "") +
                             "scale=iw:ih:flags=bicubic+accurate_rnd+full_chroma_int:sws_dither=ed,format=rgb24",
                             "-vsync", "0", "-f", "rawvideo", "-"], stdout=subprocess.PIPE, bufsize=SW * SH * 3)
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{OW}x{OH}",
                             "-r", "30000/1001", "-i", "-", "-vf",
-                            f"scale=1080:1920:flags=lanczos+accurate_rnd+full_chroma_int,{cor},{LOOK},format=yuv420p",
+                            "scale=1080:1920:flags=lanczos+accurate_rnd+full_chroma_int," +
+                            ("" if NOVA_COR else f"{cor},{LOOK},") + "format=yuv420p",
                             "-c:v", "libx264", "-preset", "veryfast", "-qp", "0", "-pix_fmt", "yuv420p",
-                            str(D / f"{nome}.mp4")], stdin=subprocess.PIPE)
+                            str(SAIDA / f"{nome}.mp4")], stdin=subprocess.PIPE)
     n = 0
     while n < len(J["cx"]):
         raw = dec.stdout.read(SW * SH * 3)
@@ -58,5 +69,5 @@ def aplicar(item):
 
 if __name__ == "__main__":
     with ThreadPoolExecutor(3) as ex:
-        for r in ex.map(aplicar, sys.argv[1:]):
+        for r in ex.map(aplicar, [a for a in sys.argv[1:] if not a.startswith("--")]):
             print(r, flush=True)
