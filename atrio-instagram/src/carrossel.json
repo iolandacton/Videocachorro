@@ -3,5 +3,11 @@
   "s3": { "file": "cena-3.jpg", "pos": "center top" },
   "s4": { "file": "cena-4.jpg", "pos": "center top" },
   "s5": { "file": "cena-5.jpg", "pos": "center top", "logoTop": 700 },
-  "hotspots": []
+  "hotspots": [
+    { "x": 462, "y": 590, "tag": "JARDIM" },
+    { "x": 690, "y": 800, "tag": "SALA DE ESTAR" },
+    { "x": 914, "y": 610, "tag": "CORREDOR", "side": "left" },
+    { "x": 66, "y": 520 }
+  ],
+  "floor": [ { "x": 560, "y": 985 } ]
 }

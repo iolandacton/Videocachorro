@@ -64,8 +64,13 @@ for (let i = 0; i < 560; i++) { const along = (rnd() - .66) * 1500, g = (rnd() +
 </script>`;
 
 const cfg = JSON.parse(fs.readFileSync(path.join(__dirname, 'carrossel.json'), 'utf8'));
-const hotspots = (cfg.hotspots || []).map(h => `<div class="hot" style="left:${h.x}px;top:${h.y}px"></div>` +
-  (h.tag ? `<div class="lead" style="left:${h.x + 24}px;top:${h.y}px;width:${h.len || 46}px"></div><div class="tag" style="left:${h.x + 24 + (h.len || 46)}px;top:${h.y - 17}px">${h.tag}</div>` : '')).join('');
+const hotspots = (cfg.hotspots || []).map(h => {
+  const len = h.len || 46;
+  let out = `<div class="hot" style="left:${h.x}px;top:${h.y}px"></div>`;
+  if (h.tag && h.side === 'left') out += `<div class="lead" style="left:${h.x - 24 - len}px;top:${h.y}px;width:${len}px"></div><div class="tag" style="right:${1080 - (h.x - 24 - len)}px;top:${h.y - 17}px">${h.tag}</div>`;
+  else if (h.tag) out += `<div class="lead" style="left:${h.x + 24}px;top:${h.y}px;width:${len}px"></div><div class="tag" style="left:${h.x + 24 + len}px;top:${h.y - 17}px">${h.tag}</div>`;
+  return out;
+}).join('') + (cfg.floor || []).map(f => `<svg style="position:absolute;left:${f.x - 90}px;top:${f.y - 30}px" width="180" height="60" viewBox="0 0 180 60" fill="none" stroke="rgb(243,237,226)"><ellipse cx="90" cy="30" rx="86" ry="26" stroke-opacity=".28"/><ellipse cx="90" cy="30" rx="56" ry="17" stroke-opacity=".7" stroke-width="1.4"/><ellipse cx="90" cy="30" rx="10" ry="3.2" fill="rgb(243,237,226)" fill-opacity=".85" stroke="none"/></svg>`).join('');
 const compass = `<svg class="compass" viewBox="0 0 92 92" fill="none" stroke="rgb(243,237,226)"><circle cx="46" cy="46" r="44" stroke-opacity=".35"/><ellipse cx="46" cy="46" rx="44" ry="15" stroke-opacity=".6"/><path d="M46 2 A44 44 0 0 1 46 90" stroke-opacity=".25"/><text x="46" y="51" text-anchor="middle" font-family="Montserrat" font-size="13" letter-spacing="2" fill="rgb(243,237,226)" stroke="none">360°</text></svg>`;
 
 const slides = {
@@ -73,7 +78,7 @@ const slides = {
   2: head + scene(cfg.s2.file, cfg.s2.pos) + mark + idx(2) + text('AUDIOVISUAL E FOTOGRAFIA', ['Imagens que', 'contam histórias.'], 258) + grain + foot,
   3: head + scene(cfg.s3.file, cfg.s3.pos) + mark + idx(3) + text('INTELIGÊNCIA ARTIFICIAL', ['Criatividade', 'sem limites.'], 258) + grain + foot,
   4: head + scene(cfg.s4.file, cfg.s4.pos) + hotspots + compass + mark + idx(4) + text('EXPERIÊNCIAS 360° E DIGITAIS', ['O digital ganha', 'uma nova dimensão.'], 258) + grain + foot,
-  5: head + scene(cfg.s5.file, cfg.s5.pos) + `<div class="layer" style="background:linear-gradient(0deg, rgba(0,0,0,.96) 0%, rgba(0,0,0,.9) 34%, rgba(0,0,0,.35) 52%, transparent 64%)"></div>` + mark + idx(5) +
+  5: head + scene(cfg.s5.file, cfg.s5.pos) + `<div class="layer" style="background:linear-gradient(0deg, rgba(0,0,0,.96) 0%, rgba(0,0,0,.9) 34%, rgba(0,0,0,.35) 52%, transparent 64%)"></div>` + idx(5) +
      `<img class="logo-full" src="../logo-atrio-oficial.png" style="top:${cfg.s5.logoTop}px" alt="ATRIO"><div class="closing" style="bottom:118px">Uma nova forma de criar.</div>` + grain + foot,
 };
 
