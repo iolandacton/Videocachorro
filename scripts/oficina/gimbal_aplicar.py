@@ -17,11 +17,13 @@ from PIL import Image
 sys.path.insert(0, str(Path(__file__).parent))
 import cor as COR
 
-NOVA_COR = "--cor" in sys.argv
+# --cor (perfil v8, saída em grade/) ou --cor=v9 (perfil v9, saída em grade9/)
+PERFIL = next((a.partition("=")[2] or "v8" for a in sys.argv if a.startswith("--cor")), None)
+NOVA_COR = PERFIL is not None
 
 SW, SH, OW, OH = 2160, 3840, 1620, 2880
 D = Path("public/oficina/gimbal")
-SAIDA = Path("public/oficina/grade") if NOVA_COR else D
+SAIDA = Path("public/oficina/grade" + ("" if PERFIL == "v8" else PERFIL[1:])) if NOVA_COR else D
 SAIDA.mkdir(parents=True, exist_ok=True)
 NEUTRO = json.load(open("public/oficina/analise/neutros.json"))
 ALVO = (206.0, 195.0, 190.0)
@@ -38,7 +40,7 @@ def aplicar(item):
     cor = f"colorchannelmixer=rr={ganho[0]:.4f}:gg={ganho[1]:.4f}:bb={ganho[2]:.4f}"
     dec = subprocess.Popen(["ffmpeg", "-v", "error", "-i", f"public/oficina/camera/{take}.MP4", "-an", "-vf",
                             ("" if lento else "select='not(mod(n\\,2))',") +
-                            (COR.filtro(take) + "," if NOVA_COR else "") +
+                            (COR.filtro(take, PERFIL) + "," if NOVA_COR else "") +
                             "scale=iw:ih:flags=bicubic+accurate_rnd+full_chroma_int:sws_dither=ed,format=rgb24",
                             "-vsync", "0", "-f", "rawvideo", "-"], stdout=subprocess.PIPE, bufsize=SW * SH * 3)
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{OW}x{OH}",

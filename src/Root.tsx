@@ -22,6 +22,7 @@ import roteiroOficinaV7 from "./oficina/roteiro_v7.json";
 import roteiroOficinaV7b from "./oficina/roteiro_v7b.json";
 import roteiroOficinaV8 from "./oficina/roteiro_v8.json";
 import roteiroOficinaV8b from "./oficina/roteiro_v8b.json";
+import roteiroOficinaV9 from "./oficina/roteiro_v9.json";
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -91,5 +92,9 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="OficinaV8b" component={Oficina}
       durationInFrames={Math.round(duracaoTotal(roteiroOficinaV8b) * roteiroOficinaV8b.fps)} fps={roteiroOficinaV8b.fps} width={1080} height={1920}
       defaultProps={{ roteiro: roteiroOficinaV8b as unknown as RoteiroOficina, audio: "oficina/mix_v8b/audio.wav" }} />
+    {/* Oficina Sete v9 — versão aprovada (com virada de página): cor menos amarela e trilha mais presente */}
+    <Composition id="OficinaV9" component={Oficina}
+      durationInFrames={Math.round(duracaoTotal(roteiroOficinaV9) * roteiroOficinaV9.fps)} fps={roteiroOficinaV9.fps} width={1080} height={1920}
+      defaultProps={{ roteiro: roteiroOficinaV9 as unknown as RoteiroOficina, audio: "oficina/mix_v9/audio.wav" }} />
   </>
 );

@@ -85,13 +85,13 @@ def limpar_voz(src: Path, dst: Path, alvo: float) -> dict:
 
 
 def mixar_musica(voz: Path, musica: Path, dst: Path, dur: float, nivel_lufs: float,
-                 alvo: float = -14) -> None:
+                 alvo: float = -14, ratio: float = 2) -> None:
     """Música em loop sob a voz, com ducking (abaixa sozinha quando há fala), fades e limiter."""
     ajuste = nivel_lufs - lufs(musica)
     fc = (f"[1:a]volume={ajuste:.2f}dB,atrim=0:{dur:.3f},afade=t=in:d=1,"
           f"afade=t=out:st={max(dur - 1.8, 0):.3f}:d=1.8,aformat=sample_rates=48000:channel_layouts=stereo[m];"
           "[0:a]asplit=2[v][sc];"
-          "[m][sc]sidechaincompress=threshold=0.05:ratio=2:attack=40:release=600:knee=4[md];"
+          f"[m][sc]sidechaincompress=threshold=0.05:ratio={ratio:g}:attack=40:release=600:knee=4[md];"
           "[v][md]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.84:level=false")
     tmp = dst.with_suffix(".tmp.wav")
     ffmpeg("-i", str(voz), "-stream_loop", "-1", "-i", str(musica), "-filter_complex", fc,

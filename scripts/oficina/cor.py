@@ -20,6 +20,13 @@ ALVO = (206.0, 195.0, 190.0)          # branco de referência da cena (levemente
 PRETO, BRANCO = 64 / 1023, 940 / 1023
 N = 4096
 SAT = 1.10                            # a compressão das luzes tira um pouco de cor; devolve
+# Perfis de cor. v8: mais densa e quente (a cliente achou o apresentador amarelo). v9: mesma recuperação das
+# altas luzes, meios-tons mais leves, balanço mais frio (wb multiplica os ganhos R,G,B do take), menos saturação
+# no geral e ainda menos nos amarelos/laranjas (madeira + LED quente contaminando a pele).
+PERFIS = {
+    "v8": dict(tom=dict(dens=1.16, ombro=0.56, teto=0.972), wb=(1, 1, 1), sat=1.10, amarelo=0.0),
+    "v9": dict(tom=dict(dens=1.06, ombro=0.54, teto=0.965), wb=(0.963, 1.0, 1.043), sat=0.88, amarelo=-0.26),
+}
 
 
 def tom(L, exp=0.0, dens=1.16, ombro=0.56, teto=0.972):
@@ -37,19 +44,19 @@ def ganhos(take):
     return [max(0.85, min(1.25, ALVO[i] / v)) for i, v in enumerate(NEUTRO[take])]
 
 
-def lut(take, **kw):
+def lut(take, wb=(1, 1, 1), **kw):
     x = np.linspace(0, 1, N)                                  # código do original interpretado como faixa completa
     L = (x - PRETO) / (BRANCO - PRETO)
-    return np.stack([tom(L * g, **kw) for g in ganhos(take)], 1)
+    return np.stack([tom(L * g * w, **kw) for g, w in zip(ganhos(take), wb)], 1)
 
 
-def gravar(take, **kw):
+def gravar(take, sufixo="", wb=(1, 1, 1), **kw):
     D = Path("public/oficina/gimbal/cor"); D.mkdir(parents=True, exist_ok=True)
-    t = lut(take, **kw)
-    with open(D / f"{take}.cube", "w") as f:
+    t = lut(take, wb, **kw)
+    with open(D / f"{take}{sufixo}.cube", "w") as f:
         f.write(f"LUT_1D_SIZE {N}\n")
         f.writelines(f"{r:.6f} {g:.6f} {b:.6f}\n" for r, g, b in t)
-    return D / f"{take}.cube"
+    return D / f"{take}{sufixo}.cube"
 
 
 def matriz_sat(s=SAT):
@@ -61,10 +68,16 @@ def matriz_sat(s=SAT):
     return "colorchannelmixer=" + ":".join(f"{k}={v:.5f}" for k, v in zip(n, sum(m, [])))
 
 
-def filtro(take):
-    """cadeia do FFmpeg: original lido com a faixa completa, em RGB de 16 bits → curva do take → saturação."""
-    return ("scale=iw:ih:in_range=full:out_range=full:flags=bicubic+accurate_rnd+full_chroma_int,format=gbrp16le,"
-            f"lut1d=file={gravar(take)}:interp=linear,{matriz_sat()}")
+def filtro(take, perfil="v8", **troca):
+    """cadeia do FFmpeg: original lido com a faixa completa, em RGB de 16 bits → curva do take → saturação
+    (→ no v9, menos saturação só nos amarelos/laranjas)."""
+    P = {**PERFIS[perfil], **troca}
+    arq = gravar(take, "" if perfil == "v8" else f"_{perfil}", P["wb"], **P["tom"])
+    f = ("scale=iw:ih:in_range=full:out_range=full:flags=bicubic+accurate_rnd+full_chroma_int,format=gbrp16le,"
+         f"lut1d=file={arq}:interp=linear,{matriz_sat(P['sat'])}")
+    if P["amarelo"]:
+        f += f",huesaturation=colors=r+y:saturation={P['amarelo']}:strength=1"
+    return f
 
 
 if __name__ == "__main__":

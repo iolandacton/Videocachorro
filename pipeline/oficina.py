@@ -37,13 +37,14 @@ from editar import ffmpeg, loudnorm_linear, mixar_musica  # noqa: E402
 from musica import gerar, salvar  # noqa: E402
 
 SR = V.SR
-VER = next((v for v in ("v5", "v6", "v6b", "v7", "v7b", "v8", "v8b") if f"--{v}" in sys.argv), None)
+VER = next((v for v in ("v5", "v6", "v6b", "v7", "v7b", "v8", "v8b", "v9") if f"--{v}" in sys.argv), None)
 V5 = VER is not None            # v5 em diante: trechos contínuos unidos, 29,97 fps, voz aprovada reaproveitada
-V6 = VER in ("v6", "v6b", "v7", "v7b", "v8", "v8b")   # v6: gimbal virtual + imagens de detalhe sobre a fala; "b" = sem a virada de página
-V7 = VER in ("v7", "v7b", "v8", "v8b")       # v7: igual à v6, só troca o encerramento pela cartela preta com a logo (referência da cliente)
+V6 = VER in ("v6", "v6b", "v7", "v7b", "v8", "v8b", "v9")   # v6: gimbal virtual + imagens de detalhe sobre a fala; "b" = sem a virada de página
+V7 = VER in ("v7", "v7b", "v8", "v8b", "v9")       # v7: igual à v6, só troca o encerramento pela cartela preta com a logo (referência da cliente)
 SUF = f"_{VER}" if VER else ""
 V8 = VER in ("v8", "v8b")       # v8: igual à v7, com a colorimetria nova (scripts/oficina/cor.py)
-PASTA = "oficina/grade" if V8 else "oficina/gimbal" if V6 else "oficina/cam" if V5 else "oficina/proc"
+V9 = VER == "v9"                # v9 (aprovada com virada de página): cor menos amarela (perfil v9) e trilha mais presente
+PASTA = "oficina/grade9" if V9 else "oficina/grade" if V8 else "oficina/gimbal" if V6 else "oficina/cam" if V5 else "oficina/proc"
 D = Path("public/oficina/voz"); D.mkdir(parents=True, exist_ok=True)
 V.OUT = D  # arquivos temporários da EQ ficam aqui
 T = json.loads(Path("public/oficina/analise/transcricoes.json").read_text())
@@ -138,7 +139,7 @@ def main() -> None:
     # movimento e as bordas rígidas parecem dobrar/esticar — deformação artificial; removido na v4.)
     for c1 in cenas_base[1:]:
         c1["entrada"] = "corte"
-    if VER in ("v5", "v6", "v7", "v8"):   # troca de tomada para o fechamento: virada de página
+    if VER in ("v5", "v6", "v7", "v8", "v9"):   # troca de tomada para o fechamento: virada de página
         cenas_base[-1]["entrada"] = "pagina"
 
     def T_(frase, n=0):
@@ -177,7 +178,7 @@ def main() -> None:
             {"video": L("C6220"), "inicioVideo": 0.5, "de": T_("Faz várias")[0] - 0.1, "ate": T_("mas assim")[0] + 0.6,
              "saida": "corte"},                                                                               # veio / emendas
             {"video": L("C6221"), "inicioVideo": 0.6, "de": T_("mas assim")[0] + 0.3, "ate": fecho + 0.45,     # raja única → fechamento
-             **({"saida": "pagina"} if VER in ("v6", "v7", "v8") else {})},
+             **({"saida": "pagina"} if VER in ("v6", "v7", "v8", "v9") else {})},
             {"video": L("C6217"), "inicioVideo": 0.6, "de": T_("eu acho uma")[0] - 0.1, "ate": T_("ter no")[0] - 0.07},
         ]
     for a in apoios:
@@ -286,8 +287,11 @@ def main() -> None:
     roteiro["sfx"] = [{"tipo": t, "pico": round(x, 2)} for t, x in eventos]
     Path(f"src/oficina/roteiro{SUF}.json").write_text(json.dumps(roteiro, ensure_ascii=False, indent=1))
     salvar(gerar(dur, 84, 3), M / "trilha.wav")
-    mixar_musica(M / "voz_sfx.wav", M / "trilha.wav", M / "audio.wav", dur, NIVEL_MUSICA, -16)
-    if V7:   # como na referência: a trilha vai sumindo durante a cartela da logo
+    if V9:   # trilha mais presente: +5,5 dB e abaixando menos sob a fala; na cartela da logo ela aparece inteira
+        mixar_musica(M / "voz_sfx.wav", M / "trilha.wav", M / "audio.wav", dur, NIVEL_MUSICA + 5.5, -16, ratio=1.5)
+    else:
+        mixar_musica(M / "voz_sfx.wav", M / "trilha.wav", M / "audio.wav", dur, NIVEL_MUSICA, -16)
+    if V7 and not V9:   # como na referência: a trilha vai sumindo durante a cartela da logo
         (M / "audio.wav").rename(M / "audio_sem_fade.wav")
         ffmpeg("-i", str(M / "audio_sem_fade.wav"), "-af", f"afade=t=out:st={outro_de + 0.1}:d={dur - outro_de - 0.25}:curve=qsin",
                "-ar", "48000", str(M / "audio.wav"))
